@@ -1,6 +1,6 @@
 %% Read imgs
 % Import satellite images from specified folder
-dir_path = "/Users/adammisik/Documents/01_TUM/02_Master/01_Kernmodule/Computer_Vision/SS_2021/Final_Project/git/Datasets/Dubai";
+dir_path = 
 dir_list  = dir(fullfile(dir_path, '*.jpg'));
 files = {dir_list.name};
 
