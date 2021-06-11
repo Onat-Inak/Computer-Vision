@@ -26,3 +26,5 @@ to:
 -Select images
 -Define the type of visualization (e.g. time lapse)
 -Define the type of change between the frames (e.g. big/small changes)
+
+## Approaches
