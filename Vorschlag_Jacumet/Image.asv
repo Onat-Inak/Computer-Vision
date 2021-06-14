@@ -1,0 +1,21 @@
+classdef Image
+
+    properties 
+       
+        Folder;
+        Names;
+        Number;
+        Content;
+        Transforms;
+        Reconstructed;
+        
+        
+    end
+    
+    methods
+       
+ 
+        
+    end
+    
+end
