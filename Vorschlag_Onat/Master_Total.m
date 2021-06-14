@@ -6,8 +6,8 @@ tic
 % Define the Image Class :
 Image = Image();
 
-Image.Folder = 'Kuwait';  %Select Images you want to work on
-Image.Plot_Steps = 0; % '1' or '0'. Plots a lot of pictures if you set true
+Image.Folder = 'Dubai';  %Select Images you want to work on
+Image.Plot_Steps = 1; % '1' or '0'. Plots a lot of pictures if you set true
 
 %% Image Loader
 % Loads Images into Cell array of Dimensions 1 x #ofImages, where each
@@ -16,9 +16,11 @@ Image.Names = {dir(fullfile(Image.Folder, '*.jpg')).name}; %cell array of all Im
 Image.Number = length(Image.Names);
 %Content of Images
 Image.Content = cell(1, Image.Number);
+
 for i = 1 : Image.Number
-Image.Content{i} = imread(fullfile(Image.Folder, Image.Names{i}));
+    Image.Content{i} = imread(fullfile(Image.Folder, Image.Names{i}));
 end
+
 Image.Middle_idx = round(Image.Number/2); 
 
 %% Plot first, middle and last Image to get
@@ -39,8 +41,10 @@ Image.Reconstructed = cell(Image.Number);
 Image.Transformation_Status = cell(Image.Number);
 
 %Iterate so that every picture is once the reference picture
-for ref_index = 1:Image.Number
+for ref_index = 1 : Image.Number
+    
     img_ref = rgb2gray(Image.Content{ref_index}(1:end-60,1:end,:)); %We simply cut away the google Logoc
+    
     for move_index = 1 : Image.Number
         img_move = rgb2gray(Image.Content{move_index}(1 : end - 60, 1 : end,:)); %We simply cut away the google Logoc
         
@@ -52,8 +56,8 @@ for ref_index = 1:Image.Number
         end
         
         %% Detect SURF Features
-        points_ref=detectSURFFeatures(img_ref, 'NumScaleLevels',4);
-        points_move=detectSURFFeatures(img_move, 'NumScaleLevels',4);
+        points_ref = detectSURFFeatures(img_ref, 'NumScaleLevels',4);
+        points_move = detectSURFFeatures(img_move, 'NumScaleLevels',4);
         
         if Image.Plot_Steps
             fig3 = figure(3);
@@ -114,7 +118,7 @@ for ref_index = 1:Image.Number
         end
         if Image.Plot_Steps
             fig6 = figure(6);
-            set(fig6, 'Name', 'Recosntructed Image');
+            set(fig6, 'Name', 'Reconstructed Image');
             imshow(Image_reconstruced); 
             title('Reconstructed Image');
         end
