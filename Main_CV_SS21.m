@@ -14,21 +14,23 @@
 clear all
 close all
 tic
+
 %% 1.) Load a folder of satelite images by specifying its name
 % From Project specification: Folder of pictures taken of the same location
 % on earth with naming convention YYYY_MM.FORMAT
 
 % Loads Images into Cell array of Dimensions 1 x #ofImages, where each
 % entry is of the size the picture has in pixels, so  width x height
-Name_of_Image_Folder='Wiesn';  %Select Images you want to work on
+Name_of_Image_Folder='Kuwait';  %Select Images you want to work on
 
 
 Image_Names={dir(fullfile(Name_of_Image_Folder,'*_*.*')).name}; %cell array of all Image file names
 Image_number=length(Image_Names);
 %Content of Images
 Images=cell(1,Image_number);
+
 for i=1:Image_number
-Images{i}=imread(fullfile(Name_of_Image_Folder,Image_Names{i}));
+    Images{i}=imread(fullfile(Name_of_Image_Folder,Image_Names{i}));
 end
 
 %% 2.) Reconstruct all pictures to be taken from the same point in space
