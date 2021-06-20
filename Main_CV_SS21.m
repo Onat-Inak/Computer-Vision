@@ -96,8 +96,8 @@ Images_reconstructed = Images_reconstructed(logical(logical_vec));
 
 % 3.0  Resize images and save them into the file 'Resized_Images' :
  
-Images_reconstructed_resized = resize_images(Images_reconstructed);
-save_resized_images(Images_reconstructed_resized, Name_of_Image_Folder);
+% Images_reconstructed_resized = resize_images(Images_reconstructed);
+% save_resized_images(Images_reconstructed_resized, Name_of_Image_Folder);
 
 % 3.1 Changes in Image based on Magnitude
 %Difference_Magnitude wird über die GUI mit dem jeweiligen Change threshold
