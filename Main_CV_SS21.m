@@ -21,7 +21,7 @@ tic
 
 % Loads Images into Cell array of Dimensions 1 x #ofImages, where each
 % entry is of the size the picture has in pixels, so  width x height
-Name_of_Image_Folder='Kuwait';  %Select Images you want to work on
+Name_of_Image_Folder='Columbia Glacier';  %Select Images you want to work on
 
 
 Image_Names={dir(fullfile(Name_of_Image_Folder,'*_*.*')).name}; %cell array of all Image file names
@@ -67,7 +67,7 @@ end
 % 
 %   tform                    trafo allowing Image_move to be transformed to Image_ref
 tic
-[Images_reconstructed, trafos] = Reconstruct_Images(Images);
+[Images_reconstructed, trafos, Image_ref_number] = Reconstruct_Images(Images);
 normalization_calc_duration=toc
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -78,20 +78,48 @@ normalization_calc_duration=toc
 % TODO ONAT
 % Erklärung der von dir erstellten Funktionen wie oben
 % Kurzer Code hier in der Main
-% the show is yours hier. Mach was du willst :)
+% the show is yours hier. Mach was dju willst :)
+
+% Filter out the empty reconstructed images :
+% Images_reconstructed(Images_reconstructed == []) = []; 
+logical_vec = zeros(1, length(Images_reconstructed));
+
+for i = 1 : length(Images_reconstructed)
+    if numel(Images_reconstructed{i}) == 0
+        logical_vec(i) = 0;
+    else 
+        logical_vec(i) = 1;
+    end
+end
+
+Images_reconstructed = Images_reconstructed(logical(logical_vec));
+
+% 3.0  Resize images and save them into the file 'Resized_Images' :
+ 
+Images_reconstructed_resized = resize_images(Images_reconstructed);
+save_resized_images(Images_reconstructed_resized, Name_of_Image_Folder);
 
 % 3.1 Changes in Image based on Magnitude
 %Difference_Magnitude wird über die GUI mit dem jeweiligen Change threshold
 %gecallt.Die funktion nimmt nur einzelne Bilder für Vergleich!!!
-images_comparison_ref=Images_reconstructed{1};
-images_comparison_changes=Images_reconstructed{end};
+images_comparison_ref = Images_reconstructed{1};
+images_comparison_changes = Images_reconstructed{end};
 change_threshold=50;
 
 t_all_differences=tic;
 Image_Marked = Difference_Magnitude(images_comparison_ref,images_comparison_changes,change_threshold);
 single_difference_calc_duration=toc(t_all_differences)
 figure; imshow(Image_Marked); title('Changes between selected features with selected threshold');
-% 3.2 Changes in Image based on Speed of change
+
+% 3.2 Changes in a timelapse :
+% This function visualizes the changes of the selected location over time :
+Difference_Magnitude_Timelapse(Images_reconstructed);
+
+% 3.3 Changes regarding the reference image :
+% This function visualizes the changes of the selected location over time :
+Difference_Magnitude_Reg_Ref(Images_reconstructed, Image_ref_number);
+
+% 3.4 Changes in Image based on Speed of change
 % Diese funktion wird auch wieder von der GUI gecallt und man kann changes
 % nach ihrer geschwindigkeit Darstellen. Diese Funktion ist noch nicht existent!!
 
@@ -100,3 +128,5 @@ figure; imshow(Image_Marked); title('Changes between selected features with sele
 %% 4.)Nur nochmal eine temporäre spielerei, bei der für verschiedene Magnitudes die changes geplottet werden
 % Das ist nur zum ansehen, allerdings nicht relevant!
 [Images_marked_changing_threshold]=show_Differences_Magnitude(images_comparison_ref, images_comparison_changes);
+
+

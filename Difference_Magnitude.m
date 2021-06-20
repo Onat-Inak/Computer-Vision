@@ -17,7 +17,7 @@ if(size(B,1)>1)
 end
 % Showing the boundaries:
 if plot_Images
-    figure(2), imshow(BW); title("Boundary at Moving Image"); hold on;
+    figure(2); imshow(BW); title("Boundary at Moving Image"); hold on;
     for k=1:length(B)
       boundary = B{k};
       plot(boundary(:,2), boundary(:,1),'g','LineWidth',2);
