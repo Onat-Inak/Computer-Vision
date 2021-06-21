@@ -7,9 +7,9 @@
 % taken at different times are input to the GUI and differences are shown
 % to the user, who can also choose parameters on:
 % - magnitude of changes
-% - speed of changes 
-% - TODO ONAT
-% - TODO ONAT
+% - segmentation of changes
+% - Clusters/outlier changes
+% - Type of visualization (time-lapse: slow/fast, difference highlights)
 
 clear all
 close all
@@ -20,7 +20,7 @@ tic
 
 % Loads Images into Cell array of Dimensions 1 x #ofImages, where each
 % entry is of the size the picture has in pixels, so  width x height
-Name_of_Image_Folder='Wiesn';  %Select Images you want to work on
+Name_of_Image_Folder='Singapur';  %Select Images you want to work on
 
 
 Image_Names={dir(fullfile(Name_of_Image_Folder,'*_*.*')).name}; %cell array of all Image file names
@@ -73,28 +73,44 @@ normalization_calc_duration=toc
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% 3.) Get Differences between the reconstructed Images
-% TODO ONAT
-% Erklärung der von dir erstellten Funktionen wie oben
-% Kurzer Code hier in der Main
-% the show is yours hier. Mach was du willst :)
+% 1. Create a panorama view of the reconstructed images. This view serves
+% as a canvas for the change visualization and displays all the scene
+% regions represented in the reconstructed images.
+% 2. Crop reference and moving image boundaries, then normalize pixels in
+% reference image. Afterwards, calculate absolute pixel differences and
+% mark them in red channel of moving image if above threshold. Furthemore, specify if
+% image segmentation is implemented with a binarized mask. This will
+% crop out specific image regions (e.g. sea/land, forest/city).
+% 3. Display changes of n images in a time lapse visualization on the
+% panorama view canvas. Set speed of time lapse. 
 
-% 3.1 Changes in Image based on Magnitude
-%Difference_Magnitude wird über die GUI mit dem jeweiligen Change threshold
-%gecallt.Die funktion nimmt nur einzelne Bilder für Vergleich!!!
+% 3.1 Create panorama view img from reconstructed imgs and trafos
+panorama_img = panorama_view(Images_reconstructed,trafos);
+figure; imshow(panorama_img); title('Panorama view img');
+
+
+% 3.2 Changes in Image based on absolute pixel differences.
 images_comparison_ref=Images_reconstructed{1};
 images_comparison_changes=Images_reconstructed{end};
-change_threshold=50;
 
+%Set treshold, segmentation flag (implements segmentation)
+% and plot flag (plots each processing step)
+change_threshold=50;
+seg_flag = 1;
+plot_Images=0;
+
+%Measure runtime and run difference calculation
+%To-Do: only extract difference pixels, not whole img
 t_all_differences=tic;
-Image_Marked = Difference_Magnitude(images_comparison_ref,images_comparison_changes,change_threshold);
+Image_Marked = Difference_Magnitude(images_comparison_ref,images_comparison_changes,change_threshold,plot_Images,seg_flag);
 single_difference_calc_duration=toc(t_all_differences)
 figure; imshow(Image_Marked); title('Changes between selected features with selected threshold');
-% 3.2 Changes in Image based on Speed of change
-% Diese funktion wird auch wieder von der GUI gecallt und man kann changes
-% nach ihrer geschwindigkeit Darstellen. Diese Funktion ist noch nicht existent!!
 
-%Image_Marked = Difference_Speed(Images_reconstructed,trafos,speed_threshold);
+%Show changes on panorama view 
+figure;imshowpair(Image_Marked,panorama_img,'blend');title("Result img");
+
+%3.3 Time lapse visualization 
 
 %% 4.)Nur nochmal eine temporäre spielerei, bei der für verschiedene Magnitudes die changes geplottet werden
 % Das ist nur zum ansehen, allerdings nicht relevant!
-[Images_marked_changing_threshold]=show_Differences_Magnitude(images_comparison_ref, images_comparison_changes);
+%[Images_marked_changing_threshold]=show_Differences_Magnitude(images_comparison_ref, images_comparison_changes);

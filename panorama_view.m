@@ -1,19 +1,26 @@
 function panorama = panorama_view(images_reconstructed, trafos)
-%PANORAMA_VIEW: creates a "panorama" image from reconstructed images
+% Moritz Schneider, Adam Misik, Onat Inak, Robert Jacumet
+% Computer Vision Project SS21, Group 30
 
+%PANORAMA_VIEW: creates a "panorama" image from an array of reconstructed images
+
+%Check number of images and transforms
 numImages = length(images_reconstructed);
 trafos = trafos(ceil(length(trafos)/2),:);
 trafos = cell(size(trafos));
 trafos(:) = {projective2d};
 
+%Check for image sizes
 for n = 1:numImages
      imageSize(n,:) = size(rgb2gray(images_reconstructed{n}));
 end
-    
+
+%Check for axis limits
 for i = 1:numel(trafos)  
     [xlim(i,:), ylim(i,:)] = outputLimits(trafos{i}, [1 imageSize(i,2)], [1 imageSize(i,1)]);    
 end
 
+%Set axis and dimensions
 avgXLim = mean(xlim, 2);
 [~,idx] = sort(avgXLim);
 centerIdx = floor((numel(trafos)+1)/2);
@@ -49,10 +56,10 @@ panoramaView = imref2d([height width], xLimits, yLimits);
 for i = 1:numImages   
     I = images_reconstructed{i};      
     % Transform I into the panorama.
-    warpedImage = imwarp(I, trafos_identity{i}, 'OutputView', panoramaView);
+    warpedImage = imwarp(I, trafos{i}, 'OutputView', panoramaView);
                   
     % Generate a binary mask.    
-    mask = imwarp(true(size(I,1),size(I,2)), trafos_identity{i}, 'OutputView', panoramaView);
+    mask = imwarp(true(size(I,1),size(I,2)), trafos{i}, 'OutputView', panoramaView);
     
     % Overlay the warpedImage onto the panorama.
     panorama = step(blender, panorama, warpedImage, mask);
