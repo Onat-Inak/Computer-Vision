@@ -20,8 +20,8 @@ H=(trans.T)';    %extract trafo matrix and transpose it to obtain the desired tr
 %so far used criteria:
 is_valid_trans=(abs((H(3,1))+abs(H(3,2)))/(max(abs(H(1:2,1:2)),[],'all')))<0.0005;%(H(3,1) and H(3,2) have to be zero for a 2D in-plane transform in the image plane
 
-%possible improvement (to be evaluated in depth):
-% is_valid_trans=is_valid_trans&(abs((H(1,1)-H(2,2))/H(3,3))<0.01)&(abs((H(1,2)+H(2,1))/H(3,3))<0.01); % check (a,a) and (b,-b)
+%possible improvement (to be evaluated in depth, threshold could be increased):
+is_valid_trans=is_valid_trans&(abs((H(1,1)-H(2,2))/(max(abs(H(1:2,1:2)),[],'all')))<0.4)&(abs((H(1,2)+H(2,1))/(max(abs(H(1:2,1:2)),[],'all')))<0.4); % check (a,a) and (b,-b)
 
 %not properly working yet:
 % is_valid_trans=is_valid_trans&(abs(((H(1,1)/H(3,3))^2+(H(2,1)/H(3,3))^2)-1)<0.01);%using:sin^2+cos^2=1
