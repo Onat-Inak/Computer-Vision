@@ -21,7 +21,7 @@ tic
 
 % Loads Images into Cell array of Dimensions 1 x #ofImages, where each
 % entry is of the size the picture has in pixels, so  width x height
-Name_of_Image_Folder='Columbia Glacier';  %Select Images you want to work on
+Name_of_Image_Folder='Dubai';  %Select Images you want to work on
 
 
 Image_Names={dir(fullfile(Name_of_Image_Folder,'*_*.*')).name}; %cell array of all Image file names

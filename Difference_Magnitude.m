@@ -1,4 +1,4 @@
-function Image_Marked = Difference_Magnitude(Image_ref,Image_move,change_threshold)
+function [Image_Marked, Diff_image_threshold] = Difference_Magnitude(Image_ref,Image_move,change_threshold)
 % Moritz Schneider, Adam Misik, Onat Inak, Robert Jacumet
 % Computer Vision Project SS21, Group 30
 
