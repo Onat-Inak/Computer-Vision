@@ -1,4 +1,4 @@
-function [Images_reconstructed, trafos] = Reconstruct_Images(Images)
+function [Images_reconstructed, trafos, Image_ref_number] = Reconstruct_Images(Images)
 % Moritz Schneider, Adam Misik, Onat Inak, Robert Jacumet
 % Computer Vision Project SS21, Group 30
 

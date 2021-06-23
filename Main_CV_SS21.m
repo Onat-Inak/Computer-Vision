@@ -13,6 +13,8 @@
 
 clear all
 close all
+clc
+
 tic
 %% 1.) Load a folder of satelite images by specifying its name
 % From Project specification: Folder of pictures taken of the same location
@@ -20,7 +22,7 @@ tic
 
 % Loads Images into Cell array of Dimensions 1 x #ofImages, where each
 % entry is of the size the picture has in pixels, so  width x height
-Name_of_Image_Folder='Singapur';  %Select Images you want to work on
+Name_of_Image_Folder = 'Beirut';  %Select Images you want to work on
 
 
 Image_Names={dir(fullfile(Name_of_Image_Folder,'*_*.*')).name}; %cell array of all Image file names
@@ -65,7 +67,7 @@ end
 % 
 %   tform                    trafo allowing Image_move to be transformed to Image_ref
 tic
-[Images_reconstructed, trafos] = Reconstruct_Images(Images);
+[Images_reconstructed, trafos, Image_ref_number] = Reconstruct_Images(Images);
 normalization_calc_duration=toc
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -84,32 +86,126 @@ normalization_calc_duration=toc
 % 3. Display changes of n images in a time lapse visualization on the
 % panorama view canvas. Set speed of time lapse. 
 
-% 3.1 Create panorama view img from reconstructed imgs and trafos
-panorama_img = panorama_view(Images_reconstructed,trafos);
-figure; imshow(panorama_img); title('Panorama view img');
 
+% 3.0.1 Set the parameters in order to change between different functionalities and
+% visualizations :
 
-% 3.2 Changes in Image based on absolute pixel differences.
-images_comparison_ref=Images_reconstructed{1};
-images_comparison_changes=Images_reconstructed{end};
+% for 3.1 :
+apply_3_1 = true;
+comparison_rg_first_img = true; % compare all the images regarding the first image in a timelapse plot:
+comparison_rg_prev_img = false; % compare all the images regarding the previous image in a timelapse plot:
 
-%Set treshold, segmentation flag (implements segmentation)
-% and plot flag (plots each processing step)
-change_threshold=50;
-seg_flag = 1;
-plot_Images=0;
+apply_3_2 = false;
+apply_3_3 = false;
 
-%Measure runtime and run difference calculation
-%To-Do: only extract difference pixels, not whole img
-t_all_differences=tic;
-Image_Marked = Difference_Magnitude(images_comparison_ref,images_comparison_changes,change_threshold,plot_Images,seg_flag);
-single_difference_calc_duration=toc(t_all_differences)
-figure; imshow(Image_Marked); title('Changes between selected features with selected threshold');
+% parameters for 3.1 :
+threshold_DM_3_1 = 80; % threshold for the Difference Magnitude function
+seg_flag_3_1 = 0;
+plot_images_3_1 = 0;
+pause_in_sec_3_1 = .5; % time difference between plots
 
-%Show changes on panorama view 
-figure;imshowpair(Image_Marked,panorama_img,'blend');title("Result img");
+% parameters for 3.2 :
+num_superpixels = 5000;
+threshold_DM_3_2 = 50;
+threshold_SP_val = 10000; % threshold for seperating superpixels, which have more pixels than this threshold,
+                        % from the others
 
-%3.3 Time lapse visualization 
+% 3.0.2 Extract years and months from Image Names and save the results to the corresponding arrays:
+% Ignore the empty reconstructed images and save the new image cell to the variable 
+% Images_reconstructed_new:
+
+logic_vec = logical(zeros(1, length(Images_reconstructed)));
+years = zeros(1, length(Images_reconstructed));
+months = zeros(1, length(Images_reconstructed));
+iter = 1;
+for i = 1 : length(Images_reconstructed)
+    year_month_temp = cell2mat(Image_Names(i));
+    years(i) = str2double(year_month_temp(1:4));
+    months(i) = str2double(year_month_temp(5:7));
+    if numel(Images_reconstructed{i}) == 0
+        logic_vec(i) = false;
+    else
+        logic_vec(i) = true;
+        Images_reconstructed_new{iter} = Images_reconstructed{i};
+        iter = iter + 1;
+    end
+end
+years_new = years(logic_vec);
+months_new = months(logic_vec);
+
+% 3.1 Apply Difference Magnitude for Threshold :
+
+if apply_3_1
+    % Get treshold, segmentation flag (implements segmentation) from GUI
+    % and plot flag (plots each processing step)
+    change_threshold = threshold_DM_3_1;
+    seg_flag = seg_flag_3_1;
+    plot_Images = plot_images_3_1;
+    fig_for_3_1 = figure();
+    hold on
+    if comparison_rg_prev_img
+        title('Changes between Images regarding to their Previous Images');
+        for img_num = 1 : length(Images_reconstructed_new) - 1
+            ref_image = Images_reconstructed_new{img_num};
+            moving_image = Images_reconstructed_new{img_num + 1};
+
+            %Measure runtime and run difference calculation
+            t_all_differences_3_1 = tic;
+            [Image_Marked, ~] = Difference_Magnitude(ref_image, moving_image, change_threshold, plot_Images, seg_flag);
+            clf;
+            imshow(Image_Marked);
+            pause(pause_in_sec_3_1);
+        end
+    end
+    if comparison_rg_first_img 
+        for img_num = 2 : length(Images_reconstructed_new)
+            ref_image = Images_reconstructed_new{1};
+            moving_image = Images_reconstructed_new{img_num};
+
+            %Measure runtime and run difference calculation
+            t_all_differences_3_1 = tic;
+            [Image_Marked, ~] = Difference_Magnitude(ref_image, moving_image, change_threshold, plot_Images, seg_flag);
+            clf;
+            title('Changes between Images regarding to first Image');
+            imshow(Image_Marked);
+            pause(pause_in_sec_3_1);
+        end 
+    end
+    difference_calc_duration_3_1 = toc(t_all_differences_3_1)
+    hold off
+end
+
+% 3.2 Apply Difference Magnitude function regarding superpixels in order to obtain 
+% differences along bigger regions over a timelapse:
+
+[superpixel_pos, N] = superpixels(Images_reconstructed_new{1}, num_superpixels);
+change_threshold = threshold_DM_3_2;
+seg_flag = seg_flag_3_1;
+[~, Diff_Image_Threshold] = Difference_Magnitude(ref_image, moving_image, change_threshold, plot_Images, seg_flag);
+
+[m, n, l] = size(Images_reconstructed_new{1});
+logical_region_mask = zeros(m, n); 
+region_mask_temp = zeros(m, n);
+region_mask = zeros(m, n, 3);
+for sp = 1 : N
+    mat_temp = sp * ones(m, n);
+    pos_sp_reg_img = (superpixel_pos == mat_temp);
+%     sum(Diff_Image_Threshold(pos_sp_reg_img), 'all')
+    if sum(Diff_Image_Threshold(pos_sp_reg_img), 'all') > threshold_SP_val
+        logical_region_mask = logical_region_mask + pos_sp_reg_img;
+    end
+end
+logical_region_mask = logical(logical_region_mask);
+region_mask_temp(logical_region_mask) = 255;
+region_mask(:,:,1) = region_mask_temp;
+region_mask(:,:,2) = zeros(m, n);
+region_mask(:,:,3) = zeros(m, n);
+
+figure();
+BM = boundarymask(superpixel_pos);
+imshow(Images_reconstructed_new{1})
+figure();
+imshow(imoverlay(region_mask, BM, 'cyan'),'InitialMagnification',67)
 
 %% 4.)Nur nochmal eine temporäre spielerei, bei der für verschiedene Magnitudes die changes geplottet werden
 % Das ist nur zum ansehen, allerdings nicht relevant!
