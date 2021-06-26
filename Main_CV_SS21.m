@@ -143,14 +143,14 @@ normalization_calc_duration=toc
 % parameters for 3.1 :
 apply_3_1 = false;
 comparison_rg_first_img_3_1 = true; % compare all the images regarding the first image in a timelapse plot:
-comparison_rg_prev_img_3_1 = false; % compare all the images regarding the previous image in a timelapse plot:
+comparison_rg_prev_img_3_1 = ~comparison_rg_first_img_3_1; % compare all the images regarding the previous image in a timelapse plot:
 threshold_DM_3_1 = 80; % threshold for the Difference Magnitude function
 seg_flag_3_1 = 0;
 plot_images_3_1 = 0;
-pause_in_sec_3_1 = .5; % time difference between plots
+pause_in_sec_3_1 = 1.5; % time difference between plots
 
 % parameters for 3.2 :
-apply_3_2 = true;
+apply_3_2 = false;
 threshold_DM_3_2 = 50;
 
     % parameters for 3.2.1
@@ -161,7 +161,7 @@ threshold_DM_3_2 = 50;
     threshold_SP_val_2_images_3_2 = 50; % threshold for seperating superpixels, which have more difference per pixel than the threshold value in comparison to the others for 2 images 
     
     % parameters for 3.2.2 :
-    apply_3_2_for_timelapse = false;
+    apply_3_2_for_timelapse = true;
     seg_flag_3_2 = 0;
     plot_images_3_2 = 0;
     num_superpixels_timelapse = 1500;
@@ -397,15 +397,15 @@ if apply_3_2
                 overlay = imoverlay(Images_reconstructed_new{img_num}, region_mask_temp, 'red');
                 clf
                 % show the overlayed image without boundary mask :
-                imshow(overlay);
+%                 imshow(overlay);
                 % show the overlayed image with boundary mask :
-%                 imshow(imoverlay(overlay, BM, 'cyan'),'InitialMagnification',67)
+                imshow(imoverlay(overlay, BM, 'cyan'),'InitialMagnification',67)
             end
             hold off
             duration_3_2_timelapse = toc(t_3_2_timelapse)
         end
     end
-    
+end
     % 3.3 : Apply Difference Magnitude function regarding superpixels in a
     % timelapse and differ big, intermediate and small changes from
     % eachother : - red : big changes 
@@ -602,7 +602,6 @@ if apply_3_2
             duration_3_3_timelapse = toc(t_3_3_timelapse)
         end
     end
-end
 %% 4.)Nur nochmal eine temporäre spielerei, bei der für verschiedene Magnitudes die changes geplottet werden
 % Das ist nur zum ansehen, allerdings nicht relevant!
 %[Images_marked_changing_threshold]=show_Differences_Magnitude(images_comparison_ref, images_comparison_changes);
