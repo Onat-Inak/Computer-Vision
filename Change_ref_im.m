@@ -3,8 +3,8 @@ function [trafos_new,imstruct_new]=Change_ref_im(trafos,im_struct,ind_old_ref,in
 %transformations. Please read the instruction.
 
 %inputs:
-    %trafos: transformation matrix
-    %im_struct: original images (not transformed images!!! Otherwise you would end up with nonsense (allready transformed))
+    %trafos: structure containing the transformation (just as usual)
+    %im_struct: original images (not reconstructed images!!! Otherwise you would end up with nonsense (allready transformed))
     %ind_old_ref: index of the old reference image
     %ind_new_ref: index of new reference image, this must be a linked image (i.e.: trafos{ind_old_ref,ind_new_ref} must contain a valid trafo)
     
@@ -20,8 +20,10 @@ function [trafos_new,imstruct_new]=Change_ref_im(trafos,im_struct,ind_old_ref,in
 %can be found in 'trafos'.
 
 if isstring(trafos{ind_old_ref,ind_new_ref}) %the caller tries to transfor ont a not linked reference image-> throw error
-    error('You are trying to convert to a not linked image, please consider using a different new reference image via ind_new_ref');
+    error('You are probably trying to convert to a not linked image, please consider using a different new reference image via ind_new_ref. If not successfull, also chech ind_old_ref.');
 end
+
+
 
 %initialize:
 trafos_new=cell(size(trafos));
@@ -29,8 +31,12 @@ imstruct_new=cell(size(im_struct));
 
 %for easier working: set element in trafos at position ind_old_ref to I (no
 %case destinction later)
+%trafos{ind_old_ref,ind_old_ref}=projective2d(eye(3));
+%no longer needed, as initialized as I before
 
-trafos{ind_old_ref,ind_old_ref}=projective2d(eye(3));
+if isempty(trafos{ind_old_ref,ind_new_ref})
+    error('Error due to empty field. ind_old_ref is probably wrong.');
+end
 
 
 %going over all images that could be linked:

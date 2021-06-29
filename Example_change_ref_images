@@ -1,0 +1,43 @@
+%This is exampel code on how to use the two functions
+%Just add this in main (at the end)
+%If questions arise, just ask me
+
+
+tic
+% determine old reference image in accordance with function Reconstruct_Images:
+ind_old_ref=ceil(length(Images)/2);
+
+%determine the index to be the first image which is possible to transform:
+for count=1:numel(Images)
+    if ~isempty(Images_reconstructed{count})
+        break;
+    end
+end
+ind_new_ref=count;
+
+%call the function to aligne all pictures w.r.t the first one
+[trafos_new,imstruct_new]=Change_ref_im(trafos,Images,ind_old_ref,ind_new_ref);
+
+%plotting for debugging:
+figure();
+a=numel(imstruct_new);
+b=ceil(sqrt(a));
+for i=1:a
+    subplot(b,b,i), imshow(imstruct_new{i});
+end
+title('Images aligned to the first linked image');
+
+
+
+%align two images w.r.t the first one:
+ind1=count+4;%count still is the index of the first image that can be transformed
+ind2=count+3;
+[I1,I2]=Align_2_images(trafos, Images, ind_old_ref, ind1, ind2);
+
+%plotting for debugging:
+figure
+subplot(1,2,1), imshow(I1);
+subplot(1,2,2), imshow(I2);
+title('Result Align 2 images');
+
+change_ref_im=toc
