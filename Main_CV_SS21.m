@@ -78,13 +78,13 @@ normalization_calc_duration=toc
 % % determine old reference image in accordance with function Reconstruct_Images:
 % ind_old_ref=ceil(length(Images)/2);
 % 
-% %determine the index to be the first image which is possible to transform:
+% % determine the index to be the first image which is possible to transform:
 % for count=1:numel(Images)
 %     if ~isempty(Images_reconstructed{count})
 %         break;
 %     end
 % end
-% ind_new_ref=count;
+% ind_new_ref = count;
 % 
 % %call the function to aligne all pictures w.r.t the first one
 % [trafos_new,Images_reconstructed]=Change_ref_im(trafos,Images,Image_ref_number,ind_new_ref);
@@ -120,10 +120,10 @@ normalization_calc_duration=toc
 %% 3.) Get Differences between the reconstructed Images
 
 % Create a class for the visualization of the image differences :
-VisualizationClass = Visualization(Images_reconstructed, Image_Names);
+VisualizationClass = Visualization(Images_reconstructed, Image_Names, trafos, Images, Image_ref_number);
 
 % Define the parameters :
-            num_visualization = 1;
+            num_visualization = 2;
             chosen_images = "all"; % "all" or [vector contains image_numbers]
             threshold_DM = 50; % threshold for the Difference Magnitude function
             comparison_rg_first_img = true; % compare all the images regarding the first image in a timelapse plot
@@ -131,8 +131,8 @@ VisualizationClass = Visualization(Images_reconstructed, Image_Names);
             pause_duration = 1.5; % duration/time-difference between two different plots
             num_superpixels = 3000; 
             th_SP = 1; % [0 - 1] threshold for surfaces
-            threshold_SP_big = 20 * th_SP; % threshold (in comparison to the most changed superpixel) in percent for seperating superpixels, which have more difference per pixel than the threshold value in comparison to the others for timelapse
-            threshold_SP_intermediate = 40 * th_SP;
+            threshold_SP_big = 30 * th_SP; % threshold (in comparison to the most changed superpixel) in percent for seperating superpixels, which have more difference per pixel than the threshold value in comparison to the others for timelapse
+            threshold_SP_intermediate = 50 * th_SP;
             threshold_SP_small = 70 * th_SP;
             plot_big_changes = true;
             plot_intermediate_changes = true;
@@ -156,12 +156,8 @@ VisualizationClass.define_parameters(...
         
 if VisualizationClass.num_visualization == 1
     VisualizationClass.apply_3_1();
-elseif VisualizationClass.num_visualization == 2
-    %     TO-DO ADAM :
-    %     VisualizationClass.apply_3_2();
-    disp('TO-DO ADAM : VisualizationClass.apply_3_2()');
 else
-    VisualizationClass.apply_3_3();
+    VisualizationClass.apply_3_2();
 end
 %% 4.)Nur nochmal eine temporäre spielerei, bei der für verschiedene Magnitudes die changes geplottet werden
 % Das ist nur zum ansehen, allerdings nicht relevant!

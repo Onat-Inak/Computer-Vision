@@ -6,10 +6,7 @@
 
 % 3.1 Apply Difference Magnitude for Threshold :
 
-% 3.2 Segmentation
-%%%%%%%%%%%%%%%%%% TO-DO for Adam
-
-% 3.3 : Apply Difference Magnitude function regarding superpixels in a
+% 3.2 : Apply Difference Magnitude function regarding superpixels in a
     % timelapse and differ big, intermediate and small changes from
     % eachother : - red : big changes 
     %             - blue : intermediate changes
@@ -53,9 +50,13 @@ classdef Visualization < handle
         years_new;
         months_new;
         superpixel_pos;
-        num_iterations_SP = 3;
+        num_iterations_SP = 5;
         seg_flag = 0;
         plot_images = 0;
+        trafos_new;
+        Images_new;
+        Image_ref_number_new;
+        ind_new_ref = 1;
     end
     
     % Properties that are specific for corresponding type of visualization
@@ -70,25 +71,37 @@ classdef Visualization < handle
     
     methods
         % Constructor / 3.0:
-        function obj = Visualization(Images_reconstructed, Image_Names)
+        function obj = Visualization(Images_reconstructed, Image_Names, trafos, Images, Image_ref_number)
             logic_vec = logical(zeros(1, length(Images_reconstructed)));
             years = zeros(1, length(Images_reconstructed));
             months = zeros(1, length(Images_reconstructed));
             iter = 1;
+            temp_ref = zeros(1, length(Images_reconstructed));
+            temp_ref(Image_ref_number) = 1;
             for i = 1 : length(Images_reconstructed)
                 year_month_temp = cell2mat(Image_Names(i));
                 years(i) = str2double(year_month_temp(1:4));
                 months(i) = str2double(year_month_temp(6:7));
                 if numel(Images_reconstructed{i}) == 0
                     logic_vec(i) = false;
+                    trafos(i,:) = [];
+                    trafos(:,i) = [];
                 else
                     logic_vec(i) = true;
                     obj.Images_reconstructed_new{iter} = Images_reconstructed{i};
+                    obj.Images_new{iter} = Images{i};
                     iter = iter + 1;
+                end
+            end
+            temp_ref = temp_ref(logic_vec);
+            for k = 1 : length(obj.Images_reconstructed_new)
+                if temp_ref(k) == 1
+                    obj.Image_ref_number_new = k;
                 end
             end
             obj.years_new = years(logic_vec);
             obj.months_new = months(logic_vec);
+            obj.trafos_new = trafos;
         end
     
         % Choose the images that you want to analyze/ visualize further :
@@ -126,7 +139,7 @@ classdef Visualization < handle
             parser = inputParser;
             
             % parameters, which are required everytime :
-            addOptional(parser, 'num_visualization', default_num_visualization, @(x) isnumeric(x) && (x > 0) && (x <= 3));
+            addOptional(parser, 'num_visualization', default_num_visualization, @(x) isnumeric(x) && (x > 0) && (x <= 2));
             addOptional(parser, 'chosen_images', default_chosen_images, @(x) (isnumeric(x) && all(x <= length(obj.Images_reconstructed_new)) && all(x > 0)) || (string(x) == "all"));
             addOptional(parser, 'threshold_DM', default_threshold_DM);
             addOptional(parser, 'comparison_rg_first_img', default_comparison_rg_first_img, @(x) islogical(x));
@@ -159,6 +172,103 @@ classdef Visualization < handle
             obj.plot_small_changes = parser.Results.plot_small_changes;
         end
         
+        % Aling_2_images function :
+        function [I1,I2] = Align_2_images(obj, ind1, ind2)
+            %tThis function transforms Image in2 into orientaton of Image ind 1
+            %The idea behind it is equivalently to Change_ref_im, now only with two images
+
+            %inputs:
+                %trafos_new: structure containing the transformation (just as usual)
+                %Images_new: original images (not reconstructed images!!! Otherwise you would end up with nonsense (allready transformed))
+                %Image_ref_number_new: index of the old reference image
+                %ind1: index of image to be aligned to
+                %ind2: index of image that has to be transformed
+
+            %outputs:
+                %I1: first image
+                %I2: second image aligned wrt first one
+
+            %easier debuging:
+            if isempty(obj.trafos_new{obj.Image_ref_number_new, ind1})
+                error('Error due to empty field. Image_ref_number_new is probably wrong.');
+            end
+
+            if isstring(obj.trafos_new{obj.Image_ref_number_new,ind1}) %the caller tries to transfor onto a not linked first image-> throw error
+                error('You are probably trying to convert to a not linked image 1, please consider using a different image 1 via ind1. If not successfull, also check Image_ref_number_new.');
+            end
+
+            if isstring(obj.trafos_new{obj.Image_ref_number_new,ind2}) %the caller tries to transfor from a not linked second image-> throw error
+                error('You are probably trying to convert a not linked image 2, please consider using a different image 2 via ind2. If not successfull, also check Image_ref_number_new.');
+            end
+
+            %actual function:
+
+            I1=obj.Images_new{ind1}; %no change necesaary
+            trafo=projective2d((obj.trafos_new{obj.Image_ref_number_new,ind2}.T)/(obj.trafos_new{obj.Image_ref_number_new,ind1}.T));
+            I2=apply_transformation(obj.Images_new{obj.Image_ref_number_new},obj.Images_new{ind2},trafo);
+
+        end
+            
+        % Change reference image for visualization purposes :
+        function Change_ref_im(obj)
+            %This function changes the referencimage and the aligned images as well as the necessary
+            %transformations. Please read the instruction.
+
+            %inputs:
+                %trafos_new: structure containing the transformation (just as usual)
+                %Images_new: original images (not reconstructed images!!! Otherwise you would end up with nonsense (allready transformed))
+                %Image_ref_number_new: index of the old reference image
+                %ind_new_ref: index of new reference image, this must be a linked image (i.e.: trafos{Image_ref_number_new,ind_new_ref} must contain a valid trafo)
+
+
+            %output:
+                %trafos_new: transformations to the orientation of the new reference image
+                %Images_reconstructed_new: transformed images wrt. the new reference image
+
+
+            %basic idea is using the chain of transformations: im1->im_ref_new =
+            %im1->im_ref_old->im_ref_new, whereas the last transformation is just the
+            %inverse transformation of im_ref_new->im_ref_old. These transformations
+            %can be found in 'trafos'.
+            
+            for count = 1 : numel(obj.Images_new)
+                if ~isempty(obj.Images_reconstructed_new{count})
+                    break;
+                end
+            end
+            obj.ind_new_ref = count;
+
+            
+            if isstring(obj.trafos_new{obj.Image_ref_number_new, obj.ind_new_ref}) %the caller tries to transfor ont a not linked reference image-> throw error
+                error('You are probably trying to convert to a not linked image, please consider using a different new reference image via ind_new_ref. If not successfull, also check Image_ref_number_new.');
+            end
+            
+            %initialize:
+            trafos_intern = cell(size(obj.trafos_new));
+            obj.Images_reconstructed_new=cell(size(obj.Images_new));
+
+            %for easier working: set element in trafos at position Image_ref_number_new to I (no
+            %case destinction later)
+            %trafos{Image_ref_number_new,Image_ref_number_new}=projective2d(eye(3));
+            %no longer needed, as initialized as I before
+            if isempty(obj.trafos_new{obj.Image_ref_number_new, obj.ind_new_ref})
+                error('Error due to empty field. Image_ref_number_new is probably wrong.');
+            end
+            
+            %going over all images that could be linked:
+            for i=1:numel(obj.Images_new)
+                if ~isstring(obj.trafos_new{obj.Image_ref_number_new,i}) %check if linked (otherwise it contains a string)
+                    %calculate new trafo over above described chain:
+                    trafos_intern{obj.ind_new_ref, i} = projective2d((obj.trafos_new{obj.Image_ref_number_new, i}.T)/(obj.trafos_new{obj.Image_ref_number_new, obj.ind_new_ref}.T));
+                    %apply trafo to image:
+                    obj.Images_reconstructed_new{i} = apply_transformation(obj.Images_new{obj.Image_ref_number_new}, obj.Images_new{i}, trafos_intern{obj.ind_new_ref, i});
+                else %no trafo was found bevor -> not possoble to link-> insert "not Working" with a capital 'W' to maintain original structure
+                    trafos_intern{obj.ind_new_ref,i} = 'not Working'; %emphasis on the capital 'W'
+                end
+            end
+        %Further explanation: https://www.youtube.com/watch?v=dQw4w9WgXcQ
+        end 
+        
         % 3.1 Apply Difference Magnitude for different Threshold values :
         function apply_3_1(obj)
             % Get treshold, segmentation flag (implements segmentation) from GUI
@@ -170,7 +280,7 @@ classdef Visualization < handle
                 for img_num = 1 : length(obj.Images_reconstructed_new) - 1
                     ref_image = obj.Images_reconstructed_new{img_num};
                     moving_image = obj.Images_reconstructed_new{img_num + 1};
-
+                    [ref_image, moving_image] = obj.Align_2_images(img_num, img_num + 1);
                     %Measure runtime and run difference calculation :
                     t_3_1 = tic;
                     [Image_Marked, ~] = Difference_Magnitude(ref_image, moving_image, obj.threshold_DM, obj.plot_images, obj.seg_flag);
@@ -179,7 +289,8 @@ classdef Visualization < handle
                     pause(obj.pause_duration);
                 end
             end
-            if obj.comparison_rg_first_img 
+            if obj.comparison_rg_first_img
+                obj.Change_ref_im();
                 for img_num = 2 : length(obj.Images_reconstructed_new)
                     ref_image = obj.Images_reconstructed_new{1};
                     moving_image = obj.Images_reconstructed_new{img_num};
@@ -197,22 +308,18 @@ classdef Visualization < handle
             hold off
         end
         
-        % 3.2 Apply 3.2
-        function apply_3_2(obj)
-            
-        end
-        
-        % 3.3 Apply Difference Magnitude function regarding superpixels in
+        % 3.2 Apply Difference Magnitude function regarding superpixels in
         % a timelapse :
-        function apply_3_3(obj)
+        function apply_3_2(obj)
             if obj.comparison_rg_prev_img
                 t_3_3 = tic;
                 figure();
                 hold on
                 for img_num = 1 : length(obj.Images_reconstructed_new) - 1
-                    [obj.superpixel_pos, N] = superpixels(obj.Images_reconstructed_new{img_num}, obj.num_superpixels, 'NumIterations', obj.num_iterations_SP);
                     ref_image = obj.Images_reconstructed_new{img_num};
                     moving_image = obj.Images_reconstructed_new{img_num + 1};
+                    [ref_image, moving_image] = obj.Align_2_images(img_num, img_num + 1);
+                    [obj.superpixel_pos, N] = superpixels(ref_image, obj.num_superpixels, 'NumIterations', obj.num_iterations_SP);
                     [~, Diff_Image_Threshold] = Difference_Magnitude(ref_image, moving_image, obj.threshold_DM, obj.plot_images, obj.seg_flag);
                     Diff_Image_Threshold(Diff_Image_Threshold > 0) = 1;
                     
@@ -284,27 +391,27 @@ classdef Visualization < handle
                     if ~obj.plot_big_changes && ~obj.plot_intermediate_changes && ~obj.plot_small_changes
                         error("Select at least one option : 1) big change 2) intermediate change 3) small change");
                     elseif obj.plot_big_changes && ~obj.plot_intermediate_changes && ~obj.plot_small_changes
-                        overlay = imoverlay(obj.Images_reconstructed_new{img_num}, region_mask_red, 'red');
+                        overlay = imoverlay(ref_image, region_mask_red, 'red');
                     elseif ~obj.plot_big_changes && obj.plot_intermediate_changes && ~obj.plot_small_changes
-                        overlay = imoverlay(obj.Images_reconstructed_new{img_num}, region_mask_blue, 'blue');
+                        overlay = imoverlay(ref_image, region_mask_blue, 'blue');
                     elseif ~obj.plot_big_changes && ~obj.plot_intermediate_changes && obj.plot_small_changes
-                        overlay = imoverlay(obj.Images_reconstructed_new{img_num}, region_mask_green, 'green');  
+                        overlay = imoverlay(ref_image, region_mask_green, 'green');  
                     elseif obj.plot_big_changes && obj.plot_intermediate_changes && ~obj.plot_small_changes
-                        overlay = imoverlay(obj.Images_reconstructed_new{img_num}, region_mask_red, 'red');
+                        overlay = imoverlay(ref_image, region_mask_red, 'red');
                         overlay = imoverlay(overlay, region_mask_blue, 'blue');
                     elseif obj.plot_big_changes && ~obj.plot_intermediate_changes && obj.plot_small_changes
-                        overlay = imoverlay(obj.Images_reconstructed_new{img_num}, region_mask_red, 'red');
+                        overlay = imoverlay(ref_image, region_mask_red, 'red');
                         overlay = imoverlay(overlay, region_mask_green, 'green');
                     elseif ~obj.plot_big_changes && obj.plot_intermediate_changes && obj.plot_small_changes
-                        overlay = imoverlay(obj.Images_reconstructed_new{img_num}, region_mask_blue, 'blue');
+                        overlay = imoverlay(ref_image, region_mask_blue, 'blue');
                         overlay = imoverlay(overlay, region_mask_green, 'green');
                     else
-                        overlay = imoverlay(obj.Images_reconstructed_new{img_num}, region_mask_red, 'red');
+                        overlay = imoverlay(ref_image, region_mask_red, 'red');
                         overlay = imoverlay(overlay, region_mask_blue, 'blue');
                         overlay = imoverlay(overlay, region_mask_green, 'green');
                     end
                     clf
-                    overlay(obj.Images_reconstructed_new{img_num} == 0) = 0;
+                    overlay(ref_image == 0) = 0;
                     % show the overlayed image without boundary mask :
                     imshow(overlay);
                     % show the overlayed image with boundary mask : 
@@ -315,6 +422,7 @@ classdef Visualization < handle
             end
         
             if obj.comparison_rg_first_img
+                obj.Change_ref_im();
                 t_3_3 = tic;
                 figure();
                 hold on
@@ -323,6 +431,9 @@ classdef Visualization < handle
                     ref_image = obj.Images_reconstructed_new{1};
                     moving_image = obj.Images_reconstructed_new{img_num};
                     [~, Diff_Image_Threshold] = Difference_Magnitude(ref_image, moving_image, obj.threshold_DM, obj.plot_images, obj.seg_flag);
+%                     boxKernel = ones(5,5); % Or whatever size window you want.
+%                     Diff_Image_Threshold = conv2(Diff_Image_Threshold, boxKernel, 'same');
+%                     size(Diff_Image_Threshold)
                     Diff_Image_Threshold(Diff_Image_Threshold > 0) = 1;
 
                     [m, n, ~] = size(obj.Images_reconstructed_new{1});
@@ -348,7 +459,7 @@ classdef Visualization < handle
                     
                     for sp = 1 : N
                         pos_sp_reg_img = (obj.superpixel_pos == sp);
-%                         if numel(Diff_Image_Threshold(pos_sp_reg_img)) < ((m * n) / N) * (25/100)
+%                         if numel(Diff_Image_Threshold(pos_sp_reg_img)) < ((m * n) / N) * (20/100)
 %                             break;
 %                         end
                         mean_change_in_sp = sum(Diff_Image_Threshold(pos_sp_reg_img), 'all') / numel(Diff_Image_Threshold(pos_sp_reg_img));
