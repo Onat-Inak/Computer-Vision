@@ -59,7 +59,6 @@ classdef Visualization < handle
     end
     
     % Properties that are specific for corresponding type of visualization
-    % :
     properties
         % parameters for 3.1 :
         duration_3_1 = [];
@@ -196,6 +195,11 @@ classdef Visualization < handle
             end
             obj.duration_3_1 = toc(t_3_1);
             hold off
+        end
+        
+        % 3.2 Apply 3.2
+        function apply_3_2(obj)
+            
         end
         
         % 3.3 Apply Difference Magnitude function regarding superpixels in
@@ -344,6 +348,9 @@ classdef Visualization < handle
                     
                     for sp = 1 : N
                         pos_sp_reg_img = (obj.superpixel_pos == sp);
+%                         if numel(Diff_Image_Threshold(pos_sp_reg_img)) < ((m * n) / N) * (25/100)
+%                             break;
+%                         end
                         mean_change_in_sp = sum(Diff_Image_Threshold(pos_sp_reg_img), 'all') / numel(Diff_Image_Threshold(pos_sp_reg_img));
                         if mean_change_in_sp > th_SP_big
                             logical_region_mask_big = logical_region_mask_big + pos_sp_reg_img;

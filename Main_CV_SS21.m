@@ -74,22 +74,66 @@ normalization_calc_duration=toc
 %%%%% ==> AB HIER ENDE MOE UND ROBERT UND START ONAT UND ADAM  <=== %%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% tic
+% % determine old reference image in accordance with function Reconstruct_Images:
+% ind_old_ref=ceil(length(Images)/2);
+% 
+% %determine the index to be the first image which is possible to transform:
+% for count=1:numel(Images)
+%     if ~isempty(Images_reconstructed{count})
+%         break;
+%     end
+% end
+% ind_new_ref=count;
+% 
+% %call the function to aligne all pictures w.r.t the first one
+% [trafos_new,Images_reconstructed]=Change_ref_im(trafos,Images,Image_ref_number,ind_new_ref);
+% 
+% %plotting for debugging:
+% % figure();
+% % a=numel(Images_reconstructed);
+% % b=ceil(sqrt(a));
+% % for i=1:a
+% %     subplot(b,b,i), imshow(Images_reconstructed{i});
+% % end
+% % title('Images aligned to the first linked image');
+% 
+% 
+% 
+% %align two images w.r.t the first one:
+% ind1=count+4;%count still is the index of the first image that can be transformed
+% ind2=count+3;
+% [I1,I2]=Align_2_images(trafos, Images, ind_old_ref, ind1, ind2);
+% 
+% %plotting for debugging:
+% % figure
+% % subplot(1,2,1), imshow(I1);
+% % subplot(1,2,2), imshow(I2);
+% % title('Result Align 2 images');
+% 
+% change_ref_im=toc
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% 3.) Get Differences between the reconstructed Images
 
 % Create a class for the visualization of the image differences :
 VisualizationClass = Visualization(Images_reconstructed, Image_Names);
 
 % Define the parameters :
-            num_visualization = 3;
+            num_visualization = 1;
             chosen_images = "all"; % "all" or [vector contains image_numbers]
             threshold_DM = 50; % threshold for the Difference Magnitude function
             comparison_rg_first_img = true; % compare all the images regarding the first image in a timelapse plot
-            comparison_rg_prev_img = false; % compare all the images regarding the previous image in a timelapse plot
+            comparison_rg_prev_img = ~comparison_rg_first_img; % compare all the images regarding the previous image in a timelapse plot
             pause_duration = 1.5; % duration/time-difference between two different plots
-            num_superpixels = 3000;
-            threshold_SP_big = 30; % threshold (in comparison to the most changed superpixel) in percent for seperating superpixels, which have more difference per pixel than the threshold value in comparison to the others for timelapse
-            threshold_SP_intermediate = 45;
-            threshold_SP_small = 60;
+            num_superpixels = 3000; 
+            th_SP = 1; % [0 - 1] threshold for surfaces
+            threshold_SP_big = 20 * th_SP; % threshold (in comparison to the most changed superpixel) in percent for seperating superpixels, which have more difference per pixel than the threshold value in comparison to the others for timelapse
+            threshold_SP_intermediate = 40 * th_SP;
+            threshold_SP_small = 70 * th_SP;
             plot_big_changes = true;
             plot_intermediate_changes = true;
             plot_small_changes = true;

@@ -7,7 +7,7 @@
 % 3.1 Apply Difference Magnitude for Threshold :
 
 % 3.2 Segmentation
-
+%%%%%%%%%%%%%%%%%% TO-DO for Adam
 
 % 3.3 : Apply Difference Magnitude function regarding superpixels in a
     % timelapse and differ big, intermediate and small changes from
@@ -29,22 +29,24 @@
 
 classdef Visualization < handle
    
+    % Properties that can be changed by the user/GUI :
     properties
-        num_visualization = 1;
-        chosen_images = "all";
-        threshold_DM = 50; % threshold for the Difference Magnitude function
-        comparison_rg_first_img = true; % compare all the images regarding the first image in a timelapse plot
-        comparison_rg_prev_img = false; % compare all the images regarding the previous image in a timelapse plot
-        pause_duration = 1.5; % duration/time-difference between two different plots
-        num_superpixels = 3000;
-        threshold_SP_big = 30; % threshold (in comparison to the most changed superpixel) in percent for seperating superpixels, which have more difference per pixel than the threshold value in comparison to the others for timelapse
-        threshold_SP_intermediate = 50;
-        threshold_SP_small = 70;
-        plot_big_changes = true;
-        plot_intermediate_changes = true;
-        plot_small_changes = true;
+        num_visualization
+        chosen_images
+        threshold_DM % threshold for the Difference Magnitude function
+        comparison_rg_first_img % compare all the images regarding the first image in a timelapse plot
+        comparison_rg_prev_img % compare all the images regarding the previous image in a timelapse plot
+        pause_duration % duration/time-difference between two different plots
+        num_superpixels
+        threshold_SP_big % threshold (in comparison to the most changed superpixel) in percent for seperating superpixels, which have more difference per pixel than the threshold value in comparison to the others for timelapse
+        threshold_SP_intermediate
+        threshold_SP_small
+        plot_big_changes
+        plot_intermediate_changes
+        plot_small_changes
     end
     
+    % Properties that cannot be changed by the user/GUI :
     properties
         plot_background_img = 1;
         Images_reconstructed_new;
@@ -52,13 +54,11 @@ classdef Visualization < handle
         months_new;
         superpixel_pos;
         num_iterations_SP = 3;
-    end
-    
-    properties
         seg_flag = 0;
         plot_images = 0;
     end
     
+    % Properties that are specific for corresponding type of visualization
     properties
         % parameters for 3.1 :
         duration_3_1 = [];
@@ -108,7 +108,7 @@ classdef Visualization < handle
         end
         
         % Define the parameters :
-        function define_parameters(obj, num_visualization, chosen_images, threshold_DM, comparison_rg_first_img, comparison_rg_prev_img, varargin)
+        function define_parameters(obj, varargin)
             default_num_visualization = 1;
             default_chosen_images = "all";
             default_threshold_DM = 50; % threshold for the Difference Magnitude function
@@ -126,13 +126,11 @@ classdef Visualization < handle
             parser = inputParser;
             
             % parameters, which are required everytime :
-            addRequired(parser, 'num_visualization', @(x) isnumeric(x) && (x > 0) && (x <= 3));
-            addRequired(parser, 'chosen_images', @(x) (isnumeric(x) && all(x < length(obj.Images_reconstructed_new)) && all(x > 0)) || (string(x) == "all"));
-            addRequired(parser, 'threshold_DM');
-            addRequired(parser, 'comparison_rg_first_img', @(x) islogical(x));
-            addRequired(parser, 'comparison_rg_prev_img', @(x) islogical(x));
-            
-            % parameters, which are optional :
+            addOptional(parser, 'num_visualization', default_num_visualization, @(x) isnumeric(x) && (x > 0) && (x <= 3));
+            addOptional(parser, 'chosen_images', default_chosen_images, @(x) (isnumeric(x) && all(x <= length(obj.Images_reconstructed_new)) && all(x > 0)) || (string(x) == "all"));
+            addOptional(parser, 'threshold_DM', default_threshold_DM);
+            addOptional(parser, 'comparison_rg_first_img', default_comparison_rg_first_img, @(x) islogical(x));
+            addOptional(parser, 'comparison_rg_prev_img', default_comparison_rg_prev_img, @(x) islogical(x));
             addOptional(parser, 'pause_duration', default_pause_duration, @(x) isnumeric(x) && (x > 0));
             addOptional(parser, 'num_superpixels', default_num_superpixels, @(x) isnumeric(x) && (x > 0));
             addOptional(parser, 'threshold_SP_big', default_threshold_SP_big, @(x) isnumeric(x) && (x > 0) && (x <= 100));
@@ -143,22 +141,22 @@ classdef Visualization < handle
             addOptional(parser, 'plot_small_changes', default_plot_small_changes, @(x) islogical(x));
             
             % parse the input variables with the defined parser object: 
-            parse(parser, num_visualization, chosen_images, threshold_DM, comparison_rg_first_img, comparison_rg_prev_img, varargin{:});
+            parse(parser, varargin{:});
             
             % define the variables in the Visualization Class :
-            num_visualization = 1;
-            chosen_images = "all";
-            threshold_DM = 50; % threshold for the Difference Magnitude function
-            comparison_rg_first_img = true; % compare all the images regarding the first image in a timelapse plot
-            comparison_rg_prev_img = false; % compare all the images regarding the previous image in a timelapse plot
-            pause_duration = 1.5; % duration/time-difference between two different plots
-            num_superpixels = 3000;
-            threshold_SP_big = 30; % threshold (in comparison to the most changed superpixel) in percent for seperating superpixels, which have more difference per pixel than the threshold value in comparison to the others for timelapse
-            threshold_SP_intermediate = 50;
-            threshold_SP_small = 70;
-            plot_big_changes = true;
-            plot_intermediate_changes = true;
-            plot_small_changes = true;
+            obj.num_visualization = parser.Results.num_visualization;
+            obj.choose_images(parser.Results.chosen_images);
+            obj.threshold_DM = parser.Results.threshold_DM; 
+            obj.comparison_rg_first_img = parser.Results.comparison_rg_first_img; 
+            obj.comparison_rg_prev_img = parser.Results.comparison_rg_prev_img; 
+            obj.pause_duration = parser.Results.pause_duration; 
+            obj.num_superpixels = parser.Results.num_superpixels;
+            obj.threshold_SP_big = parser.Results.threshold_SP_big; 
+            obj.threshold_SP_intermediate = parser.Results.threshold_SP_intermediate;
+            obj.threshold_SP_small = parser.Results.threshold_SP_small;
+            obj.plot_big_changes = parser.Results.plot_big_changes;
+            obj.plot_intermediate_changes = parser.Results.plot_intermediate_changes;
+            obj.plot_small_changes = parser.Results.plot_small_changes;
         end
         
         % 3.1 Apply Difference Magnitude for different Threshold values :
@@ -198,6 +196,9 @@ classdef Visualization < handle
             obj.duration_3_1 = toc(t_3_1);
             hold off
         end
+        
+        % 3.2 Apply 3.2
+        function apply
         
         % 3.3 Apply Difference Magnitude function regarding superpixels in
         % a timelapse :
