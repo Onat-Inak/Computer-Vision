@@ -89,14 +89,15 @@ if plot_Images
 end
 %% Mark changes bigger than threshold in reconstructed moving Image in Red
 %Mark changes in red channel of moving img
-Image_Marked=Image_move_cut;
+Image_Marked=Image_ref_cut;
 Image_Marked_red_channel=Image_Marked(:,:,1);
 Image_Marked_red_channel(Diff_image_threshold>0)=255;
 Image_Marked(:,:,1)=Image_Marked_red_channel;
 
 %Check for segmentation  
 if seg_flag
-    Image_Marked=Image_move_norm_seg;
+    %Image_Marked=Image_move_norm_seg;
+    Image_Marked=Image_ref_cut_seg;
     Image_Marked_red_channel=Image_Marked(:,:,1);
     Image_Marked_red_channel(Diff_image_threshold_seg>0)=255;
     Image_Marked(:,:,1)=Image_Marked_red_channel;
