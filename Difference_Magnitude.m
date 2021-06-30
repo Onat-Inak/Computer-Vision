@@ -1,7 +1,6 @@
 function [Image_Marked,Diff_image_threshold] = Difference_Magnitude(Image_ref,Image_move,change_threshold,plot_Images,seg_flag)
 % Moritz Schneider, Adam Misik, Onat Inak, Robert Jacumet
 % Computer Vision Project SS21, Group 30
-
 %% Get and show Boundaries of reconstructed Moving Image
 BW = im2uint8(rgb2gray(Image_move)); %Transform to Black&White
 [B,L,~,~] = bwboundaries(BW,'noholes');
@@ -89,7 +88,7 @@ if plot_Images
 end
 %% Mark changes bigger than threshold in reconstructed moving Image in Red
 %Mark changes in red channel of moving img
-Image_Marked=Image_ref_cut;
+Image_Marked=Image_ref;
 Image_Marked_red_channel=Image_Marked(:,:,1);
 Image_Marked_red_channel(Diff_image_threshold>0)=255;
 Image_Marked(:,:,1)=Image_Marked_red_channel;
