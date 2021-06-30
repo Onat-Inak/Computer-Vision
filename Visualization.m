@@ -286,6 +286,7 @@ classdef Visualization < handle
                     [Image_Marked, ~] = Difference_Magnitude(ref_image, moving_image, obj.threshold_DM, obj.plot_images, obj.seg_flag);
                     clf;
                     imshow(Image_Marked);
+                    imshowpair(Image_Marked, moving_image, 'montage')
                     pause(obj.pause_duration);
                 end
             end
@@ -300,7 +301,7 @@ classdef Visualization < handle
                     [Image_Marked, ~] = Difference_Magnitude(ref_image, moving_image, obj.threshold_DM, obj.plot_images, obj.seg_flag);
                     clf;
                     title('Changes between Images regarding to first Image');
-                    imshow(Image_Marked);
+                    imshowpair(Image_Marked, moving_image, 'montage')
                     pause(obj.pause_duration);
                 end 
             end
@@ -413,7 +414,8 @@ classdef Visualization < handle
                     clf
                     overlay(ref_image == 0) = 0;
                     % show the overlayed image without boundary mask :
-                    imshow(overlay);
+%                     imshow(overlay);
+                    imshowpair(overlay, moving_image, 'montage')
                     % show the overlayed image with boundary mask : 
     %                 imshow(imoverlay(overlay, BM, 'cyan'),'InitialMagnification',67);
                 end
@@ -516,7 +518,8 @@ classdef Visualization < handle
                     clf
                     overlay(obj.Images_reconstructed_new{obj.plot_background_img} == 0) = 0;
                     % show the overlayed image without boundary mask :
-                    imshow(overlay);
+%                     imshow(overlay);
+                    imshowpair(overlay, moving_image, 'montage')
                     % show the overlayed image with boundary mask : 
     %                 imshow(imoverlay(overlay, BM, 'cyan'),'InitialMagnification',67);
                 end
