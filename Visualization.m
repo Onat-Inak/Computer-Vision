@@ -1,28 +1,28 @@
+% Moritz Schneider, Adam Misik, Onat Inak, Robert Jacumet
+% Computer Vision Project SS21, Group 30
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% This is the Visualization Class. This class is used for visualization
+% purposes and it's methods for the GUI integration. 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 % 3. Display changes of n images in a timelapse or indivudual visualization
 
 % 3.0 Extract years and months from Image Names and save the results to the corresponding arrays:
-% Ignore the empty reconstructed images and save the new image cell to the variable 
-% Images_reconstructed_new:
+%     Ignore the empty reconstructed images and save the new image cell to the variable 
+%     Images_reconstructed_new:
 
 % 3.1 Apply Difference Magnitude for Threshold :
 
 % 3.2 : Apply Difference Magnitude function regarding superpixels in a
-    % timelapse and differ big, intermediate and small changes from
-    % eachother : - red : big changes 
-    %             - blue : intermediate changes
-    %             - green : small changes
+    %   timelapse and differ big, intermediate and small changes from
+    %   eachother : - red : big changes 
+    %               - blue : intermediate changes
+    %               - green : small changes
     
-
+% 3.3 Apply Difference Highlights function and determine the most
+%     changed pixels between chosen images :
         
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% You can see the results from indivudal segments stated above by changing
-% the logical values apply_x_y = true/false or comparison_rg_first_img_x_y = true/false
-% for example: 
-% apply_3_1 = false;
-% comparison_rg_first_img_3_1 = true;
-%
-% You can see all the adjustable parameters in Section 3.0 below :
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 classdef Visualization < handle
    
@@ -41,6 +41,7 @@ classdef Visualization < handle
         plot_big_changes
         plot_intermediate_changes
         plot_small_changes
+        top_percentage_threshold
     end
     
     % Properties that cannot be changed by the user/GUI :
@@ -135,11 +136,12 @@ classdef Visualization < handle
             default_plot_big_changes = true;
             default_plot_intermediate_changes = true;
             default_plot_small_changes = true;
+            default_top_percentage_threshold = 10;
             
             parser = inputParser;
             
             % parameters, which are required everytime :
-            addOptional(parser, 'num_visualization', default_num_visualization, @(x) isnumeric(x) && (x > 0) && (x <= 2));
+            addOptional(parser, 'num_visualization', default_num_visualization, @(x) isinteger(x) && (x > 0) && (x <= 3));
             addOptional(parser, 'chosen_images', default_chosen_images, @(x) (isnumeric(x) && all(x <= length(obj.Images_reconstructed_new)) && all(x > 0)) || (string(x) == "all"));
             addOptional(parser, 'threshold_DM', default_threshold_DM);
             addOptional(parser, 'comparison_rg_first_img', default_comparison_rg_first_img, @(x) islogical(x));
@@ -152,6 +154,7 @@ classdef Visualization < handle
             addOptional(parser, 'plot_big_changes', default_plot_big_changes, @(x) islogical(x));
             addOptional(parser, 'plot_intermediate_changes', default_plot_intermediate_changes, @(x) islogical(x));
             addOptional(parser, 'plot_small_changes', default_plot_small_changes, @(x) islogical(x));
+            addOptional(parser, 'top_percentage_threshold', default_top_percentage_threshold, @(x) isnumeric(x) && x <= 100 && x >= 0);
             
             % parse the input variables with the defined parser object: 
             parse(parser, varargin{:});
@@ -170,6 +173,7 @@ classdef Visualization < handle
             obj.plot_big_changes = parser.Results.plot_big_changes;
             obj.plot_intermediate_changes = parser.Results.plot_intermediate_changes;
             obj.plot_small_changes = parser.Results.plot_small_changes;
+            obj.top_percentage_threshold = parser.Results.top_percentage_threshold;
         end
         
         % Aling_2_images function :
@@ -527,6 +531,111 @@ classdef Visualization < handle
                 obj.duration_3_3 = toc(t_3_3);
             end
         end
+        
+        % 3.3 Apply Difference Highlights function and determine the most
+        % changed pixels between chosen images :
+        function apply_3_3(obj)
+                obj.ind_new_ref = 1;
+                obj.Change_ref_im();
+                Diff_image_acc = (zeros(size(obj.Images_reconstructed_new{1},[1,2])));
+                for i = 1 : length(obj.Images_reconstructed_new) - 1
+                    Image_ref = obj.Images_reconstructed_new{i};
+                    Image_move = obj.Images_reconstructed_new{i + 1};
+                    %% Get and show Boundaries of reconstructed Moving Image
+                    BW = im2uint8(rgb2gray(Image_move)); %Transform to Black&White
+                    [B, L, ~, ~] = bwboundaries(BW, 'noholes');
+                    if(size(B, 1) > 1)
+                        for n = 2 : length(B)
+                            L([B{n}(:, 1)],[B{n}(:, 2)]); %
+                        end
+                        B(2 : end) = []; %Set B to only have length 1 (main boundary)
+
+                    end
+                    % Showing the boundaries:
+                    if obj.plot_images
+                        figure(2), imshow(BW); title("Boundary at Moving Image"); hold on;
+                        for k=1:length(B)
+                          boundary = B{k};
+                          plot(boundary(:,2), boundary(:,1),'g','LineWidth',2);
+                        end
+                    end
+                    %% Cut Reference Image
+                    %Cut Reference Image
+                    Image_ref_cut=Image_ref.*uint8(L);
+
+                    %% Get and show Boundaries of cut reference Image
+                    BW_ref = im2uint8(rgb2gray(Image_ref_cut)); %Transform to Black&White
+                    [B,L_ref,~,~] = bwboundaries(BW_ref,'noholes');
+                    if(size(B,1)>1)
+                        for n=2:length(B)
+                            L_ref([B{n}(:,1)],[B{n}(:,2)]); %
+                        end
+                        B(2:end)=[]; %Set B to only have length 1 (main boundary)
+
+                    end
+                    % Showing the boundaries:
+                    if obj.plot_images
+                        figure(3), imshow(BW_ref); title("Boundary at Reference Image"); hold on;
+                        for k=1:length(B)
+                          boundary = B{k};
+                          plot(boundary(:,2), boundary(:,1),'g','LineWidth',2);
+                        end
+                    end
+                    %% Cut moving Image and normalize moving Image
+                    %Cut moving Image
+                    Image_move_cut=Image_move.*uint8(L_ref);
+                    Image_move_norm = histeq(Image_move_cut,imhist(Image_ref_cut));
+                     %Image_move_norm=Image_move_cut;
+
+                    if obj.plot_images
+                        figure(4)
+                            subplot(2,1,1)
+                            imshowpair(Image_ref_cut,Image_move,'montage'); title('Cut Reference Image vs Moving Image')
+
+                            subplot(2,1,2)
+                            imshowpair(Image_ref_cut,Image_move_norm,'montage'); title('Cut Reference Image vs Normalized Moving Image')
+
+                        figure(5),imshowpair(Image_ref_cut,Image_move_norm,'diff'); title("Difference Image between Reference and Moving Image")
+                    end
+
+                    %% Threshold on change
+                    %Calculate absolute pixel difference between reference and moving img
+                    Diff_image_iteration=imabsdiff(rgb2gray(Image_ref_cut),rgb2gray(Image_move_norm));
+
+                    Diff_image_acc=Diff_image_acc+im2double(Diff_image_iteration);
+                end
+                if obj.plot_images
+                figure(10)
+                imshow(Diff_image_acc);
+                end
+
+
+                [~,Indexes]=sort(Diff_image_acc(:),'ascend');
+                Diff_image_acc(Indexes(1:round(numel(Diff_image_acc)*(1 - obj.top_percentage_threshold/100))))=0;
+
+
+                if obj.plot_images
+                figure(11)
+                imshow(Diff_image_acc); title("Difference Image with threshold applied");
+                end
+
+
+                %% Mark changes bigger than threshold in reconstructed moving Image in Red
+                %Mark changes in red channel of moving img
+                Image_Highlights = obj.Images_reconstructed_new{1};
+                Image_Marked_red_channel=Image_Highlights(:,:,1);
+                Image_Marked_red_channel(Diff_image_acc>0)=255;
+                Image_Highlights(:,:,1)=Image_Marked_red_channel;
+
+
+
+                %Check for segmentation  
+                 if true
+                    figure(8)
+                    imshow(Image_Highlights);
+                    title(sprintf('Top %d %% most changed pixles highlighted in red ',obj.top_percentage_threshold));
+                 end
+        end %end of function
     end
 end
 

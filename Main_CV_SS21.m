@@ -22,7 +22,7 @@ tic
 
 % Loads Images into Cell array of Dimensions 1 x #ofImages, where each
 % entry is of the size the picture has in pixels, so  width x height
-Name_of_Image_Folder = 'Dubai';  %Select Images you want to work on
+Name_of_Image_Folder = 'Singapur';  %Select Images you want to work on
 
 
 Image_Names={dir(fullfile(Name_of_Image_Folder,'*_*.*')).name}; %cell array of all Image file names
@@ -123,10 +123,10 @@ normalization_calc_duration=toc
 VisualizationClass = Visualization(Images_reconstructed, Image_Names, trafos, Images, Image_ref_number);
 
 % Define the parameters :
-            num_visualization = 2;
+            num_visualization = int8(3);
             chosen_images = "all"; % "all" or [vector contains image_numbers]
             threshold_DM = 50; % threshold for the Difference Magnitude function
-            comparison_rg_first_img = true; % compare all the images regarding the first image in a timelapse plot
+            comparison_rg_first_img = false; % compare all the images regarding the first image in a timelapse plot
             comparison_rg_prev_img = ~comparison_rg_first_img; % compare all the images regarding the previous image in a timelapse plot
             pause_duration = 2.5; % duration/time-difference between two different plots
             num_superpixels = 3000; 
@@ -137,6 +137,7 @@ VisualizationClass = Visualization(Images_reconstructed, Image_Names, trafos, Im
             plot_big_changes = true;
             plot_intermediate_changes = true;
             plot_small_changes = true;
+            top_percentage_threshold = 5; % threshold for highlighting the most changed pixels in percentage
 
 VisualizationClass.define_parameters(...
             'num_visualization', num_visualization ,...
@@ -151,13 +152,16 @@ VisualizationClass.define_parameters(...
             'threshold_SP_small', threshold_SP_small ,...
             'plot_big_changes', plot_big_changes ,...
             'plot_intermediate_changes',  plot_intermediate_changes ,...
-            'plot_small_changes', plot_small_changes)
+            'plot_small_changes', plot_small_changes, ...
+            'top_percentage_threshold', top_percentage_threshold)
 
         
 if VisualizationClass.num_visualization == 1
     VisualizationClass.apply_3_1();
-else
+elseif VisualizationClass.num_visualization == 2
     VisualizationClass.apply_3_2();
+else
+    VisualizationClass.apply_3_3();
 end
 %% 4.)Nur nochmal eine temporäre spielerei, bei der für verschiedene Magnitudes die changes geplottet werden
 % Das ist nur zum ansehen, allerdings nicht relevant!
