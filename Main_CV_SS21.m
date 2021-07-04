@@ -123,8 +123,8 @@ normalization_calc_duration=toc
 VisualizationClass = Visualization(Images_reconstructed, Image_Names, trafos, Images, Image_ref_number);
 
 % Define the parameters :
-            num_visualization = int8(3);
-            chosen_images = "all"; % "all" or [vector contains image_numbers]
+            num_visualization = int8(2);
+            chosen_images = [1, 6]; % "all" or [vector contains image_numbers]
             threshold_DM = 50; % threshold for the Difference Magnitude function
             comparison_rg_first_img = false; % compare all the images regarding the first image in a timelapse plot
             comparison_rg_prev_img = ~comparison_rg_first_img; % compare all the images regarding the previous image in a timelapse plot
@@ -138,6 +138,7 @@ VisualizationClass = Visualization(Images_reconstructed, Image_Names, trafos, Im
             plot_intermediate_changes = true;
             plot_small_changes = true;
             top_percentage_threshold = 5; % threshold for highlighting the most changed pixels in percentage
+            threshold_l = 1;
 
 VisualizationClass.define_parameters(...
             'num_visualization', num_visualization ,...
@@ -153,7 +154,8 @@ VisualizationClass.define_parameters(...
             'plot_big_changes', plot_big_changes ,...
             'plot_intermediate_changes',  plot_intermediate_changes ,...
             'plot_small_changes', plot_small_changes, ...
-            'top_percentage_threshold', top_percentage_threshold)
+            'top_percentage_threshold', top_percentage_threshold,...
+            'threshold_l', threshold_l)
 
         
 if VisualizationClass.num_visualization == 1

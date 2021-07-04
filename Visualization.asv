@@ -156,7 +156,7 @@ classdef Visualization < handle
             addOptional(parser, 'plot_intermediate_changes', default_plot_intermediate_changes, @(x) islogical(x));
             addOptional(parser, 'plot_small_changes', default_plot_small_changes, @(x) islogical(x));
             addOptional(parser, 'top_percentage_threshold', default_top_percentage_threshold, @(x) isnumeric(x) && x <= 100 && x >= 0);
-            addOptional(parser, 'threshold_l', default_threshold_l, @(x) isnumeric(x) && x >= 1 && (mod(x / 2) ~= 0));
+            addOptional(parser, 'top_percentage_threshold', default_top_percentage_threshold, @(x) isnumeric(x) && x <= 100 && x >= 0);
             
             % parse the input variables with the defined parser object: 
             parse(parser, varargin{:});
