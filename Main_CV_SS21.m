@@ -123,7 +123,7 @@ normalization_calc_duration=toc
 VisualizationClass = Visualization(Images_reconstructed, Image_Names, trafos, Images, Image_ref_number);
 
 % Define the parameters :
-            num_visualization = int8(2);
+            num_visualization = int8(1);
             chosen_images = [1, 6]; % "all" or [vector contains image_numbers]
             threshold_DM = 50; % threshold for the Difference Magnitude function
             comparison_rg_first_img = false; % compare all the images regarding the first image in a timelapse plot

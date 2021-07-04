@@ -42,6 +42,7 @@ classdef Visualization < handle
         plot_intermediate_changes
         plot_small_changes
         top_percentage_threshold
+        threshold_l
     end
     
     % Properties that cannot be changed by the user/GUI :
@@ -156,7 +157,7 @@ classdef Visualization < handle
             addOptional(parser, 'plot_intermediate_changes', default_plot_intermediate_changes, @(x) islogical(x));
             addOptional(parser, 'plot_small_changes', default_plot_small_changes, @(x) islogical(x));
             addOptional(parser, 'top_percentage_threshold', default_top_percentage_threshold, @(x) isnumeric(x) && x <= 100 && x >= 0);
-            addOptional(parser, 'top_percentage_threshold', default_top_percentage_threshold, @(x) isnumeric(x) && x <= 100 && x >= 0);
+            addOptional(parser, 'threshold_l', default_threshold_l, @(x) isnumeric(x) && x >= 1 && (mod(x / 2) ~= 0));
             
             % parse the input variables with the defined parser object: 
             parse(parser, varargin{:});
@@ -176,6 +177,7 @@ classdef Visualization < handle
             obj.plot_intermediate_changes = parser.Results.plot_intermediate_changes;
             obj.plot_small_changes = parser.Results.plot_small_changes;
             obj.top_percentage_threshold = parser.Results.top_percentage_threshold;
+            obj.threshold_l = parser.Results
         end
         
         % Aling_2_images function :
