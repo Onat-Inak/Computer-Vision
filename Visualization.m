@@ -59,6 +59,10 @@ classdef Visualization < handle
         Images_new;
         Image_ref_number_new;
         ind_new_ref = 1;
+        moving_image
+        Image_Marked
+        Image_Highlights
+        Difference_Image_Highlight
     end
     
     % Properties that are specific for corresponding type of visualization
@@ -281,24 +285,20 @@ classdef Visualization < handle
         function apply_3_1(obj)
             % Get treshold, segmentation flag (implements segmentation) from GUI
             % and plot flag (plots each processing step)
-            figure();
             hold on
+            t_3_1 = tic;
             if obj.comparison_rg_prev_img
-                title('Changes between Images regarding to their Previous Images');
                 for img_num = 1 : length(obj.Images_reconstructed_new) - 1
                     ref_image = obj.Images_reconstructed_new{img_num};
-                    moving_image = obj.Images_reconstructed_new{img_num + 1};
+                    obj.moving_image = obj.Images_reconstructed_new{img_num + 1};
                     if ~isstring(obj.chosen_images)
-                        [ref_image, moving_image] = obj.Align_2_images(obj.chosen_images(1), obj.chosen_images(2));
+                        [ref_image, obj.moving_image] = obj.Align_2_images(obj.chosen_images(1), obj.chosen_images(2));
                     else
-                        [ref_image, moving_image] = obj.Align_2_images(img_num, img_num + 1);
+                        [ref_image, obj.moving_image] = obj.Align_2_images(img_num, img_num + 1);
                     end
                     %Measure runtime and run difference calculation :
-                    t_3_1 = tic;
-                    [Image_Marked, ~] = Difference_Magnitude(ref_image, moving_image, obj.threshold_DM, obj.plot_images, obj.seg_flag);
-                    clf;
-                    imshow(Image_Marked);
-                    imshowpair(Image_Marked, moving_image, 'montage')
+         
+                    [obj.Image_Marked, ~] = Difference_Magnitude(ref_image, obj.moving_image, obj.threshold_DM, obj.plot_images, obj.seg_flag,obj.threshold_l);
                     pause(obj.pause_duration);
                 end
             end
@@ -306,14 +306,12 @@ classdef Visualization < handle
                 obj.Change_ref_im();
                 for img_num = 2 : length(obj.Images_reconstructed_new)
                     ref_image = obj.Images_reconstructed_new{1};
-                    moving_image = obj.Images_reconstructed_new{img_num};
+                    obj.moving_image = obj.Images_reconstructed_new{img_num};
 
                     %Measure runtime and run difference calculation
                     t_3_1 = tic;
-                    [Image_Marked, ~] = Difference_Magnitude(ref_image, moving_image, obj.threshold_DM, obj.plot_images, obj.seg_flag);
+                    [obj.Image_Marked, ~] = Difference_Magnitude(ref_image, obj.moving_image, obj.threshold_DM, obj.plot_images, obj.seg_flag);
                     clf;
-                    title('Changes between Images regarding to first Image');
-                    imshowpair(Image_Marked, moving_image, 'montage')
                     pause(obj.pause_duration);
                 end 
             end
@@ -326,7 +324,7 @@ classdef Visualization < handle
         function apply_3_2(obj)
             if obj.comparison_rg_prev_img
                 t_3_3 = tic;
-                figure();
+                %figure();
                 hold on
                 for img_num = 1 : length(obj.Images_reconstructed_new) - 1
                     ref_image = obj.Images_reconstructed_new{img_num};
@@ -337,7 +335,7 @@ classdef Visualization < handle
                         [ref_image, moving_image] = obj.Align_2_images(img_num, img_num + 1);
                     end
                     [obj.superpixel_pos, N] = superpixels(moving_image, obj.num_superpixels, 'NumIterations', obj.num_iterations_SP);
-                    [~, Diff_Image_Threshold] = Difference_Magnitude(ref_image, moving_image, obj.threshold_DM, obj.plot_images, obj.seg_flag);
+                    [~, Diff_Image_Threshold] = Difference_Magnitude(ref_image, moving_image, obj.threshold_DM, obj.plot_images, obj.seg_flag,obj.threshold_l);
                     Diff_Image_Threshold(Diff_Image_Threshold > 0) = 1;
                     
                     [m, n, ~] = size(obj.Images_reconstructed_new{1});
@@ -430,8 +428,8 @@ classdef Visualization < handle
                     clf
                     overlay(ref_image == 0) = 0;
                     % show the overlayed image without boundary mask :
-%                     imshow(overlay);
-                    imshowpair(overlay, moving_image, 'montage')
+%                    imshow(overlay);
+                    %imshowpair(overlay, moving_image, 'montage')
                     % show the overlayed image with boundary mask : 
     %                 imshow(imoverlay(overlay, BM, 'cyan'),'InitialMagnification',67);
                 end
@@ -448,7 +446,7 @@ classdef Visualization < handle
                     [obj.superpixel_pos, N] = superpixels(obj.Images_reconstructed_new{img_num}, obj.num_superpixels, 'NumIterations', obj.num_iterations_SP);
                     ref_image = obj.Images_reconstructed_new{1};
                     moving_image = obj.Images_reconstructed_new{img_num};
-                    [~, Diff_Image_Threshold] = Difference_Magnitude(ref_image, moving_image, obj.threshold_DM, obj.plot_images, obj.seg_flag);
+                    [~, Diff_Image_Threshold] = Difference_Magnitude(ref_image, moving_image, obj.threshold_DM, obj.plot_images, obj.seg_flag,obj.threshold_l);
 %                     boxKernel = ones(5,5); % Or whatever size window you want.
 %                     Diff_Image_Threshold = conv2(Diff_Image_Threshold, boxKernel, 'same');
 %                     size(Diff_Image_Threshold)
@@ -638,15 +636,14 @@ classdef Visualization < handle
                 Image_Marked_red_channel=Image_Highlights(:,:,1);
                 Image_Marked_red_channel(Diff_image_acc>0)=255;
                 Image_Highlights(:,:,1)=Image_Marked_red_channel;
-
-
+                obj.Difference_Image_Highlight = Diff_image_acc;
 
                 %Check for segmentation  
-                 if true
-                    figure(8)
-                    imshow(Image_Highlights);
-                    title(sprintf('Top %d %% most changed pixles highlighted in red ',obj.top_percentage_threshold));
-                 end
+%                  if true
+%                     figure(8)
+%                     imshow(Image_Highlights);
+%                     title(sprintf('Top %d %% most changed pixles highlighted in red ',obj.top_percentage_threshold));
+%                  end
         end %end of function
     end
 end

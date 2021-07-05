@@ -18,12 +18,13 @@ classdef CV_GUI < handle
     LandButton
     SeaButton
     CityButton
+    SpecialLandscapeButton
     RunButton1
     hp4
     IntensitySlider
     IntensitySliderTitle
-    SeparationSlider
-    SeparationSliderTitle
+    AreaSlider
+    AreaSliderTitle
     SpeedSlider
     SpeedSliderTitle
     DisplayButtons
@@ -36,9 +37,13 @@ classdef CV_GUI < handle
     ModeButton4
     ParameterButtons
     RunButton2
+    RunButton3
     hp5
     folderName
     fileNames
+    fileNames_new
+    fileNames_processed1
+    fileNames_processed2
     filename
     img
     Seg_Class
@@ -46,10 +51,15 @@ classdef CV_GUI < handle
     Images
     Images_reconstructed
     Images_reconstructed_processed
+    chosen_images
+    RefDropDown
+    MovingDropDown
     trafos
     Image_ref_number
     seg_mask
-    Listener
+    Seg_Flag
+    FullScreenButton
+    Image_Highlights
     end 
     properties (Access = public, SetObservable, AbortSet)
         %Initialize class handle for data
@@ -121,9 +131,9 @@ methods (Access = public)
                       'Parent', obj.hp2,'Visible','Off');
                   
         obj.DropdownFolder = uicontrol('Style','popupmenu',...
-                                        'String','Empty',...
+                                        'String','Select image to be visualized',...
                                         'Units','normalized',...
-                                        'Position',[0.05 0.01 0.2 0.9],...
+                                        'Position',[0.05 0.3 0.2 0.3],...
                                         'BackgroundColor','white','Parent',obj.hp2,'Callback',@obj.view_img);
                                     
         obj.hp3 = uipanel('Position', [0.5 0.5 0.45 0.25],...
@@ -162,6 +172,11 @@ methods (Access = public)
                     'Units','normalized',...
                     'Position',[0.05 0.5 0.4 0.1],'Parent', obj.hp3);
                 
+        obj.SpecialLandscapeButton = uicontrol('Style','checkbox',...
+                    'String','Special Landscapes',...
+                    'Units','normalized',...
+                    'Position',[0.05 0.4 0.4 0.1],'Parent', obj.hp3);
+                
         obj.RunButton1 = uicontrol('Style', 'pushbutton',...
                 'String', 'Run Segmentation',...
                 'Units', 'normalized',...
@@ -171,12 +186,12 @@ methods (Access = public)
                 'ForeGroundColor','#FFFFFF',...
                'BackgroundColor','#0072BD','Callback',@obj.segment); 
            
-         obj.hp4 =  uipanel('Position', [0.05 0.1 0.45 0.4],...
+         obj.hp4 =  uipanel('Position', [0.05 0.1 0.55 0.4],...
                         'Title', 'Parametrization',...
                        'Parent',obj.gui_fig);    
          %Add Radio button group for signal magnitude setting
         obj.DisplayButtons = uibuttongroup('Units','normalized',...
-            'Position',[0.05 0.15 0.4 0.8],'Title','Select visualization mode','Parent',obj.hp4);
+            'Position',[0.05 0.05 0.4 0.9],'Title','Select visualization mode','Parent',obj.hp4);
         
         %Add Radio button 1 for raw data selection
         obj.ModeButton1 = uicontrol('Style','radiobutton',...
@@ -199,54 +214,78 @@ methods (Access = public)
             'String','Two image comparison',...
             'Position',[0.1 0.2 0.6 0.15],'Parent',obj.DisplayButtons);
         
+        obj.RunButton2 = uicontrol('Style', 'pushbutton',...
+                'String', 'Confirm mode',...
+                'Units', 'normalized',...
+                'Position', [0.3 0.01 0.4 0.1],...
+                'Parent', obj.DisplayButtons,...
+                'FontWeight','bold',... 
+                'ForeGroundColor','#FFFFFF',...
+               'BackgroundColor','#0072BD','Callback',@obj.setParamPanel);
+        
+        
         obj.ParameterButtons = uibuttongroup('Units','normalized',...
-            'Position',[0.55 0.15 0.4 0.8],'Title','Set visualization parameters','Parent',obj.hp4);
+            'Position',[0.45 0.05 0.5 0.9],'Title','Set visualization parameters','Parent',obj.hp4,'Visible','Off');
         
         obj.IntensitySliderTitle = uicontrol('Style','text',...
                         'String','Difference intensity',...
                         'Units','normalized',...
-                        'Position',[0.05 0.85 0.4 0.1],...
+                        'Position',[0.3 0.82 0.4 0.1],...
                         'Parent',obj.ParameterButtons,'Visible','On');
                     
          obj.IntensitySlider  =  uicontrol('Style','slider',...
                                 'min',0,...
-                                'max',120,...
-                                'SliderStep',[0.1 0.1],...
-                                'Value',60,...
+                                'max',100,...
+                                'SliderStep',[0.05 0.05],...
+                                'Value',50,...
                                 'Units','normalized',...
-                                'Position',[0.6 0.9 0.3 0.05],'Parent',obj.ParameterButtons);
+                                'Position',[0.25 0.8 0.5 0.05],'Parent',obj.ParameterButtons);
                             
-        obj.SeparationSliderTitle = uicontrol('Style','text',...
-                        'String','Difference separation',...
+        obj.AreaSliderTitle = uicontrol('Style','text',...
+                        'String','Difference area',...
                         'Units','normalized',...
-                        'Position',[0.05 0.65 0.4 0.1],...
+                        'Position',[0.3 0.67 0.4 0.1],...
                         'Parent',obj.ParameterButtons,'Visible','On');
                     
-         obj.SeparationSlider =      uicontrol('Style','slider',...
-                                'min',0,...
-                                'max',1,...
+         obj.AreaSlider =      uicontrol('Style','slider',...
+                                'min',1,...
+                                'max',20,...
                                 'SliderStep',[0.1 0.1],...
-                                'Value',0.5,...
+                                'Value',11,...
                                 'Units','normalized',...
-                                'Position',[0.6 0.7 0.3 0.05],'Parent',obj.ParameterButtons);
+                                'Position',[0.25 0.65 0.5 0.05],'Parent',obj.ParameterButtons);
                             
         obj.SpeedSliderTitle = uicontrol('Style','text',...
                         'String','Timelapse speed',...
                         'Units','normalized',...
-                        'Position',[0.05 0.45 0.4 0.1],...
+                        'Position',[0.3 0.52 0.4 0.1],...
                         'Parent',obj.ParameterButtons,'Visible','On'); 
                     
         obj.SpeedSlider =      uicontrol('Style','slider',...
                                 'min',0,...
                                 'max',3,...
                                 'SliderStep',[0.5 0.5],...
+                                'Tooltip','Set speed of the time lapse, from slow (left) to fast (right)',...
                                 'Value',1.5,...
                                 'Units','normalized',...
-                                'Position',[0.6 0.5 0.3 0.05],'Parent',obj.ParameterButtons);
+                                'Selected','On',...
+                                'Position',[0.25 0.5 0.5 0.05],'Parent',obj.ParameterButtons);
+                            
+        obj.RefDropDown = uicontrol('Style','popupmenu',...
+                                        'String','Select Reference Image',...
+                                        'Units','normalized',...
+                                        'Position',[0.25 0.5 0.5 0.05],...
+                                        'BackgroundColor','white','Parent',obj.ParameterButtons,'Visible','On');
+                                    
+        obj.MovingDropDown = uicontrol('Style','popupmenu',...
+                                        'String','Select Comparison Image',...
+                                        'Units','normalized',...
+                                        'Position',[0.25 0.3 0.5 0.05],...
+                                        'BackgroundColor','white','Parent',obj.ParameterButtons,'Visible','On');     
    
         obj.DisplayButton1 = uicontrol('Style','checkbox',...
             'Units','normalized',...
-            'String','Mark small changes (red)',...
+            'String','Mark big changes (red)',...
             'Position',[0.05 0.3 0.7 0.1],'Parent',obj.ParameterButtons);
        
         obj.DisplayButton2 = uicontrol('Style','checkbox',...
@@ -256,25 +295,34 @@ methods (Access = public)
         
         obj.DisplayButton3 = uicontrol('Style','checkbox',...
             'Units','normalized',...
-            'String','Mark large changes (green)',...
+            'String','Mark small changes (green)',...
             'Position',[0.05 0.1 0.7 0.1],'Parent',obj.ParameterButtons);
         
-        obj.RunButton2 = uicontrol('Style', 'pushbutton',...
+        obj.RunButton3 = uicontrol('Style', 'pushbutton',...
                 'String', 'Run',...
                 'Units', 'normalized',...
                 'Position', [0.3 0.01 0.4 0.1],...
-                'parent', obj.hp4,...
                 'FontWeight','bold',... 
                 'ForeGroundColor','#FFFFFF',...
-               'BackgroundColor','#0072BD','Callback',@obj.visualizationCaller);
+                'Parent',obj.ParameterButtons,...
+                'BackgroundColor','#0072BD','Callback',@obj.visualizationCaller);
            
-       obj.hp5 =  uipanel('Position', [0.5 0.1 0.45 0.4],...
+       obj.hp5 =  uipanel('Position', [0.6 0.1 0.35 0.4],...
                         'Title', 'Difference Visualization',...
                        'Parent',obj.gui_fig);
                    
        obj.DifferenceImg = uiaxes('Units', 'normalized',...
-                      'Position', [0.3 0.01 0.45 0.9],...
-                      'Parent', obj.hp5,'Visible','On');     
+                      'Position', [0.2 0.1 0.45 0.9],...
+                      'Parent', obj.hp5,'Visible','On');
+                  
+       obj.FullScreenButton = uicontrol('Style', 'pushbutton',...
+                'String', 'Show Fullscreen',...
+                'Units', 'normalized',...
+                'Position', [0.3 0.05 0.4 0.1],...
+                'Parent', obj.hp5,...
+                'FontWeight','bold',... 
+                'ForeGroundColor','#FFFFFF',...
+                'BackgroundColor','#0072BD','Callback',@obj.fullscreenShow);
     end                     
     function folderImport(obj,~,~)
             obj.folderName = uigetdir();
@@ -290,8 +338,11 @@ methods (Access = public)
             obj.Visualization_Class = Visualization(obj.Images_reconstructed, obj.fileNames, obj.trafos, obj.Images, obj.Image_ref_number);
             obj.Images_reconstructed_processed = obj.Visualization_Class.Images_reconstructed_new;
             close(f)
-            f2 = msgbox("Images loaded!");         
-            obj.DropdownFolder.String = obj.fileNames;
+            f2 = msgbox("Images loaded!");
+            obj.fileNames_new = cell(1,size(obj.fileNames,2)+1);
+            obj.fileNames_new{1} = obj.DropdownFolder.String;
+            obj.fileNames_new(2:end) = obj.fileNames;
+            obj.DropdownFolder.String = obj.fileNames_new;
             imshow(obj.Images{1},'Parent',obj.ImageGraph);
             obj.filename = replace(obj.fileNames{1},'_','-');
             title(obj.filename(1:end-4),'Parent',obj.ImageGraph);
@@ -299,10 +350,20 @@ methods (Access = public)
             %sgtitle(sprintf('Showing images for: %s', folderName{end}))
             obj.GraphTitle.String = "Showing images for " + folderName{end};
             obj.GraphTitle.Visible = 'On';
+            obj.RefDropDown.Visible = 'On';
+            obj.MovingDropDown.Visible = 'On';
+            obj.fileNames_processed1 = cell(1,size(obj.fileNames,2)+1);
+            obj.fileNames_processed1{1} = obj.RefDropDown.String;
+            obj.fileNames_processed1(2:end) = obj.fileNames;
+            obj.RefDropDown.String = obj.fileNames_processed1;
+            obj.fileNames_processed2 = cell(1,size(obj.fileNames,2)+1);
+            obj.fileNames_processed2{1} = obj.MovingDropDown.String;
+            obj.fileNames_processed2(2:end) = obj.fileNames;
+            obj.MovingDropDown.String = obj.fileNames_processed2;
     end
 
     function view_img(obj, ~, ~)
-        obj.filename = obj.fileNames{get(obj.DropdownFolder,'Value')};
+        obj.filename = obj.fileNames{get(obj.DropdownFolder,'Value')-1};
         obj.img = imread(fullfile(obj.folderName,obj.filename));  
         obj.filename = replace(obj.filename,'_','-');
         imshow(obj.img,'Parent',obj.ImageGraph);
@@ -310,6 +371,19 @@ methods (Access = public)
         folderName = split(obj.folderName,"/");
         obj.GraphTitle.String = "Showing images for " + folderName{end};
         obj.GraphTitle.Visible = 'On';
+    end
+    function fullscreenShow(obj, ~, ~)
+        figure()
+        if ~isempty(obj.Image_Highlights)
+            imshow(obj.Image_Highlights);
+            top_percentage_threshold = obj.Visualization_Class.top_percentage_threshold;
+            title(sprintf('Top %d %% most changed pixels highlighted in red ',top_percentage_threshold));
+            set(gcf, 'Position', get(0, 'Screensize'));
+        else
+            imshowpair(obj.Visualization_Class.Image_Marked,obj.Visualization_Class.moving_image,'montage')
+            title(sprintf('Showing image comparison'));
+            set(gcf, 'Position', get(0, 'Screensize'));
+        end
     end
     
     function segment(obj,~,~)
@@ -320,6 +394,7 @@ methods (Access = public)
         clear obj.seg_mask
         obj.Seg_Class = Segmentation()
         clf(obj.SegImgGraph)
+        obj.Seg_Flag = 1;
         for i=1:length(obj.Images_reconstructed_processed)
             obj.Seg_Class.img = obj.Images{i};
             if logical(get(obj.LandButton, 'Value')) && logical(get(obj.SeaButton, 'Value')) && logical(get(obj.CityButton, 'Value')) || logical(get(obj.AllRegionsButton, 'Value'))
@@ -344,8 +419,8 @@ methods (Access = public)
                     obj.SegGraphTitle.Visible = "On";
                     imshow(obj.Images{i},'Parent',obj.ImageGraph);
                 else 
-                    obj.Seg_Class.cluster_label(obj.Seg_Class.cluster_label == 1) = 0;
-                    obj.Seg_Class.cluster_label(obj.Seg_Class.cluster_label == 2) = 1;
+                    obj.Seg_Class.cluster_label(obj.Seg_Class.cluster_label == 2) = 0;
+                    obj.Seg_Class.cluster_label(obj.Seg_Class.cluster_label == 1) = 1;
                     obj.seg_mask{i} = obj.Seg_Class.cluster_label;
                     %obj.Seg_Class.img = bsxfun(@times, obj.Seg_Class.img, cast(obj.seg_mask{i}, 'like', obj.Seg_Class.img));
                     imshow(labeloverlay(obj.Seg_Class.img,obj.Seg_Class.cluster_label),'Parent',obj.SegImgGraph);
@@ -387,6 +462,38 @@ methods (Access = public)
                     obj.SegGraphTitle.Visible = "On"; 
                     imshow(obj.Images{i},'Parent',obj.ImageGraph); 
                 end
+            elseif logical(get(obj.SpecialLandscapeButton, 'Value'))
+                obj.Seg_Class.k = 3;
+                obj.Seg_Class.segment_kmeans() 
+                if logical(get(obj.SpecialLandscapeButton, 'Value')) && ~logical(get(obj.SeaButton, 'Value'))  && ~logical(get(obj.LandButton, 'Value'))
+                    obj.Seg_Class.cluster_label(obj.Seg_Class.cluster_label == 1) = 0;
+                    obj.Seg_Class.cluster_label(obj.Seg_Class.cluster_label == 2) =  0;
+                    obj.Seg_Class.cluster_label(obj.Seg_Class.cluster_label == 3) = 1;
+                    obj.seg_mask{i} = obj.Seg_Class.cluster_label;
+                    %obj.Seg_Class.img = bsxfun(@times, obj.Seg_Class.img, cast(obj.seg_mask{i}, 'like', obj.Seg_Class.img));
+                    imshow(labeloverlay(obj.Seg_Class.img,obj.Seg_Class.cluster_label),'Parent',obj.SegImgGraph);
+                    obj.SegGraphTitle.String = "Example segmentation (regions highlighted)";
+                    obj.SegGraphTitle.Visible = "On"; 
+                    imshow(obj.Images{i},'Parent',obj.ImageGraph);
+                elseif logical(get(obj.SpecialLandscapeButton, 'Value')) && logical(get(obj.SeaButton, 'Value')) && ~logical(get(obj.LandButton, 'Value'))
+                    obj.Seg_Class.cluster_label(obj.Seg_Class.cluster_label == 2) =  0;
+                    obj.Seg_Class.cluster_label(obj.Seg_Class.cluster_label == 1) =  1;
+                    obj.Seg_Class.cluster_label(obj.Seg_Class.cluster_label == 3) = 1;
+                    obj.seg_mask{i} = obj.Seg_Class.cluster_label;
+                    imshow(labeloverlay(obj.Seg_Class.img,obj.Seg_Class.cluster_label),'Parent',obj.SegImgGraph);
+                    obj.SegGraphTitle.String = "Example segmentation (regions highlighted)";
+                    obj.SegGraphTitle.Visible = "On"; 
+                    imshow(obj.Images{i},'Parent',obj.ImageGraph);
+                elseif logical(get(obj.SpecialLandscapeButton, 'Value')) && ~logical(get(obj.SeaButton, 'Value')) && logical(get(obj.LandButton, 'Value'))
+                    obj.Seg_Class.cluster_label(obj.Seg_Class.cluster_label == 1) = 0;
+                    obj.Seg_Class.cluster_label(obj.Seg_Class.cluster_label == 2) =  1;
+                    obj.Seg_Class.cluster_label(obj.Seg_Class.cluster_label == 3) =  1;
+                    obj.seg_mask{i} = obj.Seg_Class.cluster_label;
+                    imshow(labeloverlay(obj.Seg_Class.img,obj.Seg_Class.cluster_label),'Parent',obj.SegImgGraph);
+                    obj.SegGraphTitle.String = "Example segmentation (regions highlighted)";
+                    obj.SegGraphTitle.Visible = "On"; 
+                    imshow(obj.Images{i},'Parent',obj.ImageGraph); 
+                end   
             end
         end
         close(f3)
@@ -397,6 +504,64 @@ methods (Access = public)
         set(obj.SeaButton, 'Value',1)
         set(obj.CityButton, 'Value',1)
     end
+    function setParamPanel(obj, ~, ~)
+        if get(obj.ModeButton1, 'Value')
+            obj.RefDropDown.Visible = 'Off';
+            obj.MovingDropDown.Visible = 'Off';
+            obj.AreaSlider.Visible = 'On';
+            obj.SpeedSliderTitle.Visible = 'On';
+            obj.SpeedSlider.Visible = 'On';
+            obj.SpeedSliderTitle.Visible = 'On';
+            obj.DisplayButton1.Visible = 'On';
+            obj.DisplayButton2.Visible = 'On';
+            obj.DisplayButton3.Visible = 'On';
+            obj.IntensitySliderTitle.String = "Difference intensity";
+            obj.RunButton3.Visible = "On";
+            obj.ParameterButtons.Visible = 'On';
+        elseif get(obj.ModeButton2, 'Value')
+            obj.RefDropDown.Visible = 'Off';
+            obj.MovingDropDown.Visible = 'Off';
+            obj.AreaSlider.Visible = 'On';
+            obj.SpeedSliderTitle.Visible = 'On';
+            obj.SpeedSlider.Visible = 'On';
+            obj.SpeedSliderTitle.Visible = 'On';
+            obj.DisplayButton1.Visible = 'On';
+            obj.DisplayButton2.Visible = 'On';
+            obj.DisplayButton3.Visible = 'On';
+            obj.IntensitySliderTitle.String = "Difference intensity";
+            obj.RunButton3.Visible = "On";
+            obj.ParameterButtons.Visible = 'On';
+        elseif get(obj.ModeButton3, 'Value')
+            obj.RefDropDown.Visible = 'Off';
+            obj.MovingDropDown.Visible = 'Off';
+            obj.AreaSlider.Visible = 'Off';
+            obj.AreaSliderTitle.Visible = 'Off';
+            obj.SpeedSliderTitle.Visible = 'Off';
+            obj.SpeedSlider.Visible = 'Off';
+            obj.SpeedSliderTitle.Visible = 'Off';
+            obj.DisplayButton1.Visible = 'Off';
+            obj.DisplayButton2.Visible = 'Off';
+            obj.DisplayButton3.Visible = 'Off';
+            obj.IntensitySliderTitle.String = "Percent of top changes";
+            obj.RunButton3.Visible = "On";
+            obj.ParameterButtons.Visible = 'On';          
+        elseif get(obj.ModeButton4, 'Value')
+            obj.RefDropDown.Visible = 'On';
+            obj.MovingDropDown.Visible = 'On'; 
+            obj.IntensitySliderTitle.String = "Difference intensity";
+            obj.AreaSlider.Visible = 'On';
+            obj.SpeedSliderTitle.Visible = 'On';
+            obj.AreaSliderTitle.String = "Difference area";
+            obj.AreaSliderTitle.String = "On";
+            obj.SpeedSlider.Visible = 'Off';
+            obj.SpeedSliderTitle.Visible = 'Off';
+            obj.DisplayButton1.Visible = 'Off';
+            obj.DisplayButton2.Visible = 'Off';
+            obj.DisplayButton3.Visible = 'Off';
+            obj.RunButton3.Visible = "On";
+            obj.ParameterButtons.Visible = 'On'; 
+        end
+    end 
     function callReconstructImgs(obj, ~, ~)
             obj.reconstructImages(obj.Images);
     end
@@ -519,23 +684,20 @@ methods (Access = public)
     function visualizationCaller(obj,~,~)
         % Create a class for the visualization of the image differences :
         obj.Visualization_Class = Visualization(obj.Images_reconstructed, obj.fileNames, obj.trafos, obj.Images, obj.Image_ref_number);
-        obj.Listener = addlistener(obj, 'DifferenceImg', 'PostSet', @obj.Visualization_Class.apply_3_2);
-
-        % Define the parameters :
-        
+        % Define the parameters :       
         threshold_DM = get(obj.IntensitySlider,'Value'); % threshold for the Difference Magnitude function
         %comparison_rg_first_img = true; % compare all the images regarding the first image in a timelapse plot
         %comparison_rg_prev_img = ~comparison_rg_first_img; % compare all the images regarding the previous image in a timelapse plot
         pause_duration = get(obj.SpeedSlider,'Value'); % duration/time-difference between two different plots
-        num_superpixels = 3000; 
-        th_SP = get(obj.SeparationSlider,'Value'); % [0 - 1] threshold for surfaces
-        threshold_SP_big = 30 * th_SP; % threshold (in comparison to the most changed superpixel) in percent for seperating superpixels, which have more difference per pixel than the threshold value in comparison to the others for timelapse
-        threshold_SP_intermediate = 50 * th_SP;
-        threshold_SP_small = 70 * th_SP;
+        num_superpixels = 1000; 
+        threshold_SP_big = 30; % threshold (in comparison to the most changed superpixel) in percent for seperating superpixels, which have more difference per pixel than the threshold value in comparison to the others for timelapse
+        threshold_SP_intermediate = 50;
+        threshold_SP_small = 70;
         plot_big_changes = logical(get(obj.DisplayButton1, 'Value'));
         plot_intermediate_changes = logical(get(obj.DisplayButton2, 'Value'));
         plot_small_changes = logical(get(obj.DisplayButton3, 'Value'));
         top_percentage_threshold = threshold_DM;
+        threshold_l = get(obj.AreaSlider,'Value');
         
         if get(obj.ModeButton1, 'Value')
             num_visualization = 2;
@@ -543,18 +705,20 @@ methods (Access = public)
             comparison_rg_first_img = true;
             comparison_rg_prev_img = ~comparison_rg_first_img;
         elseif get(obj.ModeButton2, 'Value')
-            num_visualization = 2;
             chosen_images = "all"; % "all" or [vector contains image_numbers]
             comparison_rg_first_img = false;
             comparison_rg_prev_img = ~comparison_rg_first_img;
         elseif get(obj.ModeButton3, 'Value')
             chosen_images = "all"; % "all" or [vector contains image_numbers]
-            num_visualization = 3;
             top_percentage_threshold = get(obj.IntensitySlider,'Value');
             comparison_rg_first_img = true;
             comparison_rg_prev_img = ~comparison_rg_first_img;
+        elseif get(obj.ModeButton4, 'Value')
+            chosen_images = [double(get(obj.RefDropDown,'Value')-1) double(get(obj.MovingDropDown,'Value')-1)];
+            comparison_rg_first_img = false;
+            comparison_rg_prev_img = ~comparison_rg_first_img;
         end
-        
+               
         obj.Visualization_Class.define_parameters(...
                     'chosen_images', chosen_images ,...
                     'threshold_DM', threshold_DM,...
@@ -570,14 +734,27 @@ methods (Access = public)
                     'plot_small_changes', plot_small_changes,...
                     'top_percentage_threshold',top_percentage_threshold) 
                 
-        if num_visualization == 2
-            obj.Visualization_Class.apply_3_2();
-        else
-            obj.Visualization_Class.apply_3_3();
-            imshow(obj.Visualization_Class.Image_Highlights,'Parent',obj.DifferenceImg')
-            title(sprintf('Top %d %% most changed pixles highlighted in red ',top_percentage_threshold));
-
-        end
-    end
- end
+          if get(obj.ModeButton1, 'Value')
+              obj.Visualization_Class.apply_3_2();
+          elseif get(obj.ModeButton2, 'Value')
+              obj.Visualization_Class.apply_3_2();
+          elseif get(obj.ModeButton3, 'Value')
+              obj.Visualization_Class.apply_3_3()
+              obj.Image_Highlights = obj.Images{1};
+              Image_Marked_red_channel=obj.Image_Highlights(:,:,1);
+              if obj.Seg_Flag
+                obj.Visualization_Class.Difference_Image_Highlight = bsxfun(@times, obj.Visualization_Class.Difference_Image_Highlight, cast(obj.seg_mask{1}, 'like', obj.Visualization_Class.Difference_Image_Highlight));
+              end
+              Image_Marked_red_channel(obj.Visualization_Class.Difference_Image_Highlight>0)=255;
+              obj.Image_Highlights(:,:,1)=Image_Marked_red_channel;
+              imshow(obj.Image_Highlights,'Parent',obj.DifferenceImg)
+              title(sprintf('Top %d %% most changed pixels highlighted in red ',top_percentage_threshold),'Parent',obj.DifferenceImg);
+          elseif get(obj.ModeButton4, 'Value')
+              obj.Visualization_Class.apply_3_1()
+              imshowpair(obj.Visualization_Class.Image_Marked,obj.Visualization_Class.moving_image,'montage')
+              title(sprintf('Showing image comparison'));
+          end
+              
+      end
+   end
 end
