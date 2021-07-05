@@ -22,7 +22,7 @@ tic
 
 % Loads Images into Cell array of Dimensions 1 x #ofImages, where each
 % entry is of the size the picture has in pixels, so  width x height
-Name_of_Image_Folder = 'Singapur';  %Select Images you want to work on
+Name_of_Image_Folder = 'Dubai';  %Select Images you want to work on
 
 
 Image_Names={dir(fullfile(Name_of_Image_Folder,'*_*.*')).name}; %cell array of all Image file names
@@ -124,7 +124,7 @@ VisualizationClass = Visualization(Images_reconstructed, Image_Names, trafos, Im
 
 % Define the parameters :
             num_visualization = int8(1);
-            chosen_images = [1, 6]; % "all" or [vector contains image_numbers]
+            chosen_images = [1, 8]; % "all" or [vector contains image_numbers] (if it is not set to "all", please set comparison_rg_first_img to false!)
             threshold_DM = 50; % threshold for the Difference Magnitude function
             comparison_rg_first_img = false; % compare all the images regarding the first image in a timelapse plot
             comparison_rg_prev_img = ~comparison_rg_first_img; % compare all the images regarding the previous image in a timelapse plot

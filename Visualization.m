@@ -288,7 +288,11 @@ classdef Visualization < handle
                 for img_num = 1 : length(obj.Images_reconstructed_new) - 1
                     ref_image = obj.Images_reconstructed_new{img_num};
                     moving_image = obj.Images_reconstructed_new{img_num + 1};
-                    [ref_image, moving_image] = obj.Align_2_images(img_num, img_num + 1);
+                    if ~isstring(obj.chosen_images)
+                        [ref_image, moving_image] = obj.Align_2_images(obj.chosen_images(1), obj.chosen_images(2));
+                    else
+                        [ref_image, moving_image] = obj.Align_2_images(img_num, img_num + 1);
+                    end
                     %Measure runtime and run difference calculation :
                     t_3_1 = tic;
                     [Image_Marked, ~] = Difference_Magnitude(ref_image, moving_image, obj.threshold_DM, obj.plot_images, obj.seg_flag);
@@ -327,8 +331,12 @@ classdef Visualization < handle
                 for img_num = 1 : length(obj.Images_reconstructed_new) - 1
                     ref_image = obj.Images_reconstructed_new{img_num};
                     moving_image = obj.Images_reconstructed_new{img_num + 1};
-                    [ref_image, moving_image] = obj.Align_2_images(img_num, img_num + 1);
-                    [obj.superpixel_pos, N] = superpixels(ref_image, obj.num_superpixels, 'NumIterations', obj.num_iterations_SP);
+                    if ~isstring(obj.chosen_images)
+                        [ref_image, moving_image] = obj.Align_2_images(obj.chosen_images(1), obj.chosen_images(2));
+                    else
+                        [ref_image, moving_image] = obj.Align_2_images(img_num, img_num + 1);
+                    end
+                    [obj.superpixel_pos, N] = superpixels(moving_image, obj.num_superpixels, 'NumIterations', obj.num_iterations_SP);
                     [~, Diff_Image_Threshold] = Difference_Magnitude(ref_image, moving_image, obj.threshold_DM, obj.plot_images, obj.seg_flag);
                     Diff_Image_Threshold(Diff_Image_Threshold > 0) = 1;
                     
