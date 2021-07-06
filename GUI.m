@@ -1,4 +1,4 @@
-classdef CV_GUI < handle
+classdef GUI < handle
     properties (Access = public)
     gui_fig
     hp0
@@ -63,10 +63,11 @@ classdef CV_GUI < handle
     Image_Highlights
     Image_Marked
     DifferenceImg
+    ClearButton
     end 
 methods (Access = public)
     
-    function obj =  CV_GUI()
+    function obj =  GUI()
          obj.layoutdef()
          set(obj.gui_fig, 'Visible', 'On');
          imshow("TUM_LOGO.png",'Parent',obj.TUM_Logo);
@@ -117,7 +118,7 @@ methods (Access = public)
                    
         obj.hp2 = uipanel('Position', [0.05 0.5 0.45 0.25],...
                        'Title', 'Image Visualization',...
-                      'Parent',obj.gui_fig);
+                      'Parent',obj.gui_fig,'Visible','Off');
                   
         obj.GraphTitle = uicontrol('Style','text',...
                         'String','Test',...
@@ -139,7 +140,7 @@ methods (Access = public)
                                     
         obj.hp3 = uipanel('Position', [0.5 0.5 0.45 0.25],...
                        'Title', 'Segmentation of Image Regions',...
-                      'Parent',obj.gui_fig);
+                      'Parent',obj.gui_fig,'Visible','Off');
                   
         obj.SegGraphTitle = uicontrol('Style','text',...
                         'String','Test',...
@@ -189,7 +190,7 @@ methods (Access = public)
            
          obj.hp4 =  uipanel('Position', [0.05 0.1 0.55 0.4],...
                         'Title', 'Parametrization',...
-                       'Parent',obj.gui_fig);   
+                       'Parent',obj.gui_fig,'Visible','Off');   
                    
          %Add Radio button group for signal magnitude setting
         obj.DisplayButtons = uibuttongroup('Units','normalized',...
@@ -311,7 +312,7 @@ methods (Access = public)
            
        obj.hp5 =  uipanel('Position', [0.6 0.1 0.35 0.4],...
                         'Title', 'Difference Visualization',...
-                       'Parent',obj.gui_fig);
+                       'Parent',obj.gui_fig,'Visible','Off');
                    
        obj.DifferenceImg = uiaxes('Units', 'normalized',...
                       'Position', [0.25 0.1 0.45 0.9],...
@@ -325,8 +326,22 @@ methods (Access = public)
                 'FontWeight','bold',... 
                 'ForeGroundColor','#FFFFFF',...
                 'BackgroundColor','#0072BD','Callback',@obj.fullscreenShow);
+            
+            
+       obj.ClearButton  = matlab.ui.control.UIControl('Style', 'pushbutton',...
+                    'String', 'Reset GUI',...
+                    'Units', 'normalized',...
+                    'Position', [0.85 0.03 0.1 0.03],...
+                    'Parent', obj.gui_fig,...
+                    'FontWeight','bold',... 
+                    'ForeGroundColor','#FFFFFF',...
+                    'BackgroundColor','#0072BD',...
+                    'Callback',@obj.clear_data,'Visible','Off');
     end 
-    
+    function clear_data(obj,~, ~)
+        clear
+        GUI()
+    end
     function folderImport(obj,~,~)
             obj.folderName = uigetdir();
             obj.fileNames = {dir(fullfile(obj.folderName,'*')).name};            
@@ -350,6 +365,8 @@ methods (Access = public)
             
             close(f)
             f2 = msgbox("Images loaded!");
+            obj.hp2.Visible = 'On';
+            obj.hp3.Visible = 'On';
             
             
             obj.fileNames_new = cell(1,size(obj.fileNames_processed,2)+1);
@@ -377,7 +394,7 @@ methods (Access = public)
     
     function fullscreenShow(obj, ~, ~)
         figure()
-        if ~isempty(obj.Image_Highlights)
+        if ~get(obj.ModeButton4, 'Value')
             imshow(obj.Image_Highlights);
             top_percentage_threshold = obj.Visualization_Class.top_percentage_threshold;
             title(sprintf('Top %d %% most changed pixels highlighted in red ',top_percentage_threshold));
@@ -397,11 +414,10 @@ methods (Access = public)
         clear obj.seg_mask
         obj.Seg_Class = Segmentation()
         clf(obj.SegImgGraph)
-        obj.Seg_Flag = 1;
+        tic
         for i=1:length(obj.fileNames_processed)
             obj.Seg_Class.img = obj.Images{i};
             if logical(get(obj.LandButton, 'Value')) && logical(get(obj.SeaButton, 'Value')) && logical(get(obj.CityButton, 'Value')) || logical(get(obj.AllRegionsButton, 'Value'))
-                obj.seg_mask{i} = ones(size(obj.Images{i}));
                 imshow(obj.Images{i},'Parent',obj.SegImgGraph);
                 obj.SegGraphTitle.String = "All regions considered!";
                 obj.SegGraphTitle.Visible = "On";
@@ -409,6 +425,7 @@ methods (Access = public)
             elseif logical(get(obj.LandButton, 'Value')) && logical(get(obj.SeaButton, 'Value')) && ~logical(get(obj.CityButton, 'Value')) || logical(get(obj.LandButton, 'Value')) && ~logical(get(obj.CityButton, 'Value')) || logical(get(obj.SeaButton, 'Value')) && ~logical(get(obj.CityButton, 'Value'))
                 obj.Seg_Class.k = 2;
                 obj.Seg_Class.segment_kmeans()
+                obj.Seg_Flag = 1;
                 if logical(get(obj.LandButton, 'Value')) && ~logical(get(obj.SeaButton, 'Value'))
                     obj.Seg_Class.cluster_label(obj.Seg_Class.cluster_label == 1) = 0;
                     obj.Seg_Class.cluster_label(obj.Seg_Class.cluster_label == 2) = 1;
@@ -429,6 +446,7 @@ methods (Access = public)
             elseif logical(get(obj.CityButton, 'Value'))
                 obj.Seg_Class.k = 3;
                 obj.Seg_Class.segment_kmeans() 
+                obj.Seg_Flag = 1;
                 if logical(get(obj.CityButton, 'Value')) && ~logical(get(obj.SeaButton, 'Value'))  && ~logical(get(obj.LandButton, 'Value'))
                     obj.Seg_Class.cluster_label(obj.Seg_Class.cluster_label == 1) = 0;
                     obj.Seg_Class.cluster_label(obj.Seg_Class.cluster_label == 3) = 0;
@@ -460,6 +478,7 @@ methods (Access = public)
             elseif logical(get(obj.SpecialLandscapeButton, 'Value'))
                 obj.Seg_Class.k = 3;
                 obj.Seg_Class.segment_kmeans() 
+                obj.Seg_Flag = 1;
                 if logical(get(obj.SpecialLandscapeButton, 'Value')) && ~logical(get(obj.SeaButton, 'Value'))  && ~logical(get(obj.LandButton, 'Value'))
                     obj.Seg_Class.cluster_label(obj.Seg_Class.cluster_label == 1) = 0;
                     obj.Seg_Class.cluster_label(obj.Seg_Class.cluster_label == 2) =  0;
@@ -492,12 +511,15 @@ methods (Access = public)
         end
         close(f3)
         f4 = msgbox("Image Segmentation finished!");
+        obj.hp4.Visible = 'On';
+        display("Segmentation runtime: %d s", toc)
     end
     
     function setRegionButttons(obj, ~, ~)
         set(obj.LandButton, 'Value',1)
         set(obj.SeaButton, 'Value',1)
         set(obj.CityButton, 'Value',1)
+        set(obj.SpecialLandscapeButton, 'Value',1)
     end
     
     function setParamPanel(obj, ~, ~)
@@ -715,6 +737,7 @@ methods (Access = public)
         top_percentage_threshold = threshold_DM;
         threshold_l = get(obj.AreaSlider,'Value');
         
+        f4 = msgbox("Running visualization ...");
         if get(obj.ModeButton1, 'Value')
             num_visualization = 2;
             chosen_images = "all"; % "all" or [vector contains image_numbers]
@@ -754,18 +777,19 @@ methods (Access = public)
               if obj.Seg_Flag
                 obj.Visualization_Class.apply_3_2(obj.seg_mask);
               else 
-                 seg_masks_ones = ones(size(obj.Images)); 
+                 seg_masks_ones = []; 
                  obj.Visualization_Class.apply_3_2(seg_masks_ones);
               end
           elseif get(obj.ModeButton2, 'Value')
              if obj.Seg_Flag
                 obj.Visualization_Class.apply_3_2(obj.seg_mask);
               else 
-                 seg_masks_ones = ones(size(obj.Images)); 
+                 seg_masks_ones = []; 
                  obj.Visualization_Class.apply_3_2(seg_masks_ones);
               end
           elseif get(obj.ModeButton3, 'Value')
               obj.Visualization_Class.apply_3_3()
+              close(f4)
               obj.Image_Highlights = obj.Images{1};
               Image_Marked_red_channel=obj.Image_Highlights(:,:,1);
               if obj.Seg_Flag
@@ -774,9 +798,10 @@ methods (Access = public)
               Image_Marked_red_channel(obj.Visualization_Class.Difference_Image_Highlight>0)=255;
               obj.Image_Highlights(:,:,1)=Image_Marked_red_channel;
               imshow(obj.Image_Highlights,'Parent',obj.DifferenceImg)
-              title(sprintf('Top %d %% most changed pixels highlighted in red ',top_percentage_threshold),'Parent',obj.DifferenceImg);
+              title(sprintf('Top %d %% most changed pixels highlighted in red',top_percentage_threshold),'Parent',obj.DifferenceImg);
           elseif get(obj.ModeButton4, 'Value')
-              obj.Visualization_Class.apply_3_1()
+              obj.Visualization_Class.apply_3_1()    
+              close(f4)
               if obj.Seg_Flag
                 obj.Visualization_Class.Diff_Image_Comparison = bsxfun(@times, obj.Visualization_Class.Diff_Image_Comparison, cast(obj.seg_mask{chosen_images(1)}, 'like', obj.Visualization_Class.Diff_Image_Comparison));
               end
@@ -787,7 +812,8 @@ methods (Access = public)
               imshowpair(obj.Image_Marked,obj.Visualization_Class.moving_image,'montage')
               title(sprintf('Showing image comparison'));
           end
-              
+          obj.hp5.Visible = 'On'; 
+          obj.ClearButton.Visible = 'On'; 
       end
    end
 end
