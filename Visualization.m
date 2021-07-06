@@ -333,7 +333,6 @@ classdef Visualization < handle
             obj.seg_mask  = seg_mask;
             if obj.comparison_rg_prev_img
                 t_3_3 = tic;
-                figure();
                 hold on
                 for img_num = 1 : length(obj.Images_reconstructed_new) - 1
                     ref_image = obj.Images_reconstructed_new{img_num};
@@ -443,7 +442,8 @@ classdef Visualization < handle
                     overlay(ref_image == 0) = 0;
                     % show the overlayed image without boundary mask :
 %                    imshow(overlay);
-                    imshowpair(overlay, moving_image, 'montage')
+                    imshowpair(overlay, moving_image, 'montage');
+                    title("Comparison timelapse for");
                     % show the overlayed image with boundary mask : 
     %                 imshow(imoverlay(overlay, BM, 'cyan'),'InitialMagnification',67);
                 end
@@ -552,6 +552,7 @@ classdef Visualization < handle
                     % show the overlayed image without boundary mask :
 %                     imshow(overlay);
                     imshowpair(overlay, moving_image, 'montage')
+                    title("Historical timelapse for ");
                     % show the overlayed image with boundary mask : 
     %                 imshow(imoverlay(overlay, BM, 'cyan'),'InitialMagnification',67);
                 end

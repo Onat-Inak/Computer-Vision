@@ -757,9 +757,13 @@ methods (Access = public)
                  seg_masks_ones = ones(size(obj.Images)); 
                  obj.Visualization_Class.apply_3_2(seg_masks_ones);
               end
-
           elseif get(obj.ModeButton2, 'Value')
-              obj.Visualization_Class.apply_3_2();
+             if obj.Seg_Flag
+                obj.Visualization_Class.apply_3_2(obj.seg_mask);
+              else 
+                 seg_masks_ones = ones(size(obj.Images)); 
+                 obj.Visualization_Class.apply_3_2(seg_masks_ones);
+              end
           elseif get(obj.ModeButton3, 'Value')
               obj.Visualization_Class.apply_3_3()
               obj.Image_Highlights = obj.Images{1};
