@@ -66,6 +66,9 @@ classdef Visualization < handle
         Diff_Image_Comparison
         Image_Names_new
         Images_reconstructed
+        overlay
+        Diff_Image_Threshold
+        seg_mask
     end
     
     % Properties that are specific for corresponding type of visualization
@@ -326,7 +329,8 @@ classdef Visualization < handle
         
         % 3.2 Apply Difference Magnitude function regarding superpixels in
         % a timelapse :
-        function apply_3_2(obj)
+        function apply_3_2(obj,seg_mask)
+            obj.seg_mask  = seg_mask;
             if obj.comparison_rg_prev_img
                 t_3_3 = tic;
                 figure();
@@ -342,6 +346,11 @@ classdef Visualization < handle
                     [obj.superpixel_pos, N] = superpixels(moving_image, obj.num_superpixels, 'NumIterations', obj.num_iterations_SP);
                     [~, Diff_Image_Threshold] = Difference_Magnitude(ref_image, moving_image, obj.threshold_DM, obj.plot_images, obj.seg_flag,obj.threshold_l);
                     Diff_Image_Threshold(Diff_Image_Threshold > 0) = 1;
+                    
+                    
+                    if ~isempty(obj.seg_mask)
+                        Diff_Image_Threshold  = bsxfun(@times, Diff_Image_Threshold, cast(obj.seg_mask{img_num}, 'like', Diff_Image_Threshold));
+                    end
                     
                     [m, n, ~] = size(obj.Images_reconstructed_new{1});
                     logical_region_mask_big = zeros(m, n); 
@@ -456,6 +465,10 @@ classdef Visualization < handle
 %                     Diff_Image_Threshold = conv2(Diff_Image_Threshold, boxKernel, 'same');
 %                     size(Diff_Image_Threshold)
                     Diff_Image_Threshold(Diff_Image_Threshold > 0) = 1;
+                    
+                    if ~isempty(obj.seg_mask)
+                        Diff_Image_Threshold  = bsxfun(@times, Diff_Image_Threshold, cast(obj.seg_mask{img_num}, 'like', Diff_Image_Threshold));
+                    end
 
                     [m, n, ~] = size(obj.Images_reconstructed_new{1});
                     logical_region_mask_big = zeros(m, n); 

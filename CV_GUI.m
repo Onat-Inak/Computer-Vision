@@ -42,6 +42,7 @@ classdef CV_GUI < handle
     folderName
     fileNames
     fileNames_new
+    fileNames_processed
     fileNames_processed1
     fileNames_processed2
     filename
@@ -60,18 +61,18 @@ classdef CV_GUI < handle
     Seg_Flag
     FullScreenButton
     Image_Highlights
-    end 
-    properties (Access = public, SetObservable, AbortSet)
-        %Initialize class handle for data
-        DifferenceImg
+    Image_Marked
+    DifferenceImg
     end 
 methods (Access = public)
+    
     function obj =  CV_GUI()
          obj.layoutdef()
          set(obj.gui_fig, 'Visible', 'On');
          imshow("TUM_LOGO.png",'Parent',obj.TUM_Logo);
          imshow("Sat_Logo.png",'Parent',obj.Sat_Logo);
     end
+    
     function layoutdef(obj)
         screen_sz = get(0,'ScreenSize');
         
@@ -188,7 +189,8 @@ methods (Access = public)
            
          obj.hp4 =  uipanel('Position', [0.05 0.1 0.55 0.4],...
                         'Title', 'Parametrization',...
-                       'Parent',obj.gui_fig);    
+                       'Parent',obj.gui_fig);   
+                   
          %Add Radio button group for signal magnitude setting
         obj.DisplayButtons = uibuttongroup('Units','normalized',...
             'Position',[0.05 0.05 0.4 0.9],'Title','Select visualization mode','Parent',obj.hp4);
@@ -230,7 +232,7 @@ methods (Access = public)
         obj.IntensitySliderTitle = uicontrol('Style','text',...
                         'String','Difference intensity',...
                         'Units','normalized',...
-                        'Position',[0.3 0.82 0.4 0.1],...
+                        'Position',[0.2 0.82 0.6 0.1],...
                         'Parent',obj.ParameterButtons,'Visible','On');
                     
          obj.IntensitySlider  =  uicontrol('Style','slider',...
@@ -244,25 +246,25 @@ methods (Access = public)
         obj.AreaSliderTitle = uicontrol('Style','text',...
                         'String','Difference area',...
                         'Units','normalized',...
-                        'Position',[0.3 0.67 0.4 0.1],...
+                        'Position',[0.25 0.67 0.5 0.1],...
                         'Parent',obj.ParameterButtons,'Visible','On');
                     
          obj.AreaSlider =      uicontrol('Style','slider',...
                                 'min',1,...
-                                'max',20,...
+                                'max',201,...
                                 'SliderStep',[0.1 0.1],...
-                                'Value',11,...
+                                'Value',100,...
                                 'Units','normalized',...
                                 'Position',[0.25 0.65 0.5 0.05],'Parent',obj.ParameterButtons);
                             
         obj.SpeedSliderTitle = uicontrol('Style','text',...
-                        'String','Timelapse speed',...
+                        'String','Timelapse speed (left to right: fast to slow)',...
                         'Units','normalized',...
-                        'Position',[0.3 0.52 0.4 0.1],...
+                        'Position',[0.25 0.52 0.5 0.1],...
                         'Parent',obj.ParameterButtons,'Visible','On'); 
                     
         obj.SpeedSlider =      uicontrol('Style','slider',...
-                                'min',0,...
+                                'min',0.1,...
                                 'max',3,...
                                 'SliderStep',[0.5 0.5],...
                                 'Tooltip','Set speed of the time lapse, from slow (left) to fast (right)',...
@@ -286,17 +288,17 @@ methods (Access = public)
         obj.DisplayButton1 = uicontrol('Style','checkbox',...
             'Units','normalized',...
             'String','Mark big changes (red)',...
-            'Position',[0.05 0.3 0.7 0.1],'Parent',obj.ParameterButtons);
+            'Position',[0.05 0.35 0.7 0.1],'Parent',obj.ParameterButtons);
        
         obj.DisplayButton2 = uicontrol('Style','checkbox',...
             'Units','normalized',...
             'String','Mark medium changes (blue)',...
-            'Position',[0.05 0.2 0.7 0.1],'Parent',obj.ParameterButtons);
+            'Position',[0.05 0.25 0.7 0.1],'Parent',obj.ParameterButtons);
         
         obj.DisplayButton3 = uicontrol('Style','checkbox',...
             'Units','normalized',...
             'String','Mark small changes (green)',...
-            'Position',[0.05 0.1 0.7 0.1],'Parent',obj.ParameterButtons);
+            'Position',[0.05 0.15 0.7 0.1],'Parent',obj.ParameterButtons);
         
         obj.RunButton3 = uicontrol('Style', 'pushbutton',...
                 'String', 'Run',...
@@ -312,58 +314,58 @@ methods (Access = public)
                        'Parent',obj.gui_fig);
                    
        obj.DifferenceImg = uiaxes('Units', 'normalized',...
-                      'Position', [0.2 0.1 0.45 0.9],...
+                      'Position', [0.25 0.1 0.45 0.9],...
                       'Parent', obj.hp5,'Visible','On');
                   
        obj.FullScreenButton = uicontrol('Style', 'pushbutton',...
                 'String', 'Show Fullscreen',...
                 'Units', 'normalized',...
-                'Position', [0.3 0.05 0.4 0.1],...
+                'Position', [0.3 0.01 0.4 0.1],...
                 'Parent', obj.hp5,...
                 'FontWeight','bold',... 
                 'ForeGroundColor','#FFFFFF',...
                 'BackgroundColor','#0072BD','Callback',@obj.fullscreenShow);
-    end                     
+    end 
+    
     function folderImport(obj,~,~)
             obj.folderName = uigetdir();
             obj.fileNames = {dir(fullfile(obj.folderName,'*')).name};            
-            idx=cellfun(@(x) isequal(x,'.') | isequal(x,'..'),obj.fileNames); 
+            idx = cellfun(@(x) isequal(x,'.') | isequal(x,'..'),obj.fileNames); 
             obj.fileNames(idx)=[];
-            obj.Images=cell(1,length(obj.fileNames));            
+            
+            obj.Images=cell(1,length(obj.fileNames));
+            
             for i=1:length(obj.fileNames)
                 obj.Images{i}=imread(fullfile(obj.folderName,obj.fileNames{i}));
-            end           
+            end   
+            
             f = msgbox("Loading images ...");
             obj.callReconstructImgs()
+     
             obj.Visualization_Class = Visualization(obj.Images_reconstructed, obj.fileNames, obj.trafos, obj.Images, obj.Image_ref_number);
-            obj.Images_reconstructed_processed = obj.Visualization_Class.Images_reconstructed_new;
+            idx = find(~cellfun(@isempty,obj.Images_reconstructed));
+            obj.fileNames_processed = obj.fileNames(idx);
+            obj.Images = obj.Images(idx);
+            obj.Images_reconstructed = obj.Images_reconstructed(idx);
+            
             close(f)
             f2 = msgbox("Images loaded!");
-            obj.fileNames_new = cell(1,size(obj.fileNames,2)+1);
+            
+            
+            obj.fileNames_new = cell(1,size(obj.fileNames_processed,2)+1);
             obj.fileNames_new{1} = obj.DropdownFolder.String;
-            obj.fileNames_new(2:end) = obj.fileNames;
+            obj.fileNames_new(2:end) = obj.fileNames_processed;
             obj.DropdownFolder.String = obj.fileNames_new;
             imshow(obj.Images{1},'Parent',obj.ImageGraph);
-            obj.filename = replace(obj.fileNames{1},'_','-');
+            obj.filename = replace(obj.fileNames_processed{1},'_','-');
             title(obj.filename(1:end-4),'Parent',obj.ImageGraph);
             folderName = split(obj.folderName,"/");
-            %sgtitle(sprintf('Showing images for: %s', folderName{end}))
             obj.GraphTitle.String = "Showing images for " + folderName{end};
-            obj.GraphTitle.Visible = 'On';
-            obj.RefDropDown.Visible = 'On';
-            obj.MovingDropDown.Visible = 'On';
-            obj.fileNames_processed1 = cell(1,size(obj.fileNames,2)+1);
-            obj.fileNames_processed1{1} = obj.RefDropDown.String;
-            obj.fileNames_processed1(2:end) = obj.fileNames;
-            obj.RefDropDown.String = obj.fileNames_processed1;
-            obj.fileNames_processed2 = cell(1,size(obj.fileNames,2)+1);
-            obj.fileNames_processed2{1} = obj.MovingDropDown.String;
-            obj.fileNames_processed2(2:end) = obj.fileNames;
-            obj.MovingDropDown.String = obj.fileNames_processed2;
+            obj.GraphTitle.Visible = 'On';            
     end
 
     function view_img(obj, ~, ~)
-        obj.filename = obj.fileNames{get(obj.DropdownFolder,'Value')-1};
+        obj.filename = obj.fileNames_processed{get(obj.DropdownFolder,'Value')-1};
         obj.img = imread(fullfile(obj.folderName,obj.filename));  
         obj.filename = replace(obj.filename,'_','-');
         imshow(obj.img,'Parent',obj.ImageGraph);
@@ -372,6 +374,7 @@ methods (Access = public)
         obj.GraphTitle.String = "Showing images for " + folderName{end};
         obj.GraphTitle.Visible = 'On';
     end
+    
     function fullscreenShow(obj, ~, ~)
         figure()
         if ~isempty(obj.Image_Highlights)
@@ -380,7 +383,7 @@ methods (Access = public)
             title(sprintf('Top %d %% most changed pixels highlighted in red ',top_percentage_threshold));
             set(gcf, 'Position', get(0, 'Screensize'));
         else
-            imshowpair(obj.Visualization_Class.Image_Marked,obj.Visualization_Class.moving_image,'montage')
+            imshowpair(obj.Image_Marked,obj.Visualization_Class.moving_image,'montage')
             title(sprintf('Showing image comparison'));
             set(gcf, 'Position', get(0, 'Screensize'));
         end
@@ -395,15 +398,12 @@ methods (Access = public)
         obj.Seg_Class = Segmentation()
         clf(obj.SegImgGraph)
         obj.Seg_Flag = 1;
-        for i=1:length(obj.Images_reconstructed_processed)
+        for i=1:length(obj.fileNames_processed)
             obj.Seg_Class.img = obj.Images{i};
             if logical(get(obj.LandButton, 'Value')) && logical(get(obj.SeaButton, 'Value')) && logical(get(obj.CityButton, 'Value')) || logical(get(obj.AllRegionsButton, 'Value'))
-                obj.Seg_Class.k = 3;
-                obj.Seg_Class.segment_kmeans()
                 obj.seg_mask{i} = ones(size(obj.Images{i}));
-                %obj.Seg_Class.img = bsxfun(@times, obj.Seg_Class.img, cast(obj.seg_mask{i}, 'like', obj.Seg_Class.img));
-                imshow(labeloverlay(obj.Seg_Class.img,obj.Seg_Class.cluster_label),'Parent',obj.SegImgGraph);
-                obj.SegGraphTitle.String = "Example segmentation (regions highlighted)";
+                imshow(obj.Images{i},'Parent',obj.SegImgGraph);
+                obj.SegGraphTitle.String = "All regions considered!";
                 obj.SegGraphTitle.Visible = "On";
                 imshow(obj.Images{i},'Parent',obj.ImageGraph);
             elseif logical(get(obj.LandButton, 'Value')) && logical(get(obj.SeaButton, 'Value')) && ~logical(get(obj.CityButton, 'Value')) || logical(get(obj.LandButton, 'Value')) && ~logical(get(obj.CityButton, 'Value')) || logical(get(obj.SeaButton, 'Value')) && ~logical(get(obj.CityButton, 'Value'))
@@ -413,7 +413,6 @@ methods (Access = public)
                     obj.Seg_Class.cluster_label(obj.Seg_Class.cluster_label == 1) = 0;
                     obj.Seg_Class.cluster_label(obj.Seg_Class.cluster_label == 2) = 1;
                     obj.seg_mask{i} = obj.Seg_Class.cluster_label;
-                    %obj.Seg_Class.img = bsxfun(@times, obj.Seg_Class.img, cast(obj.seg_mask{i}, 'like', obj.Seg_Class.img));
                     imshow(labeloverlay(obj.Seg_Class.img,obj.Seg_Class.cluster_label),'Parent',obj.SegImgGraph);
                     obj.SegGraphTitle.String = "Example segmentation (regions highlighted)";
                     obj.SegGraphTitle.Visible = "On";
@@ -422,7 +421,6 @@ methods (Access = public)
                     obj.Seg_Class.cluster_label(obj.Seg_Class.cluster_label == 2) = 0;
                     obj.Seg_Class.cluster_label(obj.Seg_Class.cluster_label == 1) = 1;
                     obj.seg_mask{i} = obj.Seg_Class.cluster_label;
-                    %obj.Seg_Class.img = bsxfun(@times, obj.Seg_Class.img, cast(obj.seg_mask{i}, 'like', obj.Seg_Class.img));
                     imshow(labeloverlay(obj.Seg_Class.img,obj.Seg_Class.cluster_label),'Parent',obj.SegImgGraph);
                     obj.SegGraphTitle.String = "Example segmentation (regions highlighted)";
                     obj.SegGraphTitle.Visible = "On";                    
@@ -436,7 +434,6 @@ methods (Access = public)
                     obj.Seg_Class.cluster_label(obj.Seg_Class.cluster_label == 3) = 0;
                     obj.Seg_Class.cluster_label(obj.Seg_Class.cluster_label == 2) =  1;
                     obj.seg_mask{i} = obj.Seg_Class.cluster_label;
-                    %obj.Seg_Class.img = bsxfun(@times, obj.Seg_Class.img, cast(obj.seg_mask{i}, 'like', obj.Seg_Class.img));
                     imshow(labeloverlay(obj.Seg_Class.img,obj.Seg_Class.cluster_label),'Parent',obj.SegImgGraph);
                     obj.SegGraphTitle.String = "Example segmentation (regions highlighted)";
                     obj.SegGraphTitle.Visible = "On"; 
@@ -446,7 +443,6 @@ methods (Access = public)
                     obj.Seg_Class.cluster_label(obj.Seg_Class.cluster_label == 1) =  1;
                     obj.Seg_Class.cluster_label(obj.Seg_Class.cluster_label == 2) =  1;
                     obj.seg_mask{i} = obj.Seg_Class.cluster_label;
-                    %obj.Seg_Class.img = bsxfun(@times, obj.Seg_Class.img, cast(obj.seg_mask{i}, 'like', obj.Seg_Class.img));
                     imshow(labeloverlay(obj.Seg_Class.img,obj.Seg_Class.cluster_label),'Parent',obj.SegImgGraph);
                     obj.SegGraphTitle.String = "Example segmentation (regions highlighted)";
                     obj.SegGraphTitle.Visible = "On"; 
@@ -456,7 +452,6 @@ methods (Access = public)
                     obj.Seg_Class.cluster_label(obj.Seg_Class.cluster_label == 1) =  1;
                     obj.Seg_Class.cluster_label(obj.Seg_Class.cluster_label == 3) =  1;
                     obj.seg_mask{i} = obj.Seg_Class.cluster_label;
-                    %obj.Seg_Class.img = bsxfun(@times, obj.Seg_Class.img, cast(obj.seg_mask{i}, 'like', obj.Seg_Class.img));
                     imshow(labeloverlay(obj.Seg_Class.img,obj.Seg_Class.cluster_label),'Parent',obj.SegImgGraph);
                     obj.SegGraphTitle.String = "Example segmentation (regions highlighted)";
                     obj.SegGraphTitle.Visible = "On"; 
@@ -470,7 +465,6 @@ methods (Access = public)
                     obj.Seg_Class.cluster_label(obj.Seg_Class.cluster_label == 2) =  0;
                     obj.Seg_Class.cluster_label(obj.Seg_Class.cluster_label == 3) = 1;
                     obj.seg_mask{i} = obj.Seg_Class.cluster_label;
-                    %obj.Seg_Class.img = bsxfun(@times, obj.Seg_Class.img, cast(obj.seg_mask{i}, 'like', obj.Seg_Class.img));
                     imshow(labeloverlay(obj.Seg_Class.img,obj.Seg_Class.cluster_label),'Parent',obj.SegImgGraph);
                     obj.SegGraphTitle.String = "Example segmentation (regions highlighted)";
                     obj.SegGraphTitle.Visible = "On"; 
@@ -499,37 +493,45 @@ methods (Access = public)
         close(f3)
         f4 = msgbox("Image Segmentation finished!");
     end
+    
     function setRegionButttons(obj, ~, ~)
         set(obj.LandButton, 'Value',1)
         set(obj.SeaButton, 'Value',1)
         set(obj.CityButton, 'Value',1)
     end
+    
     function setParamPanel(obj, ~, ~)
         if get(obj.ModeButton1, 'Value')
             obj.RefDropDown.Visible = 'Off';
             obj.MovingDropDown.Visible = 'Off';
             obj.AreaSlider.Visible = 'On';
+            obj.AreaSliderTitle.Visible = 'On';
             obj.SpeedSliderTitle.Visible = 'On';
             obj.SpeedSlider.Visible = 'On';
             obj.SpeedSliderTitle.Visible = 'On';
             obj.DisplayButton1.Visible = 'On';
             obj.DisplayButton2.Visible = 'On';
             obj.DisplayButton3.Visible = 'On';
-            obj.IntensitySliderTitle.String = "Difference intensity";
+            obj.IntensitySliderTitle.String = "Difference intensity (left to right: low to high)";
+            obj.SpeedSliderTitle.Visible = 'On';
+            obj.AreaSliderTitle.String = "Difference area (left to right: small to large)";
             obj.RunButton3.Visible = "On";
             obj.ParameterButtons.Visible = 'On';
         elseif get(obj.ModeButton2, 'Value')
             obj.RefDropDown.Visible = 'Off';
             obj.MovingDropDown.Visible = 'Off';
             obj.AreaSlider.Visible = 'On';
+            obj.AreaSliderTitle.Visible = 'On';
             obj.SpeedSliderTitle.Visible = 'On';
             obj.SpeedSlider.Visible = 'On';
             obj.SpeedSliderTitle.Visible = 'On';
             obj.DisplayButton1.Visible = 'On';
             obj.DisplayButton2.Visible = 'On';
             obj.DisplayButton3.Visible = 'On';
-            obj.IntensitySliderTitle.String = "Difference intensity";
+            obj.IntensitySliderTitle.String = "Difference intensity (left to right: low to high)";
             obj.RunButton3.Visible = "On";
+            obj.SpeedSliderTitle.Visible = 'On';
+            obj.AreaSliderTitle.String = "Difference area (left to right: small to large)";
             obj.ParameterButtons.Visible = 'On';
         elseif get(obj.ModeButton3, 'Value')
             obj.RefDropDown.Visible = 'Off';
@@ -542,29 +544,42 @@ methods (Access = public)
             obj.DisplayButton1.Visible = 'Off';
             obj.DisplayButton2.Visible = 'Off';
             obj.DisplayButton3.Visible = 'Off';
-            obj.IntensitySliderTitle.String = "Percent of top changes";
+            obj.IntensitySliderTitle.String = "Top percentage of differences (left to right: high to low)";
+            obj.IntensitySliderTitle.Position = [0.15 0.82 0.7 0.1]
             obj.RunButton3.Visible = "On";
             obj.ParameterButtons.Visible = 'On';          
         elseif get(obj.ModeButton4, 'Value')
             obj.RefDropDown.Visible = 'On';
             obj.MovingDropDown.Visible = 'On'; 
-            obj.IntensitySliderTitle.String = "Difference intensity";
+            obj.IntensitySliderTitle.String = "Difference intensity (left to right: low to high)";
             obj.AreaSlider.Visible = 'On';
             obj.SpeedSliderTitle.Visible = 'On';
-            obj.AreaSliderTitle.String = "Difference area";
-            obj.AreaSliderTitle.String = "On";
+            obj.AreaSliderTitle.String = "Difference area (left to right: small to large)";
+            obj.AreaSliderTitle.Visible = 'On';
             obj.SpeedSlider.Visible = 'Off';
             obj.SpeedSliderTitle.Visible = 'Off';
             obj.DisplayButton1.Visible = 'Off';
             obj.DisplayButton2.Visible = 'Off';
             obj.DisplayButton3.Visible = 'Off';
             obj.RunButton3.Visible = "On";
+            obj.RefDropDown.Visible = 'On';
+            obj.MovingDropDown.Visible = 'On';
+            obj.fileNames_processed1 = cell(1,size(obj.Visualization_Class.Image_Names_new,2)+1);
+            obj.fileNames_processed1{1} = obj.RefDropDown.String;
+            obj.fileNames_processed1(2:end) = obj.fileNames_processed;
+            obj.RefDropDown.String = obj.fileNames_processed1;
+            obj.fileNames_processed2 = cell(1,size(obj.Visualization_Class.Image_Names_new,2)+1);
+            obj.fileNames_processed2{1} = obj.MovingDropDown.String;
+            obj.fileNames_processed2(2:end) = obj.Visualization_Class.Image_Names_new;
+            obj.MovingDropDown.String = obj.fileNames_processed2;
             obj.ParameterButtons.Visible = 'On'; 
         end
     end 
+    
     function callReconstructImgs(obj, ~, ~)
             obj.reconstructImages(obj.Images);
     end
+    
     function reconstructImages(obj,imgs)
         % 2.1) Choose Reference Image as the middle Image
         obj.Image_ref_number=ceil(length(imgs)/2);
@@ -681,9 +696,10 @@ methods (Access = public)
             end
         end 
     end 
+    
     function visualizationCaller(obj,~,~)
         % Create a class for the visualization of the image differences :
-        obj.Visualization_Class = Visualization(obj.Images_reconstructed, obj.fileNames, obj.trafos, obj.Images, obj.Image_ref_number);
+        %obj.Visualization_Class = Visualization(obj.Images_reconstructed, obj.fileNames_processed, obj.trafos, obj.Images, obj.Image_ref_number);
         % Define the parameters :       
         threshold_DM = get(obj.IntensitySlider,'Value'); % threshold for the Difference Magnitude function
         %comparison_rg_first_img = true; % compare all the images regarding the first image in a timelapse plot
@@ -735,7 +751,13 @@ methods (Access = public)
                     'top_percentage_threshold',top_percentage_threshold) 
                 
           if get(obj.ModeButton1, 'Value')
-              obj.Visualization_Class.apply_3_2();
+              if obj.Seg_Flag
+                obj.Visualization_Class.apply_3_2(obj.seg_mask);
+              else 
+                 seg_masks_ones = ones(size(obj.Images)); 
+                 obj.Visualization_Class.apply_3_2(seg_masks_ones);
+              end
+
           elseif get(obj.ModeButton2, 'Value')
               obj.Visualization_Class.apply_3_2();
           elseif get(obj.ModeButton3, 'Value')
@@ -751,7 +773,14 @@ methods (Access = public)
               title(sprintf('Top %d %% most changed pixels highlighted in red ',top_percentage_threshold),'Parent',obj.DifferenceImg);
           elseif get(obj.ModeButton4, 'Value')
               obj.Visualization_Class.apply_3_1()
-              imshowpair(obj.Visualization_Class.Image_Marked,obj.Visualization_Class.moving_image,'montage')
+              if obj.Seg_Flag
+                obj.Visualization_Class.Diff_Image_Comparison = bsxfun(@times, obj.Visualization_Class.Diff_Image_Comparison, cast(obj.seg_mask{chosen_images(1)}, 'like', obj.Visualization_Class.Diff_Image_Comparison));
+              end
+              obj.Image_Marked = obj.Images{chosen_images(1)};
+              Image_Marked_red_channel=obj.Image_Marked(:,:,1);
+              Image_Marked_red_channel(obj.Visualization_Class.Diff_Image_Comparison>0)=255;
+              obj.Image_Marked(:,:,1)=Image_Marked_red_channel;
+              imshowpair(obj.Image_Marked,obj.Visualization_Class.moving_image,'montage')
               title(sprintf('Showing image comparison'));
           end
               
