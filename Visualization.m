@@ -63,6 +63,9 @@ classdef Visualization < handle
         Image_Marked
         Image_Highlights
         Difference_Image_Highlight
+        Diff_Image_Comparison
+        Image_Names_new
+        Images_reconstructed
     end
     
     % Properties that are specific for corresponding type of visualization
@@ -78,6 +81,7 @@ classdef Visualization < handle
     methods
         % Constructor / 3.0:
         function obj = Visualization(Images_reconstructed, Image_Names, trafos, Images, Image_ref_number)
+            obj.Images_reconstructed = Images_reconstructed;
             logic_vec = logical(zeros(1, length(Images_reconstructed)));
             years = zeros(1, length(Images_reconstructed));
             months = zeros(1, length(Images_reconstructed));
@@ -90,12 +94,11 @@ classdef Visualization < handle
                 months(i) = str2double(year_month_temp(6:7));
                 if numel(Images_reconstructed{i}) == 0
                     logic_vec(i) = false;
-                    trafos(i,:) = [];
-                    trafos(:,i) = [];
-                else
+               else
                     logic_vec(i) = true;
                     obj.Images_reconstructed_new{iter} = Images_reconstructed{i};
                     obj.Images_new{iter} = Images{i};
+                    obj.Image_Names_new{iter} = Image_Names{i};
                     iter = iter + 1;
                 end
             end
@@ -107,6 +110,8 @@ classdef Visualization < handle
             end
             obj.years_new = years(logic_vec);
             obj.months_new = months(logic_vec);
+            trafos(~logic_vec,:) = [];
+            trafos(:,~logic_vec) = [];
             obj.trafos_new = trafos;
         end
     
@@ -298,7 +303,7 @@ classdef Visualization < handle
                     end
                     %Measure runtime and run difference calculation :
          
-                    [obj.Image_Marked, ~] = Difference_Magnitude(ref_image, obj.moving_image, obj.threshold_DM, obj.plot_images, obj.seg_flag,obj.threshold_l);
+                    [obj.Image_Marked, obj.Diff_Image_Comparison] = Difference_Magnitude(ref_image, obj.moving_image, obj.threshold_DM, obj.plot_images, obj.seg_flag,obj.threshold_l);
                     pause(obj.pause_duration);
                 end
             end
@@ -310,7 +315,7 @@ classdef Visualization < handle
 
                     %Measure runtime and run difference calculation
                     t_3_1 = tic;
-                    [obj.Image_Marked, ~] = Difference_Magnitude(ref_image, obj.moving_image, obj.threshold_DM, obj.plot_images, obj.seg_flag);
+                    [obj.Image_Marked, obj.Diff_Image_Comparison] = Difference_Magnitude(ref_image, obj.moving_image, obj.threshold_DM, obj.plot_images, obj.seg_flag);
                     clf;
                     pause(obj.pause_duration);
                 end 
@@ -324,7 +329,7 @@ classdef Visualization < handle
         function apply_3_2(obj)
             if obj.comparison_rg_prev_img
                 t_3_3 = tic;
-                %figure();
+                figure();
                 hold on
                 for img_num = 1 : length(obj.Images_reconstructed_new) - 1
                     ref_image = obj.Images_reconstructed_new{img_num};
@@ -429,7 +434,7 @@ classdef Visualization < handle
                     overlay(ref_image == 0) = 0;
                     % show the overlayed image without boundary mask :
 %                    imshow(overlay);
-                    %imshowpair(overlay, moving_image, 'montage')
+                    imshowpair(overlay, moving_image, 'montage')
                     % show the overlayed image with boundary mask : 
     %                 imshow(imoverlay(overlay, BM, 'cyan'),'InitialMagnification',67);
                 end
