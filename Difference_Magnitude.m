@@ -149,6 +149,23 @@ if nargin==nargin(@Difference_Magnitude) %l_filter is given-> use function
         diff_size_mask(abs(diff_size_mask)<0.15)=0;
         diff_size_mask(abs(diff_size_mask)>0)=1; %again set to 1 for better calculation in code below
         %This mask masks out the big regions of change.
+        
+        %improvement:
+        %rebuild narrower filter to extend borders of regions. This is
+        %necessary, because parts of the border fell away by thresholding
+        %in the last step
+         %tic
+        sig=floor(l_filter/4)/2;
+        x=-floor(l_filter/4):floor(l_filter/4);
+        G=exp(-(x.^2)/(2*sig^2));
+        G=G/sum(G);%normalize filter
+        %widen boarders:
+        diff_size_mask=conv2(diff_size_mask,G,'same');
+        diff_size_mask=conv2(diff_size_mask,G','same');
+        diff_size_mask(abs(diff_size_mask)>0.005)=1; %make it a mask
+        %end improvement
+        %extra_time=toc
+        
         %now combine diff_size_mask and original difference image, to obtain the detailed differences in big regions of change:
         Diff_image_threshold=Diff_image_threshold.*uint8(diff_size_mask);
         %mark it in image:
