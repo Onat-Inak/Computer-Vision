@@ -33,7 +33,26 @@ The datasets differ in complexity and are thus suitable for investigating the pe
 
 
 ## Module 2
+For Module 2, a class called Visualization is implemented. This class is defined in the file 'Visualization.m'. All the different visualization options are implemented as methods of this class using the properties of this class. 
+Methods:
+- Constructor: All the preprocessing regarding the parameters obtained from the Module 1 is done here. The images, by which no transformation is found, are eliminated and the transformation matrices are changed accordingly etc.
 
+- choose_images: The images, which are chosen by the user, are defined as properties of the class and used in the following of the code.
+
+- define_parameters: All the parameters set by the user are obtained by this function as it's input and with the implemented parser method, the correctness of the given input by the user is investigated. If a wrong parameter is given by the user, an error feedback is given to the user.
+
+- Align_2_images: This function has two inputs. The first input is the new reference image and the second input is the new moving image, which must be transformed regarding the new reference image. This function transforms the second image regarding the first image, thus align them perfectly and make them ready to visualize differences between them.
+
+- Change_ref_im: All the images are transformed with respect to the class property 'ind_new_ref' with this function.
+
+- apply_3_1: Difference magnitude for threshold visualization option is applied in this function.
+
+- apply_3_2: Apply difference magnitude function regarding superpixels in a timelapse and differ big, intermediate and small changes from eachother :
+			 - red : big changes 
+    	                 - blue : intermediate changes
+    	                 - green : small changes
+
+- apply_3_3: Apply Difference Highlights function and determine the most changed pixels between chosen images :
 
 ## Work distribution
 R.Jacumet: set up the image loading and processing pipeline, and extensively worked on the feature extractor used in Module 1. Furthermore, Robert implemented a pixel difference calculation function and created a visualization method for the difference highlights.
