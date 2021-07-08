@@ -70,53 +70,6 @@ GUI()
 % [Images_reconstructed, trafos, Image_ref_number] = Reconstruct_Images(Images);
 % normalization_calc_duration=toc
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%% ==> AB HIER ENDE MOE UND ROBERT UND START ONAT UND ADAM  <=== %%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% tic
-% % determine old reference image in accordance with function Reconstruct_Images:
-% ind_old_ref=ceil(length(Images)/2);
-% 
-% % determine the index to be the first image which is possible to transform:
-% for count=1:numel(Images)
-%     if ~isempty(Images_reconstructed{count})
-%         break;
-%     end
-% end
-% ind_new_ref = count;
-% 
-% %call the function to aligne all pictures w.r.t the first one
-% [trafos_new,Images_reconstructed]=Change_ref_im(trafos,Images,Image_ref_number,ind_new_ref);
-% 
-% %plotting for debugging:
-% % figure();
-% % a=numel(Images_reconstructed);
-% % b=ceil(sqrt(a));
-% % for i=1:a
-% %     subplot(b,b,i), imshow(Images_reconstructed{i});
-% % end
-% % title('Images aligned to the first linked image');
-% 
-% 
-% 
-% %align two images w.r.t the first one:
-% ind1=count+4;%count still is the index of the first image that can be transformed
-% ind2=count+3;
-% [I1,I2]=Align_2_images(trafos, Images, ind_old_ref, ind1, ind2);
-% 
-% %plotting for debugging:
-% % figure
-% % subplot(1,2,1), imshow(I1);
-% % subplot(1,2,2), imshow(I2);
-% % title('Result Align 2 images');
-% 
-% change_ref_im=toc
-
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% 3.) Get Differences between the reconstructed Images
 
 % % Create a class for the visualization of the image differences :
