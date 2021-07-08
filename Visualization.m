@@ -69,6 +69,7 @@ classdef Visualization < handle
         overlay
         Diff_Image_Threshold
         seg_mask
+        folderName_processed
     end
     
     % Properties that are specific for corresponding type of visualization
@@ -329,11 +330,12 @@ classdef Visualization < handle
         
         % 3.2 Apply Difference Magnitude function regarding superpixels in
         % a timelapse :
-        function apply_3_2(obj,seg_mask)
+        function apply_3_2(obj,seg_mask,folderName_processed)
             obj.seg_mask  = seg_mask;
+            obj.folderName_processed = folderName_processed;
             if obj.comparison_rg_prev_img
                 t_3_3 = tic;
-                hold on
+                %hold on
                 for img_num = 1 : length(obj.Images_reconstructed_new) - 1
                     ref_image = obj.Images_reconstructed_new{img_num};
                     moving_image = obj.Images_reconstructed_new{img_num + 1};
@@ -443,11 +445,13 @@ classdef Visualization < handle
                     % show the overlayed image without boundary mask :
 %                    imshow(overlay);
                     imshowpair(overlay, moving_image, 'montage');
-                    title("Comparison timelapse for");
+                    hold on
+                    title(sprintf("Comparison timelapse for %s",obj.folderName_processed));
+                    hold off
                     % show the overlayed image with boundary mask : 
     %                 imshow(imoverlay(overlay, BM, 'cyan'),'InitialMagnification',67);
                 end
-                hold off
+                %hold off
                 obj.duration_3_3 = toc(t_3_3);
             end
         
@@ -455,7 +459,7 @@ classdef Visualization < handle
                 obj.Change_ref_im();
                 t_3_3 = tic;
                 figure();
-                hold on
+                %hold on
                 for img_num = 2 : length(obj.Images_reconstructed_new)
                     [obj.superpixel_pos, N] = superpixels(obj.Images_reconstructed_new{img_num}, obj.num_superpixels, 'NumIterations', obj.num_iterations_SP);
                     ref_image = obj.Images_reconstructed_new{1};
@@ -552,11 +556,13 @@ classdef Visualization < handle
                     % show the overlayed image without boundary mask :
 %                     imshow(overlay);
                     imshowpair(overlay, moving_image, 'montage')
-                    title("Historical timelapse for ");
+                    hold on
+                    title(sprintf("Historical timelapse for %s",obj.folderName_processed));
+                    hold off
                     % show the overlayed image with boundary mask : 
     %                 imshow(imoverlay(overlay, BM, 'cyan'),'InitialMagnification',67);
                 end
-                hold off
+                %hold off
                 obj.duration_3_3 = toc(t_3_3);
             end
         end

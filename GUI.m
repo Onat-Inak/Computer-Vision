@@ -40,6 +40,7 @@ classdef GUI < handle
     RunButton3
     hp5
     folderName
+    folderName_processed
     fileNames
     fileNames_new
     fileNames_processed
@@ -152,7 +153,7 @@ methods (Access = public)
                     
         obj.SegImgGraph = uiaxes('Units', 'normalized',...
                       'Position', [0.45 0.01 0.5 0.9],...
-                      'Parent', obj.hp3,'Visible','On');
+                      'Parent', obj.hp3,'Visible','Off');
                   
         obj.AllRegionsButton = uicontrol('Style','checkbox',...
                     'String','All regions',...
@@ -236,7 +237,7 @@ methods (Access = public)
                         'Position',[0.2 0.82 0.6 0.1],...
                         'Parent',obj.ParameterButtons,'Visible','On');
                     
-         obj.IntensitySlider  =  uicontrol('Style','slider',...
+        obj.IntensitySlider  =  uicontrol('Style','slider',...
                                 'min',0,...
                                 'max',100,...
                                 'SliderStep',[0.05 0.05],...
@@ -265,8 +266,8 @@ methods (Access = public)
                         'Parent',obj.ParameterButtons,'Visible','On'); 
                     
         obj.SpeedSlider =      uicontrol('Style','slider',...
-                                'min',0.1,...
-                                'max',3,...
+                                'Min',0.1,...
+                                'Max',3,...
                                 'SliderStep',[0.5 0.5],...
                                 'Tooltip','Set speed of the time lapse, from slow (left) to fast (right)',...
                                 'Value',1.5,...
@@ -367,6 +368,7 @@ methods (Access = public)
             f2 = msgbox("Images loaded!");
             obj.hp2.Visible = 'On';
             obj.hp3.Visible = 'On';
+            obj.hp4.Visible = 'On';
             
             
             obj.fileNames_new = cell(1,size(obj.fileNames_processed,2)+1);
@@ -376,8 +378,9 @@ methods (Access = public)
             imshow(obj.Images{1},'Parent',obj.ImageGraph);
             obj.filename = replace(obj.fileNames_processed{1},'_','-');
             title(obj.filename(1:end-4),'Parent',obj.ImageGraph);
-            folderName = split(obj.folderName,"/");
-            obj.GraphTitle.String = "Showing images for " + folderName{end};
+            obj.folderName_processed = split(obj.folderName,"/");
+            obj.folderName_processed = obj.folderName_processed{end};
+            obj.GraphTitle.String = "Showing images for " + obj.folderName_processed;
             obj.GraphTitle.Visible = 'On';            
     end
 
@@ -387,8 +390,9 @@ methods (Access = public)
         obj.filename = replace(obj.filename,'_','-');
         imshow(obj.img,'Parent',obj.ImageGraph);
         title(obj.ImageGraph,obj.filename(1:end-4),'Parent',obj.ImageGraph);
-        folderName = split(obj.folderName,"/");
-        obj.GraphTitle.String = "Showing images for " + folderName{end};
+        obj.folderName_processed = split(obj.folderName,"/");
+        obj.folderName_processed = obj.folderName_processed{end};
+        obj.GraphTitle.String = "Showing images for " + obj.folderName_processed;
         obj.GraphTitle.Visible = 'On';
     end
     
@@ -397,11 +401,11 @@ methods (Access = public)
         if ~get(obj.ModeButton4, 'Value')
             imshow(obj.Image_Highlights);
             top_percentage_threshold = obj.Visualization_Class.top_percentage_threshold;
-            title(sprintf('Top %d %% most changed pixels highlighted in red ',top_percentage_threshold));
+            title(sprintf('Top %d %% most changed pixels highlighted in red ',round(top_percentage_threshold,0)));
             set(gcf, 'Position', get(0, 'Screensize'));
         else
             imshowpair(obj.Image_Marked,obj.Visualization_Class.moving_image,'montage')
-            title(sprintf('Showing image comparison'));
+            title(sprintf('Showing image comparison for the images: %s and %s',obj.fileNames_processed{obj.chosen_images(1)}(1:end-6),obj.fileNames_processed{obj.chosen_images(2)}(1:end-7)));
             set(gcf, 'Position', get(0, 'Screensize'));
         end
     end
@@ -511,8 +515,11 @@ methods (Access = public)
         end
         close(f3)
         f4 = msgbox("Image Segmentation finished!");
-        obj.hp4.Visible = 'On';
-        display("Segmentation runtime: %d s", toc)
+%         obj.SegImgGraph.XGrid =  'Off';
+%         obj.SegImgGraph.YGrid =  'Off';
+%         obj.SegImgGraph.Visible = 'On';
+        time = toc;
+        display(time)
     end
     
     function setRegionButttons(obj, ~, ~)
@@ -568,7 +575,11 @@ methods (Access = public)
             obj.DisplayButton3.Visible = 'Off';
             obj.IntensitySliderTitle.String = "Top percentage of differences (left to right: high to low)";
             obj.IntensitySliderTitle.Position = [0.15 0.82 0.7 0.1]
-            obj.RunButton3.Visible = "On";
+            obj.IntensitySlider.Max = 20;
+            obj.IntensitySlider.Min = 0;
+            obj.IntensitySlider.Value = 10;
+            obj.IntensitySlider.Callback = @obj.visualizationCaller;
+            obj.RunButton3.Visible = "Off";
             obj.ParameterButtons.Visible = 'On';          
         elseif get(obj.ModeButton4, 'Value')
             obj.RefDropDown.Visible = 'On';
@@ -740,26 +751,26 @@ methods (Access = public)
         f4 = msgbox("Running visualization ...");
         if get(obj.ModeButton1, 'Value')
             num_visualization = 2;
-            chosen_images = "all"; % "all" or [vector contains image_numbers]
+            obj.chosen_images = "all"; % "all" or [vector contains image_numbers]
             comparison_rg_first_img = true;
             comparison_rg_prev_img = ~comparison_rg_first_img;
         elseif get(obj.ModeButton2, 'Value')
-            chosen_images = "all"; % "all" or [vector contains image_numbers]
+            obj.chosen_images = "all"; % "all" or [vector contains image_numbers]
             comparison_rg_first_img = false;
             comparison_rg_prev_img = ~comparison_rg_first_img;
         elseif get(obj.ModeButton3, 'Value')
-            chosen_images = "all"; % "all" or [vector contains image_numbers]
+            obj.chosen_images = "all"; % "all" or [vector contains image_numbers]
             top_percentage_threshold = get(obj.IntensitySlider,'Value');
             comparison_rg_first_img = true;
             comparison_rg_prev_img = ~comparison_rg_first_img;
         elseif get(obj.ModeButton4, 'Value')
-            chosen_images = [double(get(obj.RefDropDown,'Value')-1) double(get(obj.MovingDropDown,'Value')-1)];
+            obj.chosen_images = [double(get(obj.RefDropDown,'Value')-1) double(get(obj.MovingDropDown,'Value')-1)];
             comparison_rg_first_img = false;
             comparison_rg_prev_img = ~comparison_rg_first_img;
         end
                
         obj.Visualization_Class.define_parameters(...
-                    'chosen_images', chosen_images ,...
+                    'chosen_images', obj.chosen_images ,...
                     'threshold_DM', threshold_DM,...
                     'comparison_rg_first_img', comparison_rg_first_img ,...
                     'comparison_rg_prev_img', comparison_rg_prev_img ,... 
@@ -774,19 +785,24 @@ methods (Access = public)
                     'top_percentage_threshold',top_percentage_threshold) 
                 
           if get(obj.ModeButton1, 'Value')
+              close(f4)
+              f4 = msgbox("Loading historical timelapse...")
               if obj.Seg_Flag
-                obj.Visualization_Class.apply_3_2(obj.seg_mask);
+                obj.Visualization_Class.apply_3_2(obj.seg_mask,obj.folderName_processed);
               else 
                  seg_masks_ones = []; 
-                 obj.Visualization_Class.apply_3_2(seg_masks_ones);
+                 obj.Visualization_Class.apply_3_2(seg_masks_ones,obj.folderName_processed);
               end
+              close(f4)
           elseif get(obj.ModeButton2, 'Value')
+             f4 = msgbox("Loading comparison timelapse...")
              if obj.Seg_Flag
-                obj.Visualization_Class.apply_3_2(obj.seg_mask);
+                obj.Visualization_Class.apply_3_2(obj.seg_mask,obj.folderName_processed);
               else 
                  seg_masks_ones = []; 
-                 obj.Visualization_Class.apply_3_2(seg_masks_ones);
-              end
+                 obj.Visualization_Class.apply_3_2(seg_masks_ones,obj.folderName_processed);
+             end
+             close(f4)           
           elseif get(obj.ModeButton3, 'Value')
               obj.Visualization_Class.apply_3_3()
               close(f4)
@@ -798,21 +814,22 @@ methods (Access = public)
               Image_Marked_red_channel(obj.Visualization_Class.Difference_Image_Highlight>0)=255;
               obj.Image_Highlights(:,:,1)=Image_Marked_red_channel;
               imshow(obj.Image_Highlights,'Parent',obj.DifferenceImg)
-              title(sprintf('Top %d %% most changed pixels highlighted in red',top_percentage_threshold),'Parent',obj.DifferenceImg);
+              title(sprintf('Top %d %% most changed pixels highlighted in red',round(top_percentage_threshold,0)),'Parent',obj.DifferenceImg);
+              obj.hp5.Visible = 'On'; 
           elseif get(obj.ModeButton4, 'Value')
               obj.Visualization_Class.apply_3_1()    
               close(f4)
               if obj.Seg_Flag
-                obj.Visualization_Class.Diff_Image_Comparison = bsxfun(@times, obj.Visualization_Class.Diff_Image_Comparison, cast(obj.seg_mask{chosen_images(1)}, 'like', obj.Visualization_Class.Diff_Image_Comparison));
+                obj.Visualization_Class.Diff_Image_Comparison = bsxfun(@times, obj.Visualization_Class.Diff_Image_Comparison, cast(obj.seg_mask{obj.chosen_images(1)}, 'like', obj.Visualization_Class.Diff_Image_Comparison));
               end
-              obj.Image_Marked = obj.Images{chosen_images(1)};
+              obj.Image_Marked = obj.Images{obj.chosen_images(1)};
               Image_Marked_red_channel=obj.Image_Marked(:,:,1);
               Image_Marked_red_channel(obj.Visualization_Class.Diff_Image_Comparison>0)=255;
               obj.Image_Marked(:,:,1)=Image_Marked_red_channel;
-              imshowpair(obj.Image_Marked,obj.Visualization_Class.moving_image,'montage')
-              title(sprintf('Showing image comparison'));
+              imshow(obj.Image_Marked)
+              title(sprintf('Showing image comparison for the images: %s and %s',obj.fileNames_processed{obj.chosen_images(1)}(1:end-6),obj.fileNames_processed{obj.chosen_images(2)}(1:end-7)));
+              obj.hp5.Visible = 'On'; 
           end
-          obj.hp5.Visible = 'On'; 
           obj.ClearButton.Visible = 'On'; 
       end
    end
