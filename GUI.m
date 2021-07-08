@@ -899,7 +899,7 @@ methods (Access = public)
               close(f4)
               %Apply binary mask on differences if segmentation was applied
               if obj.Seg_Flag
-                obj.Visualization_Class.Diff_Image_Comparison = bsxfun(@times, obj.Visualization_Class.Diff_Image_Comparison, cast(obj.seg_mask{obj.chosen_images(1)}, 'like', obj.Visualization_Class.Diff_Image_Comparison));
+                obj.Visualization_Class.Diff_Image_Comparison = bsxfun(@times, obj.Visualization_Class.Diff_Image_Comparison, cast(obj.seg_mask{obj.chosen_images(2)}, 'like', obj.Visualization_Class.Diff_Image_Comparison));
               end
               %Mark differences in reference image, and show
               obj.Image_Marked = obj.Images{obj.chosen_images(1)};

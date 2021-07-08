@@ -30,10 +30,20 @@ The datasets differ in complexity and are thus suitable for investigating the pe
 
 
 ## Image Segmentation
+In the image segmentation task, a class *Segmentation.m* has been implemented. The Segmentation class implements a k-Means based clustering of pixelsneeded for the semantic segmentation task. The resulting cluster centers are then sorted based on their intensities in an ascending way. Each
+cluster represents one semantic region, in essence. The properties of the class consist of:
 
+- Input image,
+- Number of cluster centers
+- Segmentated image 
+- Label matrix, with the dimension of the input image. 
 
+The class has one method that implements a k-Means clustering on images with MATLAB's *imsegkmeans* function. Afterwards, the cluster centers are sorted by their intensities, and the segmentated images relabelled.
+
+The approach works particularly well for city regions in Dubai, for the glacier region (special landscape) in Columbia Glacier, or the forest/land areas in Brazilian Rainforest.
+ 
 ## Module 2
-For Module 2, a class called Visualization is implemented. This class is defined in the file 'Visualization.m'. All the different visualization options are implemented as methods of this class using the properties of this class. 
+For Module 2, a class called Visualization is implemented. This class is defined in the file *Visualization.m*. All the different visualization options are implemented as methods of this class using the properties of this class. 
 Methods:
 - Constructor: All the preprocessing regarding the parameters obtained from the Module 1 is done here. The images, by which no transformation is found, are eliminated and the transformation matrices are changed accordingly etc.
 
