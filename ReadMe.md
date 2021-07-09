@@ -39,7 +39,6 @@ The transforamtions resulting from the graphsearch are applied to the images and
 
 Module one is called when the images are fist loaded inside the GUI, so that the images are normalized for further visualization.
 
-
 Module 1 consists of the following functions:
 - *Reconstruct_Images*: Reconstructs images so that they are all adapted to the Reference Image, meaning they are taken from the same point in space, showing the same location.
 Here we have the graph logic implemented to efficiently call our estimations of transformations. The function calls SURF_MSAC for the actual estimation of transformation between two images.
@@ -47,9 +46,6 @@ Here we have the graph logic implemented to efficiently call our estimations of 
 This function has implemented both, the calculation of an estimation, as well as the MSAC algorithm on the upper level.
 - *Check_Transform*: This function is used to spot a wrong 2D transformation obtained from *SURF_MSAC*.
 - *apply_transformation*: Used to apply the estimated transformations to the images.
-
-
-So far no class structure for module 1. Is this a Problem?
 
 ## Image Segmentation
 In the image segmentation task, a class *Segmentation.m* has been implemented. The Segmentation class implements a k-Means based clustering of pixelsneeded for the semantic segmentation task. The resulting cluster centers are then sorted based on their intensities in an ascending way. Each
