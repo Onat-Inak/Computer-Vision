@@ -336,6 +336,7 @@ classdef Visualization < handle
             if obj.comparison_rg_prev_img
                 t_3_3 = tic;
                 %hold on
+                figure()
                 for img_num = 1 : length(obj.Images_reconstructed_new) - 1
                     ref_image = obj.Images_reconstructed_new{img_num};
                     moving_image = obj.Images_reconstructed_new{img_num + 1};
@@ -445,9 +446,7 @@ classdef Visualization < handle
                     % show the overlayed image without boundary mask :
 %                    imshow(overlay);
                     imshowpair(overlay, moving_image, 'montage');
-                    hold on
                     title(sprintf("Comparison timelapse for %s",obj.folderName_processed));
-                    hold off
                     % show the overlayed image with boundary mask : 
     %                 imshow(imoverlay(overlay, BM, 'cyan'),'InitialMagnification',67);
                 end
@@ -556,9 +555,7 @@ classdef Visualization < handle
                     % show the overlayed image without boundary mask :
 %                     imshow(overlay);
                     imshowpair(overlay, moving_image, 'montage')
-                    hold on
                     title(sprintf("Historical timelapse for %s",obj.folderName_processed));
-                    hold off
                     % show the overlayed image with boundary mask : 
     %                 imshow(imoverlay(overlay, BM, 'cyan'),'InitialMagnification',67);
                 end

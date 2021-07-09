@@ -74,7 +74,7 @@ Methods:
 
 - apply_3_1: Difference magnitude for threshold visualization option is applied in this function.
 
-- apply_3_2: Apply difference magnitude function regarding superpixels in a timelapse and differ big, intermediate and small changes from eachother :
+- apply_3_2: Apply difference magnitude function regarding superpixels in a timelapse and differ big, intermediate and small changes from each other :
 			 - red : big changes 
     	     - blue : intermediate changes
     	     - green : small changes
@@ -92,7 +92,6 @@ The graphical  user interface represents an integration of all the mentioned fun
 - Run visualization option
 - (optional) Show change image in fullscreen format
 - (optional) Export reconstructed images to files
-
 
 ## Work distribution
 R.Jacumet: set up the image loading and processing pipeline, and extensively worked on the feature extractor used in Module 1. Furthermore, Robert implemented a pixel difference calculation function and created a visualization method for the difference highlights. Robert also implemented the graph search algorithm used when no direct transformation to the reference image was possible.

@@ -74,6 +74,7 @@ classdef GUI < handle
     Image_Marked
     DifferenceImg
     ClearButton
+    ExportButton
     end 
 methods (Access = public)
     %Constructor of the GUI, initialize GUI layout and Logos
@@ -331,6 +332,16 @@ methods (Access = public)
                     'ForeGroundColor','#FFFFFF',...
                     'BackgroundColor','#0072BD',...
                     'Callback',@obj.clear_data,'Visible','Off');
+        %Initialize button for export of reconstructed images             
+        obj.ExportButton  = matlab.ui.control.UIControl('Style', 'pushbutton',...
+                    'String', 'Export reconstructed images',...
+                    'Units', 'normalized',...
+                    'Position', [0.7 0.03 0.15 0.03],...
+                    'Parent', obj.gui_fig,...
+                    'FontWeight','bold',... 
+                    'ForeGroundColor','#FFFFFF',...
+                    'BackgroundColor','#0072BD',...
+                    'Callback',@obj.export_reconstructed_imgs,'Visible','Off');
     end 
     %Method that clears GUI elements (resets it)
     function clear_data(obj,~, ~)
@@ -791,12 +802,9 @@ methods (Access = public)
             comparison_rg_first_img = true;
             %Compare all the images regarding the previous image in a timelapse plot
             comparison_rg_prev_img = ~comparison_rg_first_img;
-            %Check if at least one group of superpixels was selected
-            if ~logical(get(obj.DisplayButton1, 'Value')) && ~logical(get(obj.DisplayButton2, 'Value')) && ~logical(get(obj.DisplayButton3, 'Value'))
-            errordlg("You need to mark at least one change group!")
-            end
         %For comparison timelapse visualization
         elseif get(obj.ModeButton2, 'Value')
+            num_visualization = 2;
             %Choose if all images are inspected or just an array of images
             obj.chosen_images = "all";
             %Compare all the images regarding the first image in a timelapse plot
@@ -816,6 +824,7 @@ methods (Access = public)
         %For two image comparison
         elseif get(obj.ModeButton4, 'Value')
             %Set indices of the chosen images from the drop down menu
+            obj.chosen_images = [];
             obj.chosen_images = [double(get(obj.RefDropDown,'Value')-1) double(get(obj.MovingDropDown,'Value')-1)];
             %Compare all the images regarding the first image in a timelapse plot
             comparison_rg_first_img = false;
@@ -827,7 +836,7 @@ methods (Access = public)
          
         %Call parser of the Visualization class
         obj.Visualization_Class.define_parameters(...
-                    'chosen_images', obj.chosen_images ,...
+                    'chosen_images',obj.chosen_images,...
                     'threshold_DM', threshold_DM,...
                     'comparison_rg_first_img', comparison_rg_first_img ,...
                     'comparison_rg_prev_img', comparison_rg_prev_img ,... 
@@ -876,6 +885,7 @@ methods (Access = public)
              close(f4)   
           %For highlights mode
           elseif get(obj.ModeButton3, 'Value')
+              f4 = msgbox("Loading highlights...")
               %Run the Difference Highlights function, used within the
               %Visualization class
               obj.Visualization_Class.apply_3_3()
@@ -915,6 +925,7 @@ methods (Access = public)
               obj.hp5.Visible = 'On'; 
           end
           obj.ClearButton.Visible = 'On'; 
+          obj.ExportButton.Visible = 'On';
     end
     %Method that creates a fullscreen representation of the change image
     function fullscreenShow(obj, ~, ~)
@@ -932,14 +943,15 @@ methods (Access = public)
             set(gcf, 'Position', get(0, 'Screensize'));
         end
     end
-    %Method that exports any imgs to files, by a specified folder 
-    function export_reconstructed_imgs(Images_reconstructed, fileNames_processed,folderName_processed)
-        mkdir(strcat('Exported_Imgs/',folderName_processed))
-        for ever=1:numel(fileNames_processed)
-            filename=strcat('Exported_Imgs/',folderName_processed,'/',fileNames_processed{ever});
-            imwrite(Images_reconstructed{ever}, filename);
+    %Method that exports the reconstructed imgs to img files, by the
+    %specified folder name
+    function export_reconstructed_imgs(obj, ~, ~)
+        mkdir(strcat('Exported_Imgs/',obj.folderName_processed))
+        for ever=2:numel(obj.fileNames_new)-1
+            filename=strcat('Exported_Imgs/',obj.folderName_processed,'/',obj.fileNames_new{ever});
+            imwrite(obj.Images_reconstructed{ever}, filename);
         end
 
     end
- end
+  end
 end
