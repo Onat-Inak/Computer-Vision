@@ -339,7 +339,11 @@ methods (Access = public)
     end
     %Method that enables import of folder with satellite images
     function folderImport(obj,~,~)
-            %Get images, filenames and read images
+            % Get images, filenames and read images:
+            % From Project specification: Folder of pictures taken of the same location
+            % on earth with naming convention YYYY_MM.FORMAT.
+            % Loads Images into Cell array of Dimensions 1 x #ofImages, where each
+            % entry is of the size the picture has in pixels, so  width x height
             obj.folderName = uigetdir();
             obj.fileNames = {dir(fullfile(obj.folderName,'*')).name};            
             idx = cellfun(@(x) isequal(x,'.') | isequal(x,'..'),obj.fileNames); 

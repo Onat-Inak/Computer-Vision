@@ -11,7 +11,7 @@ Following Matlab Version and Toolboxes are needed:
 - Statistics and Machine Learning Toolbox
 
 ## How to run
-Add folder to path, run the *main.m* function to run our image processing pipeline, from image loading to correspondence and change visualization. Alternatively, the *GUI.m* file can be used to run our functionalities through a graphical user interface. 
+Add folder to local path, run the *main.m* function to open our graphical user interface. This interface bundles all functionalities implemented within our project. 
 
 On a more granular level, our software can be divided into three functional groups: Module 1, Image Segmentation and Module 2. While Module 1 corresponds to image preprocessing and image matching, Module 2 includes functionalities for the change analysis and visualization.
 
@@ -22,7 +22,6 @@ Besides using the baseline data provided after the project kick-off, we created 
 - Singapur
 - Beirut
 - Garching
-- Fukushima
 
 The datasets differ in complexity and are thus suitable for investigating the performance characteristics of the functions.
 
@@ -77,10 +76,23 @@ Methods:
 
 - apply_3_2: Apply difference magnitude function regarding superpixels in a timelapse and differ big, intermediate and small changes from eachother :
 			 - red : big changes 
-    	                 - blue : intermediate changes
-    	                 - green : small changes
+    	     - blue : intermediate changes
+    	     - green : small changes
 
-- apply_3_3: Apply Difference Highlights function and determine the most changed pixels between chosen images :
+- apply_3_3: Apply Difference Highlights function and determine the most changed pixels between chosen images 
+
+## GUI 
+The graphical  user interface represents an integration of all the mentioned functional groups. The utilization of the interface can be described by a happy path, i.e. a list of steps required to accomplish the task of change visualization in satellite images:
+
+- Upload image folder
+- (optional) Visualize uploaded images
+- (optional) Select image regions used for semantic segmentation
+- Select visualization mode
+- Set change and visualization parameters
+- Run visualization option
+- (optional) Show change image in fullscreen format
+- (optional) Export reconstructed images to files
+
 
 ## Work distribution
 R.Jacumet: set up the image loading and processing pipeline, and extensively worked on the feature extractor used in Module 1. Furthermore, Robert implemented a pixel difference calculation function and created a visualization method for the difference highlights. Robert also implemented the graph search algorithm used when no direct transformation to the reference image was possible.
