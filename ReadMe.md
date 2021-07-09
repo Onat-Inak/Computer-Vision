@@ -48,8 +48,6 @@ This function has implemented both, the calculation of an estimation, as well as
 - *Check_Transform*: This function is used to spot a wrong 2D transformation obtained from *SURF_MSAC*.
 - *apply_transformation*: Used to apply the estimated transformations to the images.
 
-//This function takes a reference image, a second image and a 2D transformation. It applies the 2D transformation to the second image to make it have the same perspective as the reference image.
-
 
 So far no class structure for module 1. Is this a Problem?
 
