@@ -83,9 +83,9 @@ Methods:
 - apply_3_3: Apply Difference Highlights function and determine the most changed pixels between chosen images :
 
 ## Work distribution
-R.Jacumet: set up the image loading and processing pipeline, and extensively worked on the feature extractor used in Module 1. Furthermore, Robert implemented a pixel difference calculation function and created a visualization method for the difference highlights.
+R.Jacumet: set up the image loading and processing pipeline, and extensively worked on the feature extractor used in Module 1. Furthermore, Robert implemented a pixel difference calculation function and created a visualization method for the difference highlights. Robert also implemented the graph search algorithm used when no direct transformation to the reference image was possible.
 
-M.Schneider: Moritz built the transformation chain needed for perspective normalization of image scenes. Moritz also implemented the graph optimization algorithm used when no direct transformation chain was found. He also wrote a function for filtering image differences according to their absolute area.
+M.Schneider: Moritz built the transformation chain and validation methods, needed for perspective normalization of image scenes. Moritz also developed the graph search logic to obtain chained transformations, where no direct transformation was found. He also wrote a function for filtering image differences according to their absolute area.
 
 O.Inak: Onat has implemented most of the functions within module 2. These include the two time-lapse variants and the visualization mode for comparing two images. In addition, Onat has investigated how superpixels can be used to give more semantic meaning to the calculated differences and how they can be color coded according to their intensity.
 
