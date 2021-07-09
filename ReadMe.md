@@ -28,6 +28,29 @@ The datasets differ in complexity and are thus suitable for investigating the pe
 
 ## Module 1 
 
+Module 1 deals with normalizing the input images, so that they are rotated and translated to the same perspective.
+All images will be aligned to a reference image from the set of images and the transformed images will be returend.
+In order to align the images with respect to each other, SURF features are extracted, matched and given to the the MATLAB function *estimateGeometricTransform2D*, which is used to estimate the transformations between the images.
+This MATLAB function uses the MSAC algorithm to further enhance robustness of the estimation of transforms.
+Although the SURF extractor in combination with the MSAC algorith have a high robustness, some estimations are wrong.
+For that purpose a function checking the validity of transdforms has been implemented.
+A graph search has been implemented to find chained trafos in cases, where no valid direct transformation was found.
+The transforamtions resulting from the graphsearch are applied to the images and both are returened for further processing.
+
+Module one is called when the images are fist loaded inside the GUI, so that the images are normalized for further visualization.
+
+
+Module 1 consists of the following functions:
+-*Reconstruct_Images*: Reconstructs images so that they are all adapted to the Reference Image, meaning they are taken from the same point in space, showing the same location.
+Here we have the graph logic implemented to efficiently call our estimations of transformations. The function calls SURF_MSAC for the actual estimation of transformation between two images.
+-*SURF_MSAC*: Extracts and matches SURF features and then uses them to estimate the transformations between two images with the MATLAB function *estimateGeometricTransform2D*.
+This function has implemented both, the calculation of an estimation, as well as the MSAC algorithm on the upper level.
+-*Check_Transform*: This function is used to spot a wrong 2D transformation obtained from *SURF_MSAC*.
+-*apply_transformation*: Used to apply the estimated transformations to the images.
+//This function takes a reference image, a second image and a 2D transformation. It applies the 2D transformation to the second image to make it have the same perspective as the reference image.
+
+
+So far no class structure for module 1. Is this a Problem?
 
 ## Image Segmentation
 In the image segmentation task, a class *Segmentation.m* has been implemented. The Segmentation class implements a k-Means based clustering of pixelsneeded for the semantic segmentation task. The resulting cluster centers are then sorted based on their intensities in an ascending way. Each
