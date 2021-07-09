@@ -41,12 +41,13 @@ Module one is called when the images are fist loaded inside the GUI, so that the
 
 
 Module 1 consists of the following functions:
--*Reconstruct_Images*: Reconstructs images so that they are all adapted to the Reference Image, meaning they are taken from the same point in space, showing the same location.
+- *Reconstruct_Images*: Reconstructs images so that they are all adapted to the Reference Image, meaning they are taken from the same point in space, showing the same location.
 Here we have the graph logic implemented to efficiently call our estimations of transformations. The function calls SURF_MSAC for the actual estimation of transformation between two images.
--*SURF_MSAC*: Extracts and matches SURF features and then uses them to estimate the transformations between two images with the MATLAB function *estimateGeometricTransform2D*.
+- *SURF_MSAC*: Extracts and matches SURF features and then uses them to estimate the transformations between two images with the MATLAB function *estimateGeometricTransform2D*.
 This function has implemented both, the calculation of an estimation, as well as the MSAC algorithm on the upper level.
--*Check_Transform*: This function is used to spot a wrong 2D transformation obtained from *SURF_MSAC*.
--*apply_transformation*: Used to apply the estimated transformations to the images.
+- *Check_Transform*: This function is used to spot a wrong 2D transformation obtained from *SURF_MSAC*.
+- *apply_transformation*: Used to apply the estimated transformations to the images.
+
 //This function takes a reference image, a second image and a 2D transformation. It applies the 2D transformation to the second image to make it have the same perspective as the reference image.
 
 
