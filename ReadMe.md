@@ -93,6 +93,7 @@ The graphical  user interface represents an integration of all the mentioned fun
 - (optional) Show change image in fullscreen format
 - (optional) Export reconstructed images to files
 
+If the happy path was finished for one image folder, it is recommended to use the Reset button for experiments on new folders.
 ## Work distribution
 R.Jacumet: set up the image loading and processing pipeline, and extensively worked on the feature extractor used in Module 1. Furthermore, Robert implemented a pixel difference calculation function and created a visualization method for the difference highlights. Robert also implemented the graph search algorithm used when no direct transformation to the reference image was possible.
 
