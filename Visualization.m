@@ -291,7 +291,8 @@ classdef Visualization < handle
         end 
         
         % 3.1 Apply Difference Magnitude for different Threshold values :
-        function apply_3_1(obj)
+        function apply_3_1(obj,seg_mask)
+            obj.seg_mask = seg_mask;
             % Get treshold, segmentation flag (implements segmentation) from GUI
             % and plot flag (plots each processing step)
             hold on
@@ -305,9 +306,17 @@ classdef Visualization < handle
                     else
                         [ref_image, obj.moving_image] = obj.Align_2_images(img_num, img_num + 1);
                     end
+
                     %Measure runtime and run difference calculation :
          
-                    [obj.Image_Marked, obj.Diff_Image_Comparison] = Difference_Magnitude(ref_image, obj.moving_image, obj.threshold_DM, obj.plot_images, obj.seg_flag,obj.threshold_l);
+                    [~, obj.Diff_Image_Comparison] = Difference_Magnitude(ref_image, obj.moving_image, obj.threshold_DM, obj.plot_images, obj.seg_flag,obj.threshold_l);                  
+                    if ~isempty(obj.seg_mask)
+                        obj.Diff_Image_Comparison  = bsxfun(@times, obj.Diff_Image_Comparison, cast(obj.seg_mask, 'like', obj.Diff_Image_Comparison));
+                    end
+                    obj.Image_Marked=ref_image;%it might be better to show changes in the new image
+                    Image_Marked_red_channel=obj.Image_Marked(:,:,1);
+                    Image_Marked_red_channel(obj.Diff_Image_Comparison>0)=255;
+                    obj.Image_Marked(:,:,1)=Image_Marked_red_channel;
                     pause(obj.pause_duration);
                 end
             end

@@ -34,6 +34,8 @@ classdef GUI < handle
     hp4
     IntensitySlider
     IntensitySliderTitle
+    HighlightsSlider
+    HighlightsSliderTitle
     AreaSlider
     AreaSliderTitle
     DisplayButtons
@@ -209,26 +211,26 @@ methods (Access = public)
          obj.DisplayButtons = uibuttongroup('Units','normalized',...
             'Position',[0.05 0.05 0.4 0.9],'Title','Select visualization mode','Parent',obj.hp4);
         
-         %Initialize radio button for historical timelapse
+         %Initialize radio button for historical timelapse 
          obj.ModeButton1 = uicontrol('Style','radiobutton',...
             'Units','normalized',...
             'String','Historical timelapse',...
-            'Position',[0.1 0.8 0.6 0.15],'Parent',obj.DisplayButtons);
-         %Initialize radio button for comparison timelapse
+            'Position',[0.1 0.4 0.6 0.15],'Parent',obj.DisplayButtons);
+         %Initialize radio button for comparison timelapse 
          obj.ModeButton2 = uicontrol('Style','radiobutton',...
             'Units','normalized',...
             'String','Comparison timelapse',...
-            'Position',[0.1 0.6 0.6 0.15],'Parent',obj.DisplayButtons);
+            'Position',[0.1 0.2 0.6 0.15],'Parent',obj.DisplayButtons);
          %Initialize radio button for highlights
          obj.ModeButton3 = uicontrol('Style','radiobutton',...
             'Units','normalized',...
             'String','Highlights',...
-            'Position',[0.1 0.4 0.6 0.15],'Parent',obj.DisplayButtons);
-         %Initialize radio button for two image comparison
+            'Position',[0.1 0.6 0.6 0.15],'Parent',obj.DisplayButtons);
+         %Initialize radio button for two image comparison 
          obj.ModeButton4 = uicontrol('Style','radiobutton',...
             'Units','normalized',...
             'String','Two image comparison',...
-            'Position',[0.1 0.2 0.6 0.15],'Parent',obj.DisplayButtons);
+            'Position',[0.1 0.8 0.6 0.15],'Parent',obj.DisplayButtons);
         %Initialize button for viz mode confirmation
         obj.RunButton2 = uicontrol('Style', 'pushbutton',...
                 'String', 'Confirm mode',...
@@ -243,10 +245,10 @@ methods (Access = public)
             'Position',[0.45 0.05 0.5 0.9],'Title','Set visualization parameters','Parent',obj.hp4,'Visible','Off');
         %Initialize title for difference intensity slider
         obj.IntensitySliderTitle = uicontrol('Style','text',...
-                        'String','Difference intensity',...
+                        'String','Difference intensity (left to right: low to high)',...
                         'Units','normalized',...
                         'Position',[0.2 0.82 0.6 0.1],...
-                        'Parent',obj.ParameterButtons,'Visible','On');
+                        'Parent',obj.ParameterButtons,'Visible','Off');
         %Initialize  difference intensity slider            
         obj.IntensitySlider  =  uicontrol('Style','slider',...
                                 'min',1,...
@@ -254,10 +256,24 @@ methods (Access = public)
                                 'SliderStep',[0.1 0.1],...
                                 'Value',1,...
                                 'Units','normalized',...
-                                'Position',[0.25 0.8 0.5 0.05],'Parent',obj.ParameterButtons);
+                                'Position',[0.25 0.8 0.5 0.05],'Parent',obj.ParameterButtons,'Visible','Off');
+        %Initialize title for highlights percentage slider
+        obj.HighlightsSliderTitle = uicontrol('Style','text',...
+                        'String',"Top percentage of differences (left to right: high to low)",...
+                        'Units','normalized',...
+                        'Position',[0.2 0.52 0.7 0.1],...
+                        'Parent',obj.ParameterButtons,'Visible','Off');
+        %Initialize highlights percentage slider         
+        obj.HighlightsSlider  =  uicontrol('Style','slider',...
+                                'min',0,...
+                                'max',20,...
+                                'SliderStep',[0.05 0.05],...
+                                'Value',10,...
+                                'Units','normalized',...
+                                'Position',[0.25 0.5 0.5 0.05],'Parent',obj.ParameterButtons,'Visible','Off','Callback',@obj.visualizationCaller);
         %Initialize title for difference area slider                    
-        obj.AreaSliderTitle = uicontrol('Style','text',...
-                        'String','Difference area',...
+        obj.AreaSliderTitle = uicontrol('Style','text',...      
+                        'String','Difference area (left to right: small to large)',...
                         'Units','normalized',...
                         'Position',[0.25 0.67 0.5 0.1],...
                         'Parent',obj.ParameterButtons,'Visible','On');
@@ -380,6 +396,7 @@ methods (Access = public)
             obj.hp2.Visible = 'On';
             obj.hp3.Visible = 'On';
             obj.hp4.Visible = 'On';
+            set(obj.ModeButton4,'Value',1)
             %Set filename properties for drop down menu in image visualization           
             obj.fileNames_new = cell(1,size(obj.fileNames_processed,2)+1);
             obj.fileNames_new{1} = obj.DropdownFolder.String;
@@ -585,27 +602,31 @@ methods (Access = public)
         if get(obj.ModeButton1, 'Value')
             obj.RefDropDown.Visible = 'Off';
             obj.MovingDropDown.Visible = 'Off';
+            obj.IntensitySlider.Visible = 'On';
+            obj.IntensitySliderTitle.Visible = 'On';
+            obj.HighlightsSlider.Visible = 'Off';
+            obj.HighlightsSliderTitle.Visible = 'Off';
             obj.AreaSlider.Visible = 'On';
             obj.AreaSliderTitle.Visible = 'On';
             obj.DisplayButton1.Visible = 'On';
             obj.DisplayButton2.Visible = 'On';
             obj.DisplayButton3.Visible = 'On';
-            obj.IntensitySliderTitle.String = "Difference intensity (left to right: low to high)";
-            obj.AreaSliderTitle.String = "Difference area (left to right: small to large)";
             obj.RunButton3.Visible = "On";
             obj.ParameterButtons.Visible = 'On';
         %For comparison timelapse mode
         elseif get(obj.ModeButton2, 'Value')
             obj.RefDropDown.Visible = 'Off';
             obj.MovingDropDown.Visible = 'Off';
+            obj.IntensitySlider.Visible = 'On';
+            obj.IntensitySliderTitle.Visible = 'On';
+            obj.HighlightsSlider.Visible = 'Off';
+            obj.HighlightsSliderTitle.Visible = 'Off';
             obj.AreaSlider.Visible = 'On';
             obj.AreaSliderTitle.Visible = 'On';
             obj.DisplayButton1.Visible = 'On';
             obj.DisplayButton2.Visible = 'On';
             obj.DisplayButton3.Visible = 'On';
-            obj.IntensitySliderTitle.String = "Difference intensity (left to right: low to high)";
             obj.RunButton3.Visible = "On";
-            obj.AreaSliderTitle.String = "Difference area (left to right: small to large)";
             obj.ParameterButtons.Visible = 'On';
         %For highlights mode
         elseif get(obj.ModeButton3, 'Value')
@@ -613,26 +634,25 @@ methods (Access = public)
             obj.MovingDropDown.Visible = 'Off';
             obj.AreaSlider.Visible = 'Off';
             obj.AreaSliderTitle.Visible = 'Off';
+            obj.IntensitySlider.Visible = 'Off';
+            obj.IntensitySliderTitle.Visible = 'Off';
             obj.DisplayButton1.Visible = 'Off';
             obj.DisplayButton2.Visible = 'Off';
             obj.DisplayButton3.Visible = 'Off';
-            obj.IntensitySliderTitle.String = "Top percentage of differences (left to right: high to low)";
-            obj.IntensitySliderTitle.Position = [0.15 0.82 0.7 0.1]
-            obj.IntensitySlider.Max = 20;
-            obj.IntensitySlider.Min = 0;
-            obj.IntensitySlider.Value = 10;
-            %Set callback of the highlights mode if slider element is moved
-            obj.IntensitySlider.Callback = @obj.visualizationCaller;
+            obj.HighlightsSliderTitle.Visible  = 'On';
+            obj.HighlightsSlider.Visible = 'On';
             obj.RunButton3.Visible = "Off";
             obj.ParameterButtons.Visible = 'On';
         %For two image comparison
         elseif get(obj.ModeButton4, 'Value')
             obj.RefDropDown.Visible = 'On';
             obj.MovingDropDown.Visible = 'On'; 
-            obj.IntensitySliderTitle.String = "Difference intensity (left to right: low to high)";
+            obj.IntensitySlider.Visible = 'On';
+            obj.IntensitySliderTitle.Visible = 'On';
             obj.AreaSlider.Visible = 'On';
-            obj.AreaSliderTitle.String = "Difference area (left to right: small to large)";
             obj.AreaSliderTitle.Visible = 'On';
+            obj.HighlightsSlider.Visible = 'Off';
+            obj.HighlightsSliderTitle.Visible = 'Off';
             obj.DisplayButton1.Visible = 'Off';
             obj.DisplayButton2.Visible = 'Off';
             obj.DisplayButton3.Visible = 'Off';
@@ -776,8 +796,6 @@ methods (Access = public)
     %Method that calls the visualization pipeline (Module 2)
     function visualizationCaller(obj,~,~)
         %Define the visualization parameters from the user input:
-        %Threshold for the Difference Magnitude function
-        threshold_DM = get(obj.IntensitySlider,'Value'); 
         %Set number of superpixels and thresholds for low,mid and high
         %intensity superpixels
         num_superpixels = 1000; 
@@ -788,14 +806,16 @@ methods (Access = public)
         plot_big_changes = logical(get(obj.DisplayButton1, 'Value'));
         plot_intermediate_changes = logical(get(obj.DisplayButton2, 'Value'));
         plot_small_changes = logical(get(obj.DisplayButton3, 'Value'));
-        %Set threshold for top difference in highlights image 
-        top_percentage_threshold = threshold_DM;
-        %Set threshold for difference area in change image
-        threshold_l = get(obj.AreaSlider,'Value');
         
+        %Check special parameters of viz modes
         %For historical timelapse visualization
         if get(obj.ModeButton1, 'Value')
+            %Initialize Visualization class, and set threshold parameters required
+            %for given viz mode
             obj.Visualization_Class = Visualization(obj.Images_reconstructed, obj.fileNames, obj.trafos, obj.Images, obj.Image_ref_number);
+            threshold_DM = get(obj.IntensitySlider,'Value');
+            threshold_l = get(obj.AreaSlider,'Value');
+            top_percentage_threshold = 0;
             num_visualization = 2;
             %Choose if all images are inspected or just an array of images
             obj.chosen_images = "all";  
@@ -805,7 +825,12 @@ methods (Access = public)
             comparison_rg_prev_img = ~comparison_rg_first_img;
         %For comparison timelapse visualization
         elseif get(obj.ModeButton2, 'Value')
+            %Initialize Visualization class, and set threshold parameters required
+            %for given viz mode
             obj.Visualization_Class = Visualization(obj.Images_reconstructed, obj.fileNames, obj.trafos, obj.Images, obj.Image_ref_number);
+            threshold_DM = get(obj.IntensitySlider,'Value');
+            threshold_l = get(obj.AreaSlider,'Value');
+            top_percentage_threshold = 0;
             num_visualization = 2;
             %Choose if all images are inspected or just an array of images
             obj.chosen_images = "all";
@@ -815,17 +840,25 @@ methods (Access = public)
             comparison_rg_prev_img = ~comparison_rg_first_img;
         %For highlights visualization
         elseif get(obj.ModeButton3, 'Value')
-             %Choose if all images are inspected or just an array of images
+            %Choose if all images are inspected or just an array of images
             obj.chosen_images = "all";
-            %Set threshold for top difference in highlights image
-            top_percentage_threshold = get(obj.IntensitySlider,'Value');
+            %Set threshold for top difference in highlights image, all
+            %other thresholds irrelevant
+            threshold_DM = 1;
+            threshold_l = 1;
+            top_percentage_threshold = get(obj.HighlightsSlider,'Value');
             %Compare all the images regarding the first image in a timelapse plot
             comparison_rg_first_img = true;
             %Compare all the images regarding the previous image in a timelapse plot
             comparison_rg_prev_img = ~comparison_rg_first_img;
         %For two image comparison
         elseif get(obj.ModeButton4, 'Value')
+            %Initialize Visualization class, and set threshold parameters required
+            %for given viz mode
             obj.Visualization_Class = Visualization(obj.Images_reconstructed, obj.fileNames, obj.trafos, obj.Images, obj.Image_ref_number);
+            threshold_DM = get(obj.IntensitySlider,'Value');
+            threshold_l = get(obj.AreaSlider,'Value');
+            top_percentage_threshold = 0;
             %Set indices of the chosen images from the drop down menu
             obj.chosen_images = [];
             obj.chosen_images = [double(get(obj.RefDropDown,'Value')-1) double(get(obj.MovingDropDown,'Value')-1)];
@@ -868,7 +901,6 @@ methods (Access = public)
                  seg_masks_ones = []; 
                  obj.Visualization_Class.apply_3_2(seg_masks_ones,obj.folderName_processed);
               end
-              close(f4)
           %For comparison timelapse
           elseif get(obj.ModeButton2, 'Value')
              %Check if at least one group of superpixels was selected
@@ -885,7 +917,6 @@ methods (Access = public)
                  seg_masks_ones = []; 
                  obj.Visualization_Class.apply_3_2(seg_masks_ones,obj.folderName_processed);
              end
-             close(f4)   
           %For highlights mode
           elseif get(obj.ModeButton3, 'Value')
               f4 = msgbox("Loading highlights...")
@@ -911,19 +942,17 @@ methods (Access = public)
           elseif get(obj.ModeButton4, 'Value')
               f4 = msgbox("Loading comparison...")
               %Run the Difference Magnitude function on the two images, used within the
-              %Visualization class
-              obj.Visualization_Class.apply_3_1()    
-              close(f4)
-              %Apply binary mask on differences if segmentation was applied
+              %Visualization class and apply binary mask on differences if segmentation was applied
               if obj.Seg_Flag
-                obj.Visualization_Class.Diff_Image_Comparison = bsxfun(@times, obj.Visualization_Class.Diff_Image_Comparison, cast(obj.seg_mask{obj.chosen_images(2)}, 'like', obj.Visualization_Class.Diff_Image_Comparison));
+                 obj.Visualization_Class.apply_3_1(obj.seg_mask{obj.chosen_images(1)})                  
+              else
+                 seg_masks_ones = []; 
+                 obj.Visualization_Class.apply_3_1(seg_masks_ones)                       
               end
+              close(f4)
+
               %Mark differences in reference image, and show
-              %obj.Image_Marked = obj.Images{obj.chosen_images(1)};
               obj.Image_Marked = obj.Visualization_Class.Image_Marked;
-              %Image_Marked_red_channel=obj.Image_Marked(:,:,1);
-              %Image_Marked_red_channel(obj.Visualization_Class.Diff_Image_Comparison>0)=255;
-              %obj.Image_Marked(:,:,1)=Image_Marked_red_channel;
               imshow(obj.Image_Marked)
               title(sprintf('Showing image comparison for the images: %s and %s',obj.fileNames_processed{obj.chosen_images(1)}(1:end-6),obj.fileNames_processed{obj.chosen_images(2)}(1:end-7)));
               obj.hp5.Visible = 'On'; 

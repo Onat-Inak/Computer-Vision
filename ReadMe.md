@@ -16,7 +16,7 @@ Add folder to local path, run the *main.m* function to open our graphical user i
 On a more granular level, our software can be divided into three functional groups: Module 1, Image Segmentation and Module 2. While Module 1 corresponds to image preprocessing and image matching, Module 2 includes functionalities for the change analysis and visualization.
 
 ## Data 
-Besides using the baseline data provided after the project kick-off, we created 5 more datasets that can be tested with our software:
+Besides using the baseline data provided after the project kick-off, we created 4 more datasets that can be tested with our software:
 
 - Schiphol
 - Singapur
@@ -51,8 +51,8 @@ In the image segmentation task, a class *Segmentation.m* has been implemented. T
 cluster represents one semantic region, in essence. The properties of the class consist of:
 
 - Input image,
-- Number of cluster centers
-- Segmentated image 
+- Number of cluster centers,
+- Segmentated image,
 - Label matrix, with the dimension of the input image. 
 
 The class has one method that implements a k-Means clustering on images with MATLAB's *imsegkmeans* function. Afterwards, the cluster centers are sorted by their intensities, and the segmentated images relabelled.
