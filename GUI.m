@@ -795,6 +795,7 @@ methods (Access = public)
         
         %For historical timelapse visualization
         if get(obj.ModeButton1, 'Value')
+            obj.Visualization_Class = Visualization(obj.Images_reconstructed, obj.fileNames, obj.trafos, obj.Images, obj.Image_ref_number);
             num_visualization = 2;
             %Choose if all images are inspected or just an array of images
             obj.chosen_images = "all";  
@@ -804,6 +805,7 @@ methods (Access = public)
             comparison_rg_prev_img = ~comparison_rg_first_img;
         %For comparison timelapse visualization
         elseif get(obj.ModeButton2, 'Value')
+            obj.Visualization_Class = Visualization(obj.Images_reconstructed, obj.fileNames, obj.trafos, obj.Images, obj.Image_ref_number);
             num_visualization = 2;
             %Choose if all images are inspected or just an array of images
             obj.chosen_images = "all";
@@ -917,10 +919,11 @@ methods (Access = public)
                 obj.Visualization_Class.Diff_Image_Comparison = bsxfun(@times, obj.Visualization_Class.Diff_Image_Comparison, cast(obj.seg_mask{obj.chosen_images(2)}, 'like', obj.Visualization_Class.Diff_Image_Comparison));
               end
               %Mark differences in reference image, and show
-              obj.Image_Marked = obj.Images{obj.chosen_images(1)};
-              Image_Marked_red_channel=obj.Image_Marked(:,:,1);
-              Image_Marked_red_channel(obj.Visualization_Class.Diff_Image_Comparison>0)=255;
-              obj.Image_Marked(:,:,1)=Image_Marked_red_channel;
+              %obj.Image_Marked = obj.Images{obj.chosen_images(1)};
+              obj.Image_Marked = obj.Visualization_Class.Image_Marked;
+              %Image_Marked_red_channel=obj.Image_Marked(:,:,1);
+              %Image_Marked_red_channel(obj.Visualization_Class.Diff_Image_Comparison>0)=255;
+              %obj.Image_Marked(:,:,1)=Image_Marked_red_channel;
               imshow(obj.Image_Marked)
               title(sprintf('Showing image comparison for the images: %s and %s',obj.fileNames_processed{obj.chosen_images(1)}(1:end-6),obj.fileNames_processed{obj.chosen_images(2)}(1:end-7)));
               obj.hp5.Visible = 'On'; 
