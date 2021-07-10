@@ -389,7 +389,9 @@ methods (Access = public)
             idx = find(~cellfun(@isempty,obj.Images_reconstructed));
             obj.fileNames_processed = obj.fileNames(idx);
             obj.Images = obj.Images(idx);
-            obj.Images_reconstructed = obj.Images_reconstructed(idx);           
+            obj.Images_reconstructed = obj.Images_reconstructed(idx);  
+            obj.trafos = obj.Visualization_Class.trafos_new;
+            obj.Image_ref_number = obj.Visualization_Class.Image_ref_number_new;
             close(f)
             f2 = msgbox("Images loaded!");
             %Visualize GUI elements
