@@ -84,6 +84,28 @@ classdef Visualization < handle
     
     methods
         % Constructor / 3.0:
+        % -The images_reconstructed_new property is created from the
+        % parameter Images_reconstructed by eliminating the images, by
+        % which there were no transformation possibilities.
+        % -The years and methods are gotten from the image names in the
+        % folder for every single applicable image and saved in the
+        % corresponding class properties.
+        % -The elements of the transformation matrix, which correspond to
+        % the images without possible transformation are eliminated from
+        % the matrix.
+        % -The original images corresponding the transformed images in the 
+        % property Images_reconstructed_new are saved in the property
+        % Images_new, to use the methods align_2_images and Change_ref_im
+        % in further visualization options corresponding the chosen images
+        % and selected visualization options by the user or regarding 
+        % the selected folder.
+        
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        % The constructor is essential for the methods of this class and
+        % therefore must be initialized every time after the user changes
+        % some options in the GUI!
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        
         function obj = Visualization(Images_reconstructed, Image_Names, trafos, Images, Image_ref_number)
             obj.Images_reconstructed = Images_reconstructed;
             logic_vec = logical(zeros(1, length(Images_reconstructed)));
@@ -120,6 +142,11 @@ classdef Visualization < handle
         end
     
         % Choose the images that you want to analyze/ visualize further :
+        % The Images_reconstructed_new is recreated regarding the chosen
+        % images by the user. The parameter Images_reconstructed_new only
+        % contains the selected images, if chosen_images parameter is not
+        % set to "all". If it is set to "all", then all the transformed
+        % images are stored in the corresponding preperty.
         function choose_images(obj, chosen_images)
             obj.chosen_images = sort(chosen_images);
             if string(obj.chosen_images) ~= "all"
@@ -675,7 +702,7 @@ classdef Visualization < handle
 %                     imshow(Image_Highlights);
 %                     title(sprintf('Top %d %% most changed pixles highlighted in red ',obj.top_percentage_threshold));
 %                  end
-        end %end of function
+        end
     end
 end
 
