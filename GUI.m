@@ -823,6 +823,7 @@ methods (Access = public)
             comparison_rg_prev_img = ~comparison_rg_first_img;
         %For two image comparison
         elseif get(obj.ModeButton4, 'Value')
+            obj.Visualization_Class = Visualization(obj.Images_reconstructed, obj.fileNames, obj.trafos, obj.Images, obj.Image_ref_number);
             %Set indices of the chosen images from the drop down menu
             obj.chosen_images = [];
             obj.chosen_images = [double(get(obj.RefDropDown,'Value')-1) double(get(obj.MovingDropDown,'Value')-1)];
