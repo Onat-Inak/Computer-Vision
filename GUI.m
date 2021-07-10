@@ -457,6 +457,7 @@ methods (Access = public)
                 obj.SegGraphTitle.String = "All regions considered!";
                 obj.SegGraphTitle.Visible = "On";
                 imshow(obj.Images{i},'Parent',obj.ImageGraph);
+                obj.Seg_Flag = 0;
             %If two regions are selected (and no city/special landscape), initialize kMeans with 2 cluster centers    
             elseif logical(get(obj.LandButton, 'Value')) && logical(get(obj.SeaButton, 'Value')) && ~logical(get(obj.CityButton, 'Value')) && ~logical(get(obj.SpecialLandscapeButton, 'Value')) || logical(get(obj.LandButton, 'Value')) && ~logical(get(obj.CityButton, 'Value')) || logical(get(obj.SeaButton, 'Value')) && ~logical(get(obj.CityButton, 'Value')) && ~logical(get(obj.SpecialLandscapeButton, 'Value'))
                 obj.Seg_Class.k = 2;
@@ -950,7 +951,6 @@ methods (Access = public)
                  obj.Visualization_Class.apply_3_1(seg_masks_ones)                       
               end
               close(f4)
-
               %Mark differences in reference image, and show
               obj.Image_Marked = obj.Visualization_Class.Image_Marked;
               imshow(obj.Image_Marked)
