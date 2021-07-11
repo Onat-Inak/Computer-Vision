@@ -983,9 +983,21 @@ methods (Access = public)
     %Method that exports the reconstructed imgs to img files, by the
     %specified folder name
     function export_reconstructed_imgs(obj, ~, ~)
-        mkdir(strcat('Exported_Imgs/',obj.folderName_processed))
+        if ispc 
+            temp_fold = split(obj.folderName_processed,'\')
+            temp_fold = string(temp_fold(end));
+            mkdir(strcat('Exported_Imgs', '\',temp_fold));
+        else
+            mkdir(strcat('Exported_Imgs', '/',obj.folderName_processed));
+        end
         for ever=2:numel(obj.fileNames_new)-1
-            filename=strcat('Exported_Imgs/',obj.folderName_processed,'/',obj.fileNames_new{ever});
+            if ispc
+                temp_fold = split(obj.folderName_processed,'\')
+                temp_fold = string(temp_fold(end));
+                filename=strcat('Exported_Imgs', '\', temp_fold, '\', obj.fileNames_new{ever});
+            else
+                filename=strcat('Exported_Imgs', '/', obj.folderName_processed, '/', obj.fileNames_new{ever});
+            end
             imwrite(obj.Images_reconstructed{ever}, filename);
         end
 
