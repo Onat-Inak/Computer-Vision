@@ -372,14 +372,15 @@ methods (Access = public)
             % Loads Images into Cell array of Dimensions 1 x #ofImages, where each
             % entry is of the size the picture has in pixels, so  width x height
             obj.folderName = uigetdir();
-            obj.fileNames = {dir(fullfile(obj.folderName,'*')).name};            
+            obj.fileNames = {dir(fullfile(obj.folderName,'*')).name}; 
+            f = msgbox("Loading images ...");
+            tic;
             idx = cellfun(@(x) isequal(x,'.') | isequal(x,'..'),obj.fileNames); 
             obj.fileNames(idx)=[];         
             obj.Images=cell(1,length(obj.fileNames));            
             for i=1:length(obj.fileNames)
                 obj.Images{i}=imread(fullfile(obj.folderName,obj.fileNames{i}));
             end              
-            f = msgbox("Loading images ...");
             %Call image matching and reconstruction pipeline (Module 1, see ReadMe)
             obj.callReconstructImgs()
             %Initialize the Visualization class, that will be needed for
@@ -393,7 +394,8 @@ methods (Access = public)
             obj.trafos = obj.Visualization_Class.trafos_new;
             obj.Image_ref_number = obj.Visualization_Class.Image_ref_number_new;
             close(f)
-            f2 = msgbox("Images loaded!");
+            time = toc
+            f2 = msgbox("Images loaded! Loading time: " + num2str(time)+"s");
             %Visualize GUI elements
             obj.hp2.Visible = 'On';
             obj.hp3.Visible = 'On';
