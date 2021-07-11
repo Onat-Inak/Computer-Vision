@@ -430,6 +430,8 @@ classdef Visualization < handle
                         end
                     end
 
+                    % Define the thresholds relatively to the biggest mean
+                    % of change:
                     th_SP_big = biggest_change_mean * (100 - obj.threshold_SP_big) / 100;
                     th_SP_intermediate = biggest_change_mean * (100 - obj.threshold_SP_intermediate) / 100;
                     th_SP_small = biggest_change_mean * (100 - obj.threshold_SP_small) / 100;
@@ -532,6 +534,8 @@ classdef Visualization < handle
                         end
                     end
 
+                    % Define the thresholds relatively to the biggest mean
+                    % of change:
                     th_SP_big = biggest_change_mean * (100 - obj.threshold_SP_big) / 100;
                     th_SP_intermediate = biggest_change_mean * (100 - obj.threshold_SP_intermediate) / 100;
                     th_SP_small = biggest_change_mean * (100 - obj.threshold_SP_small) / 100;
