@@ -27,15 +27,14 @@ The datasets differ in complexity and are thus suitable for investigating the pe
 On a more granular level, our software can be divided into three functional groups: Module 1, Image Segmentation and Module 2. While Module 1 corresponds to image preprocessing and image matching, Module 2 includes functionalities for the change analysis and visualization.
 
 ### Module 1 
-
 Module 1 deals with normalizing the input images, so that they are rotated and translated to the same perspective.
-All images will be aligned to a reference image from the set of images and the transformed images will be returend.
+All images will be aligned to a reference image from the set of images and the transformed images will be returned.
 In order to align the images with respect to each other, SURF features are extracted, matched and given to the the MATLAB function *estimateGeometricTransform2D*, which is used to estimate the transformations between the images.
-This MATLAB function uses the MSAC algorithm to further enhance robustness of the estimation of transforms.
-Although the SURF extractor in combination with the MSAC algorith have a high robustness, some estimations are wrong.
-For that purpose a function checking the validity of transdforms has been implemented.
-A graph search has been implemented to find chained trafos in cases, where no valid direct transformation was found.
-The transforamtions resulting from the graphsearch are applied to the images and both are returened for further processing.
+This MATLAB function uses the MSAC algorithm to further enhance robustness of the estimation of transformations.
+Although the SURF extractor in combination with the MSAC algorithm have a high robustness, some estimations are wrong.
+For that purpose a function checking the validity of transformations has been implemented.
+A graph search has been implemented to find chained transformations in cases, where no valid direct transformation was found.
+The transformations resulting from the graph search are applied to the images and both are returned for further processing.
 
 Module one is called when the images are fist loaded inside the GUI, so that the images are normalized for further visualization.
 
@@ -99,6 +98,8 @@ The graphical  user interface represents an integration of all the mentioned fun
 - (optional) Export reconstructed images to files
 
 If the happy path was finished for one image folder, it is recommended to use the Reset button for experiments on new folders.
+Please also note that when first loading the images, the normalization of perspective takes place. Therefore a short waiting period might occur.
+
 ## Work distribution
 R.Jacumet: set up the image loading and processing pipeline, and extensively worked on the feature extractor used in Module 1. Furthermore, Robert implemented a pixel difference calculation function and created a visualization method for the difference highlights. Robert also implemented the graph search algorithm used when no direct transformation to the reference image was possible.
 
