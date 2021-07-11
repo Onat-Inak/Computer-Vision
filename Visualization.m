@@ -115,6 +115,7 @@ classdef Visualization < handle
             temp_ref = zeros(1, length(Images_reconstructed));
             temp_ref(Image_ref_number) = 1;
             for i = 1 : length(Images_reconstructed)
+                %The years and methods are gotten from the image names
                 year_month_temp = cell2mat(Image_Names(i));
                 years(i) = str2double(year_month_temp(1:4));
                 months(i) = str2double(year_month_temp(6:7));
@@ -162,27 +163,27 @@ classdef Visualization < handle
             end
         end
         
-        % Define the parameters :
+        % Define the parameters, through the class parser:
         function define_parameters(obj, varargin)
-            default_num_visualization = 1;
-            default_chosen_images = "all";
-            default_threshold_DM = 50; % threshold for the Difference Magnitude function
-            default_comparison_rg_first_img = true; % compare all the images regarding the first image in a timelapse plot
+            default_num_visualization = 1; %set if Difference Magnitude function shall be applied
+            default_chosen_images = "all"; %set if all images will be analyzed
+            default_threshold_DM = 50; %default threshold for the Difference Magnitude function
+            default_comparison_rg_first_img = true; %compare all the images regarding the first image in a timelapse plot
             default_comparison_rg_prev_img = false; % compare all the images regarding the previous image in a timelapse plot
             default_pause_duration = 1.5; % duration/time-difference between two different plots
-            default_num_superpixels = 3000;
+            default_num_superpixels = 3000; %set number of superpixels
             default_threshold_SP_big = 30; % threshold (in comparison to the most changed superpixel) in percent for seperating superpixels, which have more difference per pixel than the threshold value in comparison to the others for timelapse
-            default_threshold_SP_intermediate = 50;
-            default_threshold_SP_small = 70;
-            default_plot_big_changes = true;
-            default_plot_intermediate_changes = true;
-            default_plot_small_changes = true;
-            default_top_percentage_threshold = 10;
-            default_threshold_l = 1;
+            default_threshold_SP_intermediate = 50; % threshold (in comparison to the most changed superpixel) in percent for seperating superpixels, which have more difference per pixel than the threshold value in comparison to the others for timelapse
+            default_threshold_SP_small = 70;% threshold (in comparison to the most changed superpixel) in percent for seperating superpixels, which have more difference per pixel than the threshold value in comparison to the others for timelapse
+            default_plot_big_changes = true; %mark if big changes will be shown
+            default_plot_intermediate_changes = true; %mark if medium changes will be shown
+            default_plot_small_changes = true; %mark if  small will be shown
+            default_top_percentage_threshold = 10; %set default threshold for highlights function 
+            default_threshold_l = 1; %set default area threshold
             
             parser = inputParser;
             
-            % parameters, which are required everytime :
+            %Add and check format of parameters, which are required in each viz mode:
             addOptional(parser, 'num_visualization', default_num_visualization, @(x) isinteger(x) && (x > 0) && (x <= 3));
             addOptional(parser, 'chosen_images', default_chosen_images, @(x) (isnumeric(x) && all(x <= length(obj.Images_reconstructed_new)) && all(x > 0)) || (string(x) == "all"));
             addOptional(parser, 'threshold_DM', default_threshold_DM);
@@ -202,7 +203,7 @@ classdef Visualization < handle
             % parse the input variables with the defined parser object: 
             parse(parser, varargin{:});
             
-            % define the variables in the Visualization Class :
+            %Define the variables in the Visualization Class :
             obj.num_visualization = parser.Results.num_visualization;
             obj.choose_images(parser.Results.chosen_images);
             obj.threshold_DM = parser.Results.threshold_DM; 
@@ -324,36 +325,42 @@ classdef Visualization < handle
             % and plot flag (plots each processing step)
             hold on
             t_3_1 = tic;
+            %For two image comparison
             if obj.comparison_rg_prev_img
                 for img_num = 1 : length(obj.Images_reconstructed_new) - 1
                     ref_image = obj.Images_reconstructed_new{img_num};
                     obj.moving_image = obj.Images_reconstructed_new{img_num + 1};
+                    %Allign both of the images to be compared using the
+                    %allign 2 images function
                     if ~isstring(obj.chosen_images)
                         [ref_image, obj.moving_image] = obj.Align_2_images(obj.chosen_images(1), obj.chosen_images(2));
                     else
                         [ref_image, obj.moving_image] = obj.Align_2_images(img_num, img_num + 1);
                     end
-
-                    %Measure runtime and run difference calculation :
-         
+                    %Run Difference Magnitude function with the chosen images:      
                     [~, obj.Diff_Image_Comparison] = Difference_Magnitude(ref_image, obj.moving_image, obj.threshold_DM, obj.plot_images, obj.seg_flag,obj.threshold_l);                  
+                    %If segmentation mask was given, filter the calculated
+                    %differences for the segmentated regions
                     if ~isempty(obj.seg_mask)
                         obj.Diff_Image_Comparison  = bsxfun(@times, obj.Diff_Image_Comparison, cast(obj.seg_mask, 'like', obj.Diff_Image_Comparison));
                     end
+                    %Now combine diff_size_mask and original difference image, to obtain the detailed differences in big regions of change:
                     obj.Image_Marked=ref_image;%it might be better to show changes in the new image
                     Image_Marked_red_channel=obj.Image_Marked(:,:,1);
+                    %Mark it in image:
                     Image_Marked_red_channel(obj.Diff_Image_Comparison>0)=255;
                     obj.Image_Marked(:,:,1)=Image_Marked_red_channel;
                     pause(obj.pause_duration);
                 end
             end
+            %This part is not actively used within our implementation, but
+            %could be used later on, e.g. for historical timelape without
+            %superpixels
             if obj.comparison_rg_first_img
                 obj.Change_ref_im();
                 for img_num = 2 : length(obj.Images_reconstructed_new)
                     ref_image = obj.Images_reconstructed_new{1};
                     obj.moving_image = obj.Images_reconstructed_new{img_num};
-
-                    %Measure runtime and run difference calculation
                     t_3_1 = tic;
                     [obj.Image_Marked, obj.Diff_Image_Comparison] = Difference_Magnitude(ref_image, obj.moving_image, obj.threshold_DM, obj.plot_images, obj.seg_flag);
                     clf;
@@ -369,27 +376,33 @@ classdef Visualization < handle
         function apply_3_2(obj,seg_mask,folderName_processed)
             obj.seg_mask  = seg_mask;
             obj.folderName_processed = folderName_processed;
+            %For comparison timelapse
             if obj.comparison_rg_prev_img
                 t_3_3 = tic;
-                %hold on
                 figure()
+                %Iterate over images of timelapse
                 for img_num = 1 : length(obj.Images_reconstructed_new) - 1
                     ref_image = obj.Images_reconstructed_new{img_num};
                     moving_image = obj.Images_reconstructed_new{img_num + 1};
+                    %Allign the two current timelapse images
                     if ~isstring(obj.chosen_images)
                         [ref_image, moving_image] = obj.Align_2_images(obj.chosen_images(1), obj.chosen_images(2));
                     else
                         [ref_image, moving_image] = obj.Align_2_images(img_num, img_num + 1);
                     end
+                    %Calculate superpixels, and apply Difference Magnitude
+                    %function on the superpixel representation of the image
                     [obj.superpixel_pos, N] = superpixels(moving_image, obj.num_superpixels, 'NumIterations', obj.num_iterations_SP);
                     [~, Diff_Image_Threshold] = Difference_Magnitude(ref_image, moving_image, obj.threshold_DM, obj.plot_images, obj.seg_flag,obj.threshold_l);
                     Diff_Image_Threshold(Diff_Image_Threshold > 0) = 1;
                     
-                    
+                    %If segmentation mask was given, filter the calculated
+                    %differences for the segmentated regions
                     if ~isempty(obj.seg_mask)
                         Diff_Image_Threshold  = bsxfun(@times, Diff_Image_Threshold, cast(obj.seg_mask{img_num}, 'like', Diff_Image_Threshold));
                     end
                     
+                    %Init superpixel masks
                     [m, n, ~] = size(obj.Images_reconstructed_new{1});
                     logical_region_mask_big = zeros(m, n); 
                     logical_region_mask_intermediate = zeros(m, n);
@@ -431,30 +444,17 @@ classdef Visualization < handle
                     % biggest changes -> red
                     logical_region_mask_big = logical(logical_region_mask_big);
                     region_mask_red(logical_region_mask_big) = 255;
-    %                 region_mask_biggest(:,:,1) = region_mask_red;
-    %                 region_mask_biggest(:,:,2) = zeros(m, n);
-    %                 region_mask_biggest(:,:,3) = zeros(m, n);
 
                     % intermediate changes -> blue
                     logical_region_mask_intermediate = logical(logical_region_mask_intermediate);
                     region_mask_blue(logical_region_mask_intermediate) = 255;
-    %                 region_mask_intermediate(:,:,1) = zeros(m, n);
-    %                 region_mask_intermediate(:,:,2) = zeros(m, n);
-    %                 region_mask_intermediate(:,:,3) = region_mask_blue;
 
                     % low changes -> green
                     logical_region_mask_small = logical(logical_region_mask_small);
                     region_mask_green(logical_region_mask_small) = 255;
-    %                 region_mask_low(:,:,1) = zeros(m, n);
-    %                 region_mask_low(:,:,2) = region_mask_green;
-    %                 region_mask_low(:,:,3) = zeros(m, n);
 
-    %                 region_mask = region_mask_biggest + region_mask_intermediate + region_mask_low;
 
                     BM = boundarymask(obj.superpixel_pos);
-        %             imshow(Images_reconstructed_new{1})
-        %             figure();
-        %             imshow(imoverlay(region_mask, BM, 'cyan'),'InitialMagnification',67)
                     if ~obj.plot_big_changes && ~obj.plot_intermediate_changes && ~obj.plot_small_changes
                         error("Select at least one option : 1) big change 2) intermediate change 3) small change");
                     elseif obj.plot_big_changes && ~obj.plot_intermediate_changes && ~obj.plot_small_changes
@@ -479,32 +479,28 @@ classdef Visualization < handle
                     end
                     clf
                     overlay(ref_image == 0) = 0;
-                    % show the overlayed image without boundary mask :
-%                    imshow(overlay);
                     imshowpair(overlay, moving_image, 'montage');
                     title(sprintf("Comparison timelapse for %s",obj.folderName_processed));
-                    % show the overlayed image with boundary mask : 
-    %                 imshow(imoverlay(overlay, BM, 'cyan'),'InitialMagnification',67);
                 end
-                %hold off
                 obj.duration_3_3 = toc(t_3_3);
             end
-        
+            %For historical timelapse
             if obj.comparison_rg_first_img
                 obj.Change_ref_im();
                 t_3_3 = tic;
                 figure();
-                %hold on
+                %Iterate over images of timelapse
                 for img_num = 2 : length(obj.Images_reconstructed_new)
+                    %Calculate superpixels, and apply Difference Magnitude
+                    %function on the superpixel representation of the image
                     [obj.superpixel_pos, N] = superpixels(obj.Images_reconstructed_new{img_num}, obj.num_superpixels, 'NumIterations', obj.num_iterations_SP);
                     ref_image = obj.Images_reconstructed_new{1};
                     moving_image = obj.Images_reconstructed_new{img_num};
                     [~, Diff_Image_Threshold] = Difference_Magnitude(ref_image, moving_image, obj.threshold_DM, obj.plot_images, obj.seg_flag,obj.threshold_l);
-%                     boxKernel = ones(5,5); % Or whatever size window you want.
-%                     Diff_Image_Threshold = conv2(Diff_Image_Threshold, boxKernel, 'same');
-%                     size(Diff_Image_Threshold)
                     Diff_Image_Threshold(Diff_Image_Threshold > 0) = 1;
                     
+                    %If segmentation mask was given, filter the calculated
+                    %differences for the segmentated regions
                     if ~isempty(obj.seg_mask)
                         Diff_Image_Threshold  = bsxfun(@times, Diff_Image_Threshold, cast(obj.seg_mask{img_num}, 'like', Diff_Image_Threshold));
                     end
@@ -532,9 +528,6 @@ classdef Visualization < handle
                     
                     for sp = 1 : N
                         pos_sp_reg_img = (obj.superpixel_pos == sp);
-%                         if numel(Diff_Image_Threshold(pos_sp_reg_img)) < ((m * n) / N) * (20/100)
-%                             break;
-%                         end
                         mean_change_in_sp = sum(Diff_Image_Threshold(pos_sp_reg_img), 'all') / numel(Diff_Image_Threshold(pos_sp_reg_img));
                         if mean_change_in_sp > th_SP_big
                             logical_region_mask_big = logical_region_mask_big + pos_sp_reg_img;
@@ -558,12 +551,8 @@ classdef Visualization < handle
                     logical_region_mask_small = logical(logical_region_mask_small);
                     region_mask_green(logical_region_mask_small) = 255;
 
-    %                 region_mask = region_mask_biggest + region_mask_intermediate + region_mask_low;
 
                     BM = boundarymask(obj.superpixel_pos);
-        %             imshow(Images_reconstructed_new{1})
-        %             figure();
-        %             imshow(imoverlay(region_mask, BM, 'cyan'),'InitialMagnification',67)
                     if ~obj.plot_big_changes && ~obj.plot_intermediate_changes && ~obj.plot_small_changes
                         error("Select at least one option : 1) big change 2) intermediate change 3) small change");
                     elseif obj.plot_big_changes && ~obj.plot_intermediate_changes && ~obj.plot_small_changes
@@ -588,14 +577,9 @@ classdef Visualization < handle
                     end
                     clf
                     overlay(obj.Images_reconstructed_new{obj.plot_background_img} == 0) = 0;
-                    % show the overlayed image without boundary mask :
-%                     imshow(overlay);
                     imshowpair(overlay, moving_image, 'montage')
                     title(sprintf("Historical timelapse for %s",obj.folderName_processed));
-                    % show the overlayed image with boundary mask : 
-    %                 imshow(imoverlay(overlay, BM, 'cyan'),'InitialMagnification',67);
                 end
-                %hold off
                 obj.duration_3_3 = toc(t_3_3);
             end
         end
@@ -696,12 +680,7 @@ classdef Visualization < handle
                 Image_Highlights(:,:,1)=Image_Marked_red_channel;
                 obj.Difference_Image_Highlight = Diff_image_acc;
 
-                %Check for segmentation  
-%                  if true
-%                     figure(8)
-%                     imshow(Image_Highlights);
-%                     title(sprintf('Top %d %% most changed pixles highlighted in red ',obj.top_percentage_threshold));
-%                  end
+
         end
     end
 end
