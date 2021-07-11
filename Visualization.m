@@ -154,11 +154,14 @@ classdef Visualization < handle
                 if ~all(obj.chosen_images <= length(obj.Images_reconstructed_new))
                     error("Choose the images you want to visualize correctly!");
                 end
+                % Temporary_cell for memory:
                 temp_cell = cell(1, length(obj.chosen_images));
                 for i = 1 : length(obj.chosen_images)
                     temp_cell{i} = obj.Images_reconstructed_new{obj.chosen_images(i)};
                 end
                 obj.Images_reconstructed_new = cell(1, length(obj.chosen_images));
+                % Reinitialize the property Images_reconstructed_new with
+                % chosen_images:
                 obj.Images_reconstructed_new = temp_cell;
             end
         end
@@ -340,12 +343,12 @@ classdef Visualization < handle
                     %Run Difference Magnitude function with the chosen images:      
                     [~, obj.Diff_Image_Comparison] = Difference_Magnitude(ref_image, obj.moving_image, obj.threshold_DM, obj.plot_images, obj.seg_flag,obj.threshold_l);                  
                     %If segmentation mask was given, filter the calculated
-                    %differences for the segmentated regions
+                    %differences for the segmentated regions:
                     if ~isempty(obj.seg_mask)
                         obj.Diff_Image_Comparison  = bsxfun(@times, obj.Diff_Image_Comparison, cast(obj.seg_mask, 'like', obj.Diff_Image_Comparison));
                     end
                     %Now combine diff_size_mask and original difference image, to obtain the detailed differences in big regions of change:
-                    obj.Image_Marked=ref_image;%it might be better to show changes in the new image
+                    obj.Image_Marked=ref_image;%it might be better to show changes in the new image:
                     Image_Marked_red_channel=obj.Image_Marked(:,:,1);
                     %Mark it in image:
                     Image_Marked_red_channel(obj.Diff_Image_Comparison>0)=255;
@@ -415,6 +418,9 @@ classdef Visualization < handle
                     region_mask_intermediate = zeros(m, n, 3);
                     region_mask_small = zeros(m, n, 3);
 
+                    % Calculate the biggest change in a superpixel and use
+                    % this value as a basis value for calculating
+                    % thresholds:
                     biggest_change_mean = 0;
                     for sp = 1 : N
                         pos_sp_reg_img = (obj.superpixel_pos == sp);
@@ -428,6 +434,7 @@ classdef Visualization < handle
                     th_SP_intermediate = biggest_change_mean * (100 - obj.threshold_SP_intermediate) / 100;
                     th_SP_small = biggest_change_mean * (100 - obj.threshold_SP_small) / 100;
                     
+                    % apply threshold for every superpixel in a for-loop:
                     for sp = 1 : N
                         pos_sp_reg_img = (obj.superpixel_pos == sp);
                         mean_change_in_sp = sum(Diff_Image_Threshold(pos_sp_reg_img), 'all') / numel(Diff_Image_Threshold(pos_sp_reg_img));
@@ -513,6 +520,9 @@ classdef Visualization < handle
                     region_mask_blue = zeros(m, n);
                     region_mask_green = zeros(m, n);
 
+                    % Calculate the biggest change in a superpixel and use
+                    % this value as a basis value for calculating
+                    % thresholds:
                     biggest_change_mean = 0;
                     for sp = 1 : N
                         pos_sp_reg_img = (obj.superpixel_pos == sp);
