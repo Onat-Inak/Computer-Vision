@@ -1,0 +1,470 @@
+{\rtf1\ansi\deff3\adeflang1025
+{\fonttbl{\f0\froman\fprq2\fcharset0 Times New Roman;}{\f1\froman\fprq2\fcharset2 Symbol;}{\f2\fswiss\fprq2\fcharset0 Arial;}{\f3\froman\fprq2\fcharset0 Liberation Serif{\*\falt Times New Roman};}{\f4\fswiss\fprq2\fcharset0 Liberation Sans{\*\falt Arial};}{\f5\froman\fprq2\fcharset0 Calibri;}{\f6\froman\fprq2\fcharset0 Calibri Light;}{\f7\fnil\fprq2\fcharset0 Noto Sans CJK SC;}{\f8\fnil\fprq2\fcharset0 Times New Roman;}{\f9\fnil\fprq2\fcharset0 Lohit Devanagari;}{\f10\fnil\fprq0\fcharset128 Lohit Devanagari;}{\f11\fnil\fprq2\fcharset0 Calibri;}}
+{\colortbl;\red0\green0\blue0;\red0\green0\blue255;\red0\green255\blue255;\red0\green255\blue0;\red255\green0\blue255;\red255\green0\blue0;\red255\green255\blue0;\red255\green255\blue255;\red0\green0\blue128;\red0\green128\blue128;\red0\green128\blue0;\red128\green0\blue128;\red128\green0\blue0;\red128\green128\blue0;\red128\green128\blue128;\red192\green192\blue192;\red114\green159\blue207;\red47\green84\blue150;\red68\green114\blue196;}
+{\stylesheet{\s0\snext0\dbch\af8\langfe1033\dbch\af11\afs22\alang1025\sl256\slmult1\ql\widctlpar\faauto\sb0\sa160\hyphpar0\ltrpar\loch\f5\fs22\lang1033\cf0\kerning1 Normal;}
+{\s1\sbasedon0\snext1\dbch\af8\langfe1033\dbch\af8\afs32\alang1025\sl256\slmult1\ql\keep\widctlpar\faauto\sb240\sa0\keepn\cf18\loch\f6\fs32\lang1033 \u220\'dcberschrift 1;}
+{\*\cs15\snext15 Default Paragraph Font;}
+{\*\cs16\sbasedon15\snext16\dbch\af8\afs32\cf18\loch\f6\fs32 Heading 1 Char;}
+{\*\cs17\snext17\cf19\i Intense Emphasis;}
+{\s18\sbasedon0\snext19\dbch\af7\langfe1033\dbch\af9\afs28\alang1025\sl256\slmult1\ql\widctlpar\faauto\sb240\sa120\keepn\loch\f4\fs28\lang1033 \u220\'dcberschrift;}
+{\s19\sbasedon0\snext19\dbch\af8\langfe1033\dbch\af11\afs22\alang1025\sl276\slmult1\ql\widctlpar\faauto\sb0\sa140\loch\f5\fs22\lang1033 Textk\u246\'f6rper;}
+{\s20\sbasedon19\snext20\dbch\af8\langfe1033\dbch\af10\afs22\alang1025\sl276\slmult1\ql\widctlpar\faauto\sb0\sa140\loch\f5\fs22\lang1033 Liste;}
+{\s21\sbasedon0\snext21\dbch\af8\langfe1033\dbch\af10\afs24\alang1025\ai\sl256\slmult1\ql\widctlpar\faauto\sb120\sa120\noline\loch\f5\fs24\lang1033\i Beschriftung;}
+{\s22\sbasedon0\snext22\dbch\af8\langfe1033\dbch\af10\afs22\alang1025\sl256\slmult1\ql\widctlpar\faauto\sb0\sa160\noline\loch\f5\fs22\lang1033 Verzeichnis;}
+{\s23\snext23\dbch\af8\langfe1033\dbch\af11\afs22\alang1025\sl256\slmult1\ql\widctlpar\faauto\sb0\sa160\hyphpar0\ltrpar\loch\f5\fs22\lang1033\cf0\kerning1 Normal Table;}
+}{\*\generator LibreOffice/6.4.7.2$Linux_X86_64 LibreOffice_project/40$Build-2}{\info{\creatim\yr2021\mo7\dy13\hr17\min44}{\revtim\yr2021\mo7\dy14\hr12\min53}{\printim\yr0\mo0\dy0\hr0\min0}}{\*\userprops{\propname Operator}\proptype30{\staticval ge69nox}}\deftab720\deftab720
+\hyphauto1\viewscale110
+{\*\pgdsctbl
+{\pgdsc0\pgdscuse451\pgwsxn11906\pghsxn16838\marglsxn1417\margrsxn1417\margtsxn1417\margbsxn1134\pgdscnxt0 Standard;}}
+\formshade{\*\pgdscno0}\paperh16838\paperw11906\margl1417\margr1417\margt1417\margb1134\sectd\sbknone\sectunlocked1\pgndec\pgwsxn11906\pghsxn16838\marglsxn1417\margrsxn1417\margtsxn1417\margbsxn1134\ftnbj\ftnstart1\ftnrstcont\ftnnar\aenddoc\aftnrstcont\aftnstart1\aftnnrlc
+{\*\ftnsep\chftnsep}\pgndec\pard\plain \s1\dbch\af8\langfe1033\dbch\af8\afs32\alang1025\sl256\slmult1\ql\keep\widctlpar\faauto\sb240\sa0\keepn\cf18\loch\f6\fs32\lang1033\sl256\slmult1\li0\ri0\lin0\rin0\fi0\sb240\sa0\ltrpar{\rtlch \ltrch\lang1031\loch
+Gutachten G07:}
+\par \pard\plain \s0\dbch\af8\langfe1033\dbch\af11\afs22\alang1025\sl256\slmult1\ql\widctlpar\faauto\sb0\sa160\hyphpar0\ltrpar\loch\f5\fs22\lang1033\cf0\kerning1\sl256\slmult1\li0\ri0\lin0\rin0\fi0\ltrpar\rtlch\dbch\af8 \ltrch\lang1031\loch
+
+\par \pard\plain \s0\dbch\af8\langfe1033\dbch\af11\afs22\alang1025\sl256\slmult1\ql\widctlpar\faauto\sb0\sa160\hyphpar0\ltrpar\loch\f5\fs22\lang1033\cf0\kerning1\sl256\slmult1\li0\ri0\lin0\rin0\fi0\ltrpar{\rtlch\langfe1033\alang1025\ai \ltrch\cs17\cf19\i\lang1031\loch
+Abgabe: 4/4 Punkte}
+\par \pard\plain \s0\dbch\af8\langfe1033\dbch\af11\afs22\alang1025\sl256\slmult1\ql\widctlpar\faauto\sb0\sa160\hyphpar0\ltrpar\loch\f5\fs22\lang1033\cf0\kerning1\sl256\slmult1\li0\ri0\lin0\rin0\fi0\ltrpar{\rtlch \ltrch\lang1031\loch
+Die Abgabe ist vollst\u228\'e4ndig. Es wurde die Ordnerstruktur eingehalten, die Bennenung der einzelnen Dateien ist in Ordnung und die Abgabe ist generell \u252\'fcbersichtlich. Die Readme fasst kurz und pr\u228\'e4gnant das Wichtige zusammen und der Bericht erl\u228\'e4utert die Hintergr\u252\'fcnde und Funktionalit\u228\'e4t genauer. In dieser Kategorie gibt es nichts zu beanstanden.}
+\par \pard\plain \s0\dbch\af8\langfe1033\dbch\af11\afs22\alang1025\sl256\slmult1\ql\widctlpar\faauto\sb0\sa160\hyphpar0\ltrpar\loch\f5\fs22\lang1033\cf0\kerning1\sl256\slmult1\li0\ri0\lin0\rin0\fi0\ltrpar\rtlch \ltrch\lang1031\loch
+
+\par \pard\plain \s0\dbch\af8\langfe1033\dbch\af11\afs22\alang1025\sl256\slmult1\ql\widctlpar\faauto\sb0\sa160\hyphpar0\ltrpar\loch\f5\fs22\lang1033\cf0\kerning1\sl256\slmult1\li0\ri0\lin0\rin0\fi0\ltrpar{\rtlch\langfe1033\alang1025\ai \ltrch\cs17\cf19\i\lang1031\loch
+Dokumentation 6/6 Punkte}
+\par \pard\plain \s0\dbch\af8\langfe1033\dbch\af11\afs22\alang1025\sl256\slmult1\ql\widctlpar\faauto\sb0\sa160\hyphpar0\ltrpar\loch\f5\fs22\lang1033\cf0\kerning1\sl256\slmult1\li0\ri0\lin0\rin0\fi0\ltrpar{\rtlch \ltrch\lang1031\loch
+Die Readme ist gut. Sie ist kurz und pr\u228\'e4gnant, wobei sie bei der Beschreibung des Interactive Mode mir etwas zu unklar ist, was aber lediglich eine kleine Anmerkung ist.}
+\par \pard\plain \s0\dbch\af8\langfe1033\dbch\af11\afs22\alang1025\sl256\slmult1\ql\widctlpar\faauto\sb0\sa160\hyphpar0\ltrpar\loch\f5\fs22\lang1033\cf0\kerning1\sl256\slmult1\li0\ri0\lin0\rin0\fi0\ltrpar{\rtlch \ltrch\lang1031\loch
+Der Report ist sehr gut. Er erf\u252\'fcllt alle harten Anforderungen, also mehr als 3 Locations werden bebildert, Quellen werden genannt und Diagramme gezeigt etc. Figure 1.1 gibt einen guten Gesamt\u252\'fcberblick und ist besonders positiv hervorzuheben. Eine kleine Anmerkung: Die Bilder Richtung Ende zeigen eine GUI, welche nicht der finale Stand ist. Hier w\u228\'e4re es gut die Bilder auszutauschen. Ansonsten: Sehr gute Arbeit!}
+\par \pard\plain \s0\dbch\af8\langfe1033\dbch\af11\afs22\alang1025\sl256\slmult1\ql\widctlpar\faauto\sb0\sa160\hyphpar0\ltrpar\loch\f5\fs22\lang1033\cf0\kerning1\sl256\slmult1\li0\ri0\lin0\rin0\fi0\ltrpar{\rtlch \ltrch\lang1031\loch
+Die Qualit\u228\'e4t der Kommentierung variiert deutlich zwischen den einzelnen Funktionen. PCA_KMEANS_4DIEPOLD.m ist beispielsweise sehr gut kommentiert, w\u228\'e4hrend QUADModell.m kaum bis gar nicht kommentiert ist. Zudem zeigt sich etwas st\u246\'f6rend, dass nicht im einheitlichen Stil kommentiert wurde. So haben manche Funktionen bspw. unter dem Header, in welchem die in/outputs beschrieben werden und manche nicht. Manche Funktionen sind in Sektionen aufgeteilt und andere nicht. Hier k\u246\'f6nnte in Zukunft noch etwas mehr drauf geachtet werden. Zudem empfiehlt es sich in der main.m Datei auch Kommentare einz\u252\'fcgigen, sodass noch einmal klar ist, wer die Software geschrieben hat, um was es geht etc. Hierbei handelt es sich aber um ein Bem\u228\'e4ngeln kleiner Punkte. Wir konnten den Code verstehen und deshalb ist er trotz den genannten Punkten noch hinreichend kommentiert.}
+\par \pard\plain \s0\dbch\af8\langfe1033\dbch\af11\afs22\alang1025\sl256\slmult1\ql\widctlpar\faauto\sb0\sa160\hyphpar0\ltrpar\loch\f5\fs22\lang1033\cf0\kerning1\sl256\slmult1\li0\ri0\lin0\rin0\fi0\ltrpar{\rtlch \ltrch\lang1031\loch
+Insgesamt geben wir gerade noch 6/6 punkten, da Bericht wirklich sehr stark ist und die kleinen Kritikpunkte an der Code-Kommentierung aushebelt. }
+\par \pard\plain \s0\dbch\af8\langfe1033\dbch\af11\afs22\alang1025\sl256\slmult1\ql\widctlpar\faauto\sb0\sa160\hyphpar0\ltrpar\loch\f5\fs22\lang1033\cf0\kerning1\sl256\slmult1\li0\ri0\lin0\rin0\fi0\ltrpar\rtlch \ltrch\lang1031\loch
+
+\par \pard\plain \s0\dbch\af8\langfe1033\dbch\af11\afs22\alang1025\sl256\slmult1\ql\widctlpar\faauto\sb0\sa160\hyphpar0\ltrpar\loch\f5\fs22\lang1033\cf0\kerning1\sl256\slmult1\li0\ri0\lin0\rin0\fi0\ltrpar{\rtlch\langfe1033\alang1025\ai \ltrch\cs17\cf19\i\lang1031\loch
+Ausf\u252\'fchrbarkeit 6/6}
+\par \pard\plain \s0\dbch\af8\langfe1033\dbch\af11\afs22\alang1025\sl256\slmult1\ql\widctlpar\faauto\sb0\sa160\hyphpar0\ltrpar\loch\f5\fs22\lang1033\cf0\kerning1\sl256\slmult1\li0\ri0\lin0\rin0\fi0\ltrpar{\rtlch \ltrch\lang1031\loch
+Das Programm l\u228\'e4uft bei Unix und Windows ohne Anpassungen, also out-of-the-box. Das Programm reagiert angemessen schnell, hier ist das cachen von Berechnungen positiv anzumerken. Die Spezifikationen bez\u252\'fcglich der Ausf\u252\'fchrbarkeit sind erf\u252\'fcllt. Etwas sch\u246\'f6ner w\u228\'e4re gewesen, die Berechnungsintensive Parts an den Anfang beim initialen Hochladen des Ordners zu ziehen, um dann bei sp\u228\'e4teren Spielereien in der GUI k\u252\'fcrzere Zeiten warten zu m\u252\'fcssen. Die Wartezeiten sind aber durch den wirklich guten Loadingscreen in der GUI deutlich angenehmer!}
+\par \pard\plain \s0\dbch\af8\langfe1033\dbch\af11\afs22\alang1025\sl256\slmult1\ql\widctlpar\faauto\sb0\sa160\hyphpar0\ltrpar\loch\f5\fs22\lang1033\cf0\kerning1\sl256\slmult1\li0\ri0\lin0\rin0\fi0\ltrpar\rtlch \ltrch\lang1031\loch
+
+\par \pard\plain \s0\dbch\af8\langfe1033\dbch\af11\afs22\alang1025\sl256\slmult1\ql\widctlpar\faauto\sb0\sa160\hyphpar0\ltrpar\loch\f5\fs22\lang1033\cf0\kerning1\sl256\slmult1\li0\ri0\lin0\rin0\fi0\ltrpar{\rtlch\langfe1033\alang1025\ai \ltrch\cs17\cf19\i\lang1031\loch
+GUI 6/6}
+\par \pard\plain \s0\dbch\af8\langfe1033\dbch\af11\afs22\alang1025\sl256\slmult1\ql\widctlpar\faauto\sb0\sa160\hyphpar0\ltrpar\loch\f5\fs22\lang1033\cf0\kerning1\sl256\slmult1\li0\ri0\lin0\rin0\fi0\ltrpar{\rtlch \ltrch\lang1031\loch
+Die GUI ist intuitiv und benutzerfreundlich. Sie sieht sehr gut aus und macht genau das, was sie machen soll. Die Reaktivit\u228\'e4t ist durch den besonders hervorzuhebenden Loadingscreen besonders hervorzuheben. Die Benennungen der Slider und Checkboxes macht Sinn, wobei ich die Boxen bei \u8222\'84Changes\u8220\'93 noch etwas besser erkl\u228\'e4ren w\u252\'fcrde. Die GUI ist im Gro\u223\'dfen und Ganzen wirklich sehr ansprechend und ist mit kurzem lesen der ReadMe sehr intuitiv zu verstehen. Wir haben nichts zu beanstanden, gute Arbeit: 6/6 Punkte}
+\par \pard\plain \s0\dbch\af8\langfe1033\dbch\af11\afs22\alang1025\sl256\slmult1\ql\widctlpar\faauto\sb0\sa160\hyphpar0\ltrpar\loch\f5\fs22\lang1033\cf0\kerning1\sl256\slmult1\li0\ri0\lin0\rin0\fi0\ltrpar\rtlch \ltrch\lang1031\loch
+
+\par \pard\plain \s0\dbch\af8\langfe1033\dbch\af11\afs22\alang1025\sl256\slmult1\ql\widctlpar\faauto\sb0\sa160\hyphpar0\ltrpar\loch\f5\fs22\lang1033\cf0\kerning1\sl256\slmult1\li0\ri0\lin0\rin0\fi0\ltrpar{\rtlch\langfe1033\alang1025\ai \ltrch\cs17\cf19\i\lang1031\loch
+Qualit\u228\'e4t 4/8 Punkte}
+\par \pard\plain \s0\dbch\af8\langfe1033\dbch\af11\afs22\alang1025\sl256\slmult1\ql\widctlpar\faauto\sb0\sa160\hyphpar0\ltrpar\loch\f5\fs22\lang1033\cf0\kerning1\sl256\slmult1\li0\ri0\lin0\rin0\fi0\ltrpar{\rtlch \ltrch\lang1031\loch
+Geht es um den Umgang mit Rotationen, schwierigen Szenen, Intensit\u228\'e4tsschwankungen etc. performt das Programm mittel bis gut. Der Gro\u223\'dfteil der Bilder wird ohne Probleme und sauber transformiert. Bei den Datens\u228\'e4tzen Brazilian Rainforest, Wiesn, Testdaten von uns und Frauenkirche, also den schwierigeren Datens\u228\'e4tzen, sind einige Transformation komplett falsch. Hiermit ist gemeint, dass der Zoomfaktor v\u246\'f6llig anders ist und die Rotationen komplett out-of plane sind. Das passiert bei diesem Programm vergleichsweise h\u228\'e4ufig, da nur direkte Transformationen probiert werden. Es wird also immer versucht die zwei Bilder direkt ineinander \u252\'fcbergehen zu lassen, was ab und an aber nicht direkt geht. Eine L\u246\'f6sung w\u228\'e4re \u252\'fcber Mehrschritt Transformationen zu gehen, also von unserem Startbild zu einem oder mehreren Zwischenbildern und dann zu dem Zielbild. Das wurde aber nicht implementiert. Zudem wird nicht gecheckt ob die Transformationen sinnvoll sind, weswegen diese teils stark falschen Transformationen zum End User gelangen und die wahrgenommene Qualit\u228\'e4t des Programmes merklich sinken lassen. Da das h\u228\'e4ufig passiert und die gezeigten Ver\u228\'e4nderungen hierbei sinnlos sind gibt es hier einen }{\rtlch \ltrch\lang1031\ul\ulc0\loch
+Abzug von 1.5 Punkten.}
+\par \pard\plain \s0\dbch\af8\langfe1033\dbch\af11\afs22\alang1025\sl256\slmult1\ql\widctlpar\faauto\sb0\sa160\hyphpar0\ltrpar\loch\f5\fs22\lang1033\cf0\kerning1\sl256\slmult1\li0\ri0\lin0\rin0\fi0\ltrpar{\rtlch \ltrch\lang1031\loch
+Arten der Visualisierung sind die Differenz zwischen 2 Bildern darstellen, die Timeline aus den Bildern im oberen Teil der GUI und die M\u246\'f6glichkeit zwischen Bildern smooth zu wechseln. Damit ist die Minimalanforderung gerade erf\u252\'fcllt, jedoch l\u228\'e4sst sich diskutieren, ob es sich wirklich 3 getrennte Arten der Visualisierung handelt. Der Vergleich zwischen 2 Bilder funktioniert gut. Die Timeline aus Bildern im oberen Teil der GUI passt auch, w\u228\'e4re aber etwas hilfreicher f\u252\'fcr den User, wenn sie statt der Originale transformierte Bilder zeigen w\u252\'fcrde, welche zueinander angepasst sind. Der Schieberegler im Interactive Teil ist eine gute Idee, leider ist die Umsetzung hier mangelhaft. Der Slider kann nicht einfach von links nach rechts bewegt werden, da man f\u252\'fcr jedes einzelne Intervall erst einzeln die Berechnungen durchf\u252\'fchren lassen muss. Hat man alle Berechnungen gemacht (welche aufsummiert dann doch recht lange dauern, besonders wenn man bedenkt, dass nur direkte Transformationen berechnet werden) so ist der Slider ebenfalls nicht sinnvoll f\u252\'fcr den User, da die Bilder nicht zu einem Referenzbild transformiert werden. Vielmehr springen die Bilder beim sliden von rechts nach links, weswegen die Analyse von \u196\'c4nderungen \u252\'fcber den ganzen Zeitraum dem User stark erschwert wird. }{\rtlch \ltrch\lang1031\ul\ulc0\loch
+Wir ziehen hier einen Punkt ab}{\rtlch \ltrch\lang1031\loch
+, da die Arten der Visualisierung nicht wirklich vielf\u228\'e4ltig sind und der Slider \u252\'fcber die Bilder so nicht sinnvoll ist. Durch diesen kommen ein eher langsamer und lediglich mittel potenter Bildmatching Algorithmus zum Vorschein, was die Qualit\u228\'e4t aus Sicht des Users tr\u252\'fcbt. Diese Kritik kann auch teils als Teil der Ausf\u252\'fchrbarkeit-Kategorie gesehen werden, wobei wir uns entschieden haben, den Punkt in dieser Sektion aus zuvor genannten Gr\u252\'fcnden bez\u252\'fcglich der wahrgenommenen Qualit\u228\'e4t abzuziehen.}
+\par \pard\plain \s0\dbch\af8\langfe1033\dbch\af11\afs22\alang1025\sl256\slmult1\ql\widctlpar\faauto\sb0\sa160\hyphpar0\ltrpar\loch\f5\fs22\lang1033\cf0\kerning1\sl256\slmult1\li0\ri0\lin0\rin0\fi0\ltrpar{\rtlch \ltrch\lang1031\loch
+Arten der Ver\u228\'e4nderung sind bei diesem Programm die Gr\u246\'f6\u223\'dfe der Ver\u228\'e4nderung, und die Ver\u228\'e4nderung je nach Bereich (also beispielsweise Meer, Eis etc). Es gibt keine andere Art der Ver\u228\'e4nderung, wenn man im Manual oder Interactive Mode ist. In jedem Fall werden zwischen genau zwei Bildern Ver\u228\'e4nderungen dargestellt, wobei hier nur die zwei Arten der Ver\u228\'e4nderung (Fl\u228\'e4che und Segmentabh\u228\'e4ngig) vorhanden sind. F\u252\'fcr diese Unterschreitung der Mindestanforderung und dem Problem, dass die Area Size Threshold nicht intuitiv ist, ziehen wir 1.5 Punkte ab.}
+\par \pard\plain \s0\dbch\af8\langfe1033\dbch\af11\afs22\alang1025\sl256\slmult1\ql\widctlpar\faauto\sb0\sa160\hyphpar0\ltrpar\loch\f5\fs22\lang1033\cf0\kerning1\sl256\slmult1\li0\ri0\lin0\rin0\fi0\ltrpar{\rtlch \ltrch\lang1031\loch
+Somit wurden in der Kategorie Qualit\u228\'e4t 4/8 Punkten vergeben, die Gr\u252\'fcnde hierzu wurden ausf\u252\'fchrlich in den drei vorherigen Paragrafen erkl\u228\'e4rt.}
+\par \pard\plain \s0\dbch\af8\langfe1033\dbch\af11\afs22\alang1025\sl256\slmult1\ql\widctlpar\faauto\sb0\sa160\hyphpar0\ltrpar\loch\f5\fs22\lang1033\cf0\kerning1\sl256\slmult1\li0\ri0\lin0\rin0\fi0\ltrpar\rtlch \ltrch\lang1031\loch
+
+\par \pard\plain \s0\dbch\af8\langfe1033\dbch\af11\afs22\alang1025\sl256\slmult1\ql\widctlpar\faauto\sb0\sa160\hyphpar0\ltrpar\loch\f5\fs22\lang1033\cf0\kerning1\sl256\slmult1\li0\ri0\lin0\rin0\fi0\ltrpar{\rtlch\langfe1033\alang1025\ai \ltrch\cs17\cf19\i\lang1031\loch
+Gesamteindruck: 26/30 Punkte}
+\par \pard\plain \s0\dbch\af8\langfe1033\dbch\af11\afs22\alang1025\sl256\slmult1\ql\widctlpar\faauto\sb0\sa160\hyphpar0\ltrpar\loch\f5\fs22\lang1033\cf0\kerning1\sl256\slmult1\li0\ri0\lin0\rin0\fi0\ltrpar{\rtlch \ltrch\lang1031\loch
+Insgesamt wurden 26/30 Punkten vergeben, was sehr gut den Gesamteindruck eines guten bis sehr guten Projekts widerspiegelt. Die Abgabe selbst funktioniert und die Dokumentation ist vor allem mit dem Bericht sehr gut. Die Abgabe profitiert stark von einer sehr guten GUI. Diese ist intuitiv und gibt dem Nutzer hervorragendes Feedback. Nur bei der Kategorie Qualit\u228\'e4t wurden Punkte abgezogen. Neben dem nicht Vorhandensein dreier Arten der Ver\u228\'e4nderung liegt ein Problem in der Art wie die Bilder transformiert werden. Da nur direkte Transformationen berechnet werden, funktionieren einige Transformationen nicht, welche bis zum User durchkommen und so die wahrgenommene Qualit\u228\'e4t senken. Dies ist auch in abge\u228\'e4nderter Form ein Grund f\u252\'fcr die mangelnde Sinnhaftigkeit des Sliders im Interactive Modus, da so die Bilder beim durchsliden immer springen und der User die Ver\u228\'e4nderung \u252\'fcber alle Jahre nicht nachvollziehen kann. Zudem muss der Nutzer erst jedes Intervall zwischen den Bildern einzeln analysieren lassen. Diese Punkte k\u246\'f6nnten also noch verbessert werden, insgesamt aber eine sch\u246\'f6ne Arbeit!}
+\par \pard\plain \s0\dbch\af8\langfe1033\dbch\af11\afs22\alang1025\sl256\slmult1\ql\widctlpar\faauto\sb0\sa160\hyphpar0\ltrpar\loch\f5\fs22\lang1033\cf0\kerning1\sl256\slmult1\li0\ri0\lin0\rin0\fi0\ltrpar\rtlch \ltrch\lang1031\loch
+
+\par \pard\plain \s1\dbch\af8\langfe1033\dbch\af8\afs32\alang1025\sl256\slmult1\ql\keep\widctlpar\faauto\sb240\sa0\keepn\cf18\loch\f6\fs32\lang1033\pagebb\sl256\slmult1\li0\ri0\lin0\rin0\fi0\ltrpar{\rtlch\dbch\af8\langfe1033\dbch\af8\afs32\alang1025 \ltrch\cf18\fs32\lang1031\loch
+Review}{\rtlch \ltrch\lang1031\loch
+ G0}{\rtlch \ltrch\lang1031\loch
+9}{\rtlch \ltrch\lang1031\loch
+:}
+\par \pard\plain \s1\dbch\af8\langfe1033\dbch\af8\afs32\alang1025\sl256\slmult1\ql\keep\widctlpar\faauto\sb240\sa0\keepn\cf18\loch\f6\fs32\lang1033\sl256\slmult1\li0\ri0\lin0\rin0\fi0\ltrpar\loch
+
+\par \pard\plain \s0\dbch\af8\langfe1033\dbch\af11\afs22\alang1025\sl256\slmult1\ql\widctlpar\faauto\sb0\sa160\hyphpar0\ltrpar\loch\f5\fs22\lang1033\cf0\kerning1\ql\ltrpar{\rtlch\dbch\af8\langfe1033\dbch\af11\afs22\alang1025\ai \ltrch\cs17\cf19\i\cf19\fs22\lang1031\i\loch
+Assignment}{\rtlch\ai \ltrch\cf19\i\loch
+: }{\rtlch\ai \ltrch\cf19\i\loch
+4/4}
+\par \pard\plain \s0\dbch\af8\langfe1033\dbch\af11\afs22\alang1025\sl256\slmult1\ql\widctlpar\faauto\sb0\sa160\hyphpar0\ltrpar\loch\f5\fs22\lang1033\cf0\kerning1\ql\ltrpar{\loch
+The Assignment seems to be complete, }{\loch
+correctly named }{\loch
+and its }{\loch
+folder}{\loch
+ structure is according to the requirements. }{\loch
+As it is available for peer review, I assume it was handed in before the deadline.}
+\par \pard\plain \s0\dbch\af8\langfe1033\dbch\af11\afs22\alang1025\sl256\slmult1\ql\widctlpar\faauto\sb0\sa160\hyphpar0\ltrpar\loch\f5\fs22\lang1033\cf0\kerning1\ql\ltrpar{\loch
+Thus }{\loch
+4/4 Pts. }{\loch
+were given.}
+\par \pard\plain \s0\dbch\af8\langfe1033\dbch\af11\afs22\alang1025\sl256\slmult1\ql\widctlpar\faauto\sb0\sa160\hyphpar0\ltrpar\loch\f5\fs22\lang1033\cf0\kerning1\ql\ltrpar\loch
+
+\par \pard\plain \s0\dbch\af8\langfe1033\dbch\af11\afs22\alang1025\sl256\slmult1\ql\widctlpar\faauto\sb0\sa160\hyphpar0\ltrpar\loch\f5\fs22\lang1033\cf0\kerning1\ql\ltrpar{\rtlch\dbch\af8\langfe1033\dbch\af11\afs22\alang1025\ai \ltrch\cs17\cf19\i\cf19\fs22\lang1031\i\loch
+Documentation}{\rtlch\ai \ltrch\cf19\i\loch
+:  }{\rtlch\ai \ltrch\cf19\i\loch
+5/6}
+\par \pard\plain \s0\dbch\af8\langfe1033\dbch\af11\afs22\alang1025\sl256\slmult1\ql\widctlpar\faauto\sb0\sa160\hyphpar0\ltrpar\loch\f5\fs22\lang1033\cf0\kerning1\ql\ltrpar{\loch
+The documentation is written in good and comprehensible English. }{\loch
+Sufficient}{\loch
+ description on how to use the program }{\loch
+is given, b}{\loch
+oth in the }{\loch
+Rea}{\loch
+dme and the }{\loch
+P}{\loch
+df. }{\loch
+The }{\loch
+R}{\loch
+eadme introduces the program very well, while t}{\loch
+he }{\loch
+P}{\loch
+df }{\loch
+gives a dense insight in the program. }{\loch
+At some points m}{\loch
+ore information would be desirable. }{\loch
+For the used methodology, the user might want to know how the transform is estimated }{\loch
+in the case of automatic \u8218\'82}{\loch
+Image }{\loch
+c}{\loch
+a}{\loch
+libration\u8216\'91 }{\loch
+(e.g.: is it the 4 point algorithm? }{\loch
+Does it use RANSAC or }{\loch
+a comparable algorithm}{\loch
+? I}{\loch
+s it a pre-implemented function?,\u8230\'85). }{\loch
+For }{\loch
+the }{\loch
+GUI}{\loch
+, the user might want to }{\loch
+have more information too. }{\loch
+There the user}{\loch
+ might desire to }{\loch
+find a description }{\loch
+on}{\loch
+ what the \u8218\'82Change statistics\u8216\'91 actually shows. It could be the amount of pixels that changed (and therefore the area that changed), }{\loch
+but }{\loch
+it could also }{\loch
+be }{\loch
+weighted by }{\loch
+the }{\loch
+absolute difference of intensity }{\loch
+or }{\loch
+similar}{\loch
+. Intuitively one would assume the first option, but more clarification would be helpful. }{\loch
+Still the functionality and used methods are }{\loch
+mostly}{\loch
+ described or mentioned in the documentation. }{\loch
+It contains examples for all provided data sets, sources and diagrams. The code is }{\loch
+commented, but sometimes }{\loch
+a general function description, as well a a overview of the functions}{\loch
+ could be desirable.}{\loch
+ }{\loch
+All in all }{\loch
+the work, receives }{\loch
+5/6 }{\loch
+Pts.}{\loch
+ }{\loch
+for these criteria.}
+\par \pard\plain \s0\dbch\af8\langfe1033\dbch\af11\afs22\alang1025\sl256\slmult1\ql\widctlpar\faauto\sb0\sa160\hyphpar0\ltrpar\loch\f5\fs22\lang1033\cf0\kerning1\ql\ltrpar\loch
+
+\par \pard\plain \s0\dbch\af8\langfe1033\dbch\af11\afs22\alang1025\sl256\slmult1\ql\widctlpar\faauto\sb0\sa160\hyphpar0\ltrpar\loch\f5\fs22\lang1033\cf0\kerning1\ql\ltrpar{\rtlch\ai \ltrch\cf19\i\loch
+Executability: }{\rtlch\ai \ltrch\cf19\i\loch
+6/}{\rtlch\ai \ltrch\cf19\i\loch
+6 }
+\par \pard\plain \s0\dbch\af8\langfe1033\dbch\af11\afs22\alang1025\sl256\slmult1\ql\widctlpar\faauto\sb0\sa160\hyphpar0\ltrpar\loch\f5\fs22\lang1033\cf0\kerning1\ql\ltrpar{\loch
+The Program }{\loch
+has been successfully tested on }{\loch
+ }{\loch
+Linux and Windows. }{\loch
+It works out of the box, }{\loch
+is }{\loch
+fully}{\loch
+ controlled via  a GUI and seems to fulfill the specification}{\loch
+s}{\loch
+. }{\loch
+The alignment of the images }{\loch
+only}{\loch
+ }{\loch
+takes a reasonable time, }{\loch
+b}{\loch
+ut other options, }{\loch
+such as change image or time }{\loch
+l}{\loch
+aps, }{\loch
+take long}{\loch
+er than expected}{\loch
+. This is considered in the next section and ignored for now, as it is possibly mainly due to the }{\loch
+reactiveness of the }{\loch
+GUI. }{\loch
+The assignment gets }{\loch
+6/}{\loch
+6 }{\loch
+Pts. }{\loch
+in this category.}
+\par \pard\plain \s0\dbch\af8\langfe1033\dbch\af11\afs22\alang1025\sl256\slmult1\ql\widctlpar\faauto\sb0\sa160\hyphpar0\ltrpar\loch\f5\fs22\lang1033\cf0\kerning1\ql\ltrpar\loch
+
+\par \pard\plain \s0\dbch\af8\langfe1033\dbch\af11\afs22\alang1025\sl256\slmult1\ql\widctlpar\faauto\sb0\sa160\hyphpar0\ltrpar\loch\f5\fs22\lang1033\cf0\kerning1\ql\ltrpar{\rtlch\ai \ltrch\cf19\i\loch
+GUI:  }{\rtlch\ai \ltrch\cf19\i\loch
+4/6}
+\par \pard\plain \s0\dbch\af8\langfe1033\dbch\af11\afs22\alang1025\sl256\slmult1\ql\widctlpar\faauto\sb0\sa160\hyphpar0\ltrpar\loch\f5\fs22\lang1033\cf0\kerning1\ql\ltrpar{\loch
+The }{\loch
+GUI}{\loch
+ has }{\loch
+many }{\loch
+options }{\loch
+and functionalities, }{\loch
+is structured neatl}{\loch
+y}{\loch
+ and is self descriptive in its layout. }{\loch
+One minor issue is}{\loch
+ }{\loch
+that the}{\loch
+ \u8218\'82}{\loch
+D}{\loch
+etecting strength\u8216\'91 option }{\loch
+under \u8218\'82Difference map\u8216\'91 }{\loch
+is }{\loch
+m}{\loch
+isleading}{\loch
+. \u8218\'82}{\loch
+S}{\loch
+trong\u8216\'91 results in more, }{\loch
+but}{\loch
+ smaller pixel changes being shown, \u8218\'82}{\loch
+W}{\loch
+eak\u8216\'91 }{\loch
+seems to}{\loch
+ results in less, but stronger pixel changes being shown. }{\loch
+The co}{\loch
+u}{\loch
+nter intuitive description becomes }{\loch
+obvious }{\loch
+on }{\loch
+many data sets quickly}{\loch
+, }{\loch
+but }{\loch
+in general }{\loch
+this might lead to confusion. }{\loch
+Sometimes more descriptions would simplify the usage of the GUI, but the important things are depicted in a obvious way. }{\loch
+The above mentioned aspect}{\loch
+s}{\loch
+ }{\loch
+could}{\loch
+ be improved, but }{\loch
+they}{\loch
+ do not }{\loch
+effect }{\loch
+t}{\loch
+he experience in a negative way.}
+\par \pard\plain \s0\dbch\af8\langfe1033\dbch\af11\afs22\alang1025\sl256\slmult1\ql\widctlpar\faauto\sb0\sa160\hyphpar0\ltrpar\loch\f5\fs22\lang1033\cf0\kerning1\ql\ltrpar{\loch
+Unfortunately, }{\loch
+the GUI}{\loch
+ }{\loch
+reacts slowly to a point where it }{\loch
+hinders the usabilit}{\loch
+y}{\loch
+. }{\loch
+For example displaying changes in }{\loch
+\u8216\'91}{\loch
+change image\u8216\'91 }{\loch
+takes rather long. Even the time laps}{\loch
+ react rather slow }{\loch
+on inputs via the slider}{\loch
+. }{\loch
+On the used computer (rather slow) the user might even have the fe}{\loch
+e}{\loch
+ling, that }{\loch
+(for some options) }{\loch
+the program }{\loch
+does not react at all}{\loch
+, }{\loch
+as his input }{\loch
+does not result in a }{\loch
+response from the program for }{\loch
+round }{\loch
+about 10 seconds. }
+\par \pard\plain \s0\dbch\af8\langfe1033\dbch\af11\afs22\alang1025\sl256\slmult1\ql\widctlpar\faauto\sb0\sa160\hyphpar0\ltrpar\loch\f5\fs22\lang1033\cf0\kerning1\ql\ltrpar{\loch
+Additionally }{\loch
+the program does not }{\loch
+always }{\loch
+show its}{\loch
+ progress }{\loch
+or status}{\loch
+. }{\loch
+As a result t}{\loch
+he user does not know }{\loch
+the}{\loch
+ state  }{\loch
+of }{\loch
+the program,}{\loch
+ }{\loch
+he does not know whether the changes he entered are currently processed, and sometimes it is uncertain whether the processing is fin}{\loch
+ish}{\loch
+ed. For example when changing the reference image, no response i}{\loch
+s}{\loch
+ given once the program is done. }{\loch
+So the user does not know }{\loch
+for certain}{\loch
+ when to proceed with the next }{\loch
+steps.}
+\par \pard\plain \s0\dbch\af8\langfe1033\dbch\af11\afs22\alang1025\sl256\slmult1\ql\widctlpar\faauto\sb0\sa160\hyphpar0\ltrpar\loch\f5\fs22\lang1033\cf0\kerning1\ql\ltrpar{\loch
+Th}{\loch
+e last}{\loch
+ two aspects are the reason for only giving }{\loch
+4/6}{\loch
+ }{\loch
+Pts. }{\loch
+in this section.}
+\par \pard\plain \s0\dbch\af8\langfe1033\dbch\af11\afs22\alang1025\sl256\slmult1\ql\widctlpar\faauto\sb0\sa160\hyphpar0\ltrpar\loch\f5\fs22\lang1033\cf0\kerning1\ql\ltrpar\loch
+
+\par \pard\plain \s0\dbch\af8\langfe1033\dbch\af11\afs22\alang1025\sl256\slmult1\ql\widctlpar\faauto\sb0\sa160\hyphpar0\ltrpar\loch\f5\fs22\lang1033\cf0\kerning1\ql\ltrpar{\rtlch\ai \ltrch\cf19\i\loch
+Quality:  }{\rtlch\ai \ltrch\cf19\i\loch
+7}{\rtlch\ai \ltrch\cf19\i\loch
+/8}
+\par \pard\plain \s0\dbch\af8\langfe1033\dbch\af11\afs22\alang1025\sl256\slmult1\ql\widctlpar\faauto\sb0\sa160\hyphpar0\ltrpar\loch\f5\fs22\lang1033\cf0\kerning1\ql\ltrpar{\loch
+The Program has many ways of showing and differentiating changes. For the visualization of changes, a time laps, \u8218\'82change image\u8216\'91 and }{\loch
+a diagram showing the \u8218\'82change statistics\u8216\'91}{\loch
+. }{\loch
+In \u8218\'82change images\u8216\'91 the user even has two option on how to visualize the calculated differences (showing actual difference and }{\loch
+a generalization by regions that changed)}{\loch
+. }{\loch
+The user is }{\loch
+also }{\loch
+given }{\loch
+options}{\loch
+ }{\loch
+for}{\loch
+ }{\loch
+differentiation}{\loch
+ between kinds of changes }{\loch
+via slider}{\loch
+(}{\loch
+manly }{\loch
+difference in intensity }{\loch
+and}{\loch
+ size of change}{\loch
+)}{\loch
+. All the above }{\loch
+is}{\loch
+ complemented by a }{\loch
+well working }{\loch
+segmentation, that also allows to differentiate between the changes in different types of landscape. }{\loch
+So it is possible to automatically detect how much different }{\loch
+type has }{\loch
+changed. }{\loch
+All these }{\loch
+options are very helpful and add immense value to the program. In the following a few }{\loch
+more }{\loch
+positive and negative aspects, }{\loch
+concerning the visualization and differentiation of changes, }{\loch
+are listed. }{\loch
+\u8218\'82}{\loch
+C}{\loch
+ha}{\loch
+n}{\loch
+ge statistics\u8216\'91 over the years }{\loch
+is a }{\loch
+great}{\loch
+ idea. }{\loch
+It helps the user to compare the changes quic}{\loch
+kly}{\loch
+ and makes it possible to see the amounts of change in relation. }{\loch
+This also adds the option to differentiate changes by their speed. }{\loch
+One negative aspect is that }{\loch
+image borders are highlighted as changes. It might irritate the user, as these are not the }{\loch
+actual }{\loch
+changes inside the image. }{\loch
+The}{\loch
+ ability to }{\loch
+also }{\loch
+classify into multiple clusters }{\loch
+allows the user to easily adapt to different scenarios }{\loch
+and is a }{\loch
+advantage}{\loch
+ of }{\loch
+this}{\loch
+ program. }{\loch
+Additionally the possibility to chose the reference image adds another degree of fre}{\loch
+e}{\loch
+dom to the program.}
+\par \pard\plain \s0\dbch\af8\langfe1033\dbch\af11\afs22\alang1025\sl256\slmult1\ql\widctlpar\faauto\sb0\sa160\hyphpar0\ltrpar\loch\f5\fs22\lang1033\cf0\kerning1\ql\ltrpar{\loch
+The quality of the handling of different scenes is good but might be further improved. }{\loch
+It works well on most data sets but exhibits }{\loch
+some }{\loch
+failures on more complex scenes such as \u8218\'82Frauenkirche\u8216\'91 and \u8218\'82Brazilian Rainforest\u8216\'91. }{\loch
+Even in these cases, it can reconstruct the perspective of }{\loch
+some}{\loch
+ images. On the test data sets of our team }{\loch
+created, }{\loch
+it performed }{\loch
+worse, but }{\loch
+ac}{\loch
+c}{\loch
+eptable as well. }{\loch
+On}{\loch
+ some}{\loch
+ }{\loch
+data sets the alignment was nearly correct but not precise enough. In these cases, the further step of \u8218\'82change image\u8216\'91 was }{\loch
+only of limited use}{\loch
+, as it showed m}{\loch
+ainly differences due to the unprecise perspective, }{\loch
+rather than actual changes in the landscape. }{\loch
+In \u8218\'82timeline\u8216\'91 the image wobbled around, making it hard to spot changes, too.}
+\par \pard\plain \s0\dbch\af8\langfe1033\dbch\af11\afs22\alang1025\sl256\slmult1\ql\widctlpar\faauto\sb0\sa160\hyphpar0\ltrpar\loch\f5\fs22\lang1033\cf0\kerning1\ql\ltrpar{\loch
+In case}{\loch
+s}{\loch
+ of failed transformation}{\loch
+s}{\loch
+, the option of \u8218\'82Manual calibration\u8216\'91 is provided. \u8218\'82M}{\loch
+anual calibration\u8216\'91 }{\loch
+works }{\loch
+well}{\loch
+, but is very tedious. }{\loch
+On }{\loch
+the F}{\loch
+rauenkirche }{\loch
+data set }{\loch
+it can be done in an acceptable amount of time, but e}{\loch
+specially }{\loch
+on images of the }{\loch
+R}{\loch
+ainforest }{\loch
+it is rather time consuming. }{\loch
+Still \u8218\'82Manual calibration\u8216\'91 is a good addition to the program.}
+\par \pard\plain \s0\dbch\af8\langfe1033\dbch\af11\afs22\alang1025\sl256\slmult1\ql\widctlpar\faauto\sb0\sa160\hyphpar0\ltrpar\loch\f5\fs22\lang1033\cf0\kerning1\ql\ltrpar{\loch
+All in all the program receives }{\loch
+7}{\loch
+/8 }{\loch
+P}{\loch
+ts. }{\loch
+considering its quality.}
+\par \pard\plain \s0\dbch\af8\langfe1033\dbch\af11\afs22\alang1025\sl256\slmult1\ql\widctlpar\faauto\sb0\sa160\hyphpar0\ltrpar\loch\f5\fs22\lang1033\cf0\kerning1\ql\ltrpar\loch
+
+\par \pard\plain \s0\dbch\af8\langfe1033\dbch\af11\afs22\alang1025\sl256\slmult1\ql\widctlpar\faauto\sb0\sa160\hyphpar0\ltrpar\loch\f5\fs22\lang1033\cf0\kerning1\ql\ltrpar{\rtlch\ai \ltrch\cf19\i\loch
+Summary: }{\rtlch\ai \ltrch\cf19\lang1031\i\loch
+26/30 }
+\par \pard\plain \s0\dbch\af8\langfe1033\dbch\af11\afs22\alang1025\sl256\slmult1\ql\widctlpar\faauto\sb0\sa160\hyphpar0\ltrpar\loch\f5\fs22\lang1033\cf0\kerning1\ql\ltrpar{\loch
+The Assignment fulfills al}{\loch
+l t}{\loch
+he specifications and solve}{\loch
+s}{\loch
+ the given problem.}
+\par \pard\plain \s0\dbch\af8\langfe1033\dbch\af11\afs22\alang1025\sl256\slmult1\ql\widctlpar\faauto\sb0\sa160\hyphpar0\ltrpar\loch\f5\fs22\lang1033\cf0\kerning1\sl256\slmult1\li0\ri0\lin0\rin0\fi0\sb0\sa160\ltrpar{\rtlch \ltrch\lang1031\loch
+The available options for differentiating and visualizing changes add a lot of value to the program. The performance on different scenes is good. It might be improved, so that complex scenes are handled better. }{\rtlch \ltrch\lang1031\loch
+Its main drawback is the slow }{\rtlch \ltrch\lang1031\loch
+re}{\rtlch \ltrch\lang1031\loch
+activeness when controlling it via the GUI. On slow computers it }{\rtlch \ltrch\lang1031\loch
+even}{\rtlch \ltrch\lang1031\loch
+ makes it hard to }{\rtlch \ltrch\lang1031\loch
+actually }{\rtlch \ltrch\lang1031\loch
+use the program. }{\rtlch \ltrch\lang1031\loch
+Additionally the documentation could be a bit more in depth. }{\rtlch \ltrch\lang1031\loch
+Except for }{\rtlch \ltrch\lang1031\loch
+the last two mentioned points}{\rtlch \ltrch\lang1031\loch
+,}{\rtlch \ltrch\lang1031\loch
+ t}{\rtlch \ltrch\lang1031\loch
+he }{\rtlch \ltrch\lang1031\loch
+assignment is }{\rtlch \ltrch\lang1031\loch
+done }{\rtlch \ltrch\lang1031\loch
+very}{\rtlch \ltrch\lang1031\loch
+ beautifully }{\rtlch \ltrch\lang1031\loch
+and in total it receives 26/30 Pts..}
+\par }
